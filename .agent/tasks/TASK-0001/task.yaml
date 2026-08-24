@@ -1,13 +1,13 @@
 protocol_version: 3
 
 task_id: TASK-0001
-task_revision: 1
+task_revision: 2
 state: EXECUTION_READY
 
 origin:
-  type: user_request
-  task_id: ""
-  gap_id: ""
+  type: architect_revision
+  task_id: TASK-0001
+  gap_id: "H1,H2,H3"
 
 architect_binding:
   target_repository: phatnguyen03022001/agent-documents
@@ -41,70 +41,44 @@ external_skills:
   execution_recommended: []
 
 authority_sources:
-  - source: "TASK-0001 revision 1 approved Architect handoff"
-    role: "canonical implementation scope and acceptance authority"
+  - source: "TASK-0001 revision 2 Architect review of candidate f79d220ff700f5fa59cdb59365fe2a2e13634c76"
+    role: "canonical correction scope and acceptance authority"
     precedence: 1
 
 structure_authority:
   status: RESOLVED
-  source: "TASK-0001 revision 1 structure_policy.expected_new_files"
-  rationale: "Exactly the previously approved 15 agent-documents V1 candidate files are authorized, plus the protocol-required Executor-owned report artifact. No architectural expansion is permitted."
+  source: "TASK-0001 revision 2"
+  rationale: "Preserve the existing 15-file V1 candidate architecture and correct exactly three material model gaps: truth-linked coverage support, scalable physical document sharding under eight fixed authority domains, and rooted reachability for cross-cutting entities."
 
-objective: "Instantiate the previously approved agent-documents V1 candidate exactly as specified: finite 45-concern coverage taxonomy; eight canonical Markdown templates; one JSON project catalog; stable identity and relationship model; L0/L1/L2 depth semantics; explicit unknown and build/buy models; closed-world milestone semantics; deterministic DOCS_READY; tiny Python-standard-library validator; and deterministic tests. The result remains an unreleased candidate pending independent audit."
+objective: >-
+  Revise the unreleased agent-documents V1 candidate without redesigning its foundation.
+  Preserve the exact 45 concern universe, eight authority domains, single project catalog,
+  L0/L1/L2 depth model, explicit unknown/build-buy semantics, closed-world milestone model,
+  and standard-library-only deterministic validator. Close H1 truth-linked coverage, H2
+  large-project physical document scaling, and H3 cross-cutting graph-root semantics.
+  Produce the protocol-required Executor report. The result remains an unreleased candidate
+  pending Architect and independent audit.
 
 scope:
   required_changes:
-    - "Create README.md as orientation only, preserving repository boundaries and candidate/unreleased status."
-    - "Create DOCUMENT_MODEL.md as the normative reusable V1 document-model specification defined by the approved Architect handoff."
-    - "Create model/coverage.v1.json containing exactly the approved 45 coverage concerns and canonical homes."
-    - "Create model/project.schema.v1.json using JSON Schema Draft 2020-12 and the exact approved V1 catalog semantics."
-    - "Create exactly eight canonical Markdown templates under templates/docs/: PRODUCT.md, BEHAVIOR.md, ARCHITECTURE.md, DATA.md, INTERFACES.md, QUALITY.md, DELIVERY.md, DECISIONS.md."
-    - "Create templates/docs/catalog/project.json as the single machine-readable starting manifest."
-    - "Create tools/validate.py as a deterministic Python-standard-library-only validator for structural/model invariants and DOCS_READY closure."
-    - "Create tests/test_validate.py using unittest and temporary directories for the approved positive and negative validator cases."
-    - "Create .agent/tasks/TASK-0001/report.yaml only as the protocol-required Executor-owned execution report; it is governance evidence and is not part of the 15-file agent-documents candidate architecture."
+    - "H1: Rename coverage evidence_refs to support_refs everywhere in the V1 model, schema, template catalog, validator, normative docs, and tests."
+    - "H1: For APPLICABLE concerns, actual_depth NONE requires support_refs to be empty; actual_depth L0/L1/L2 requires at least one support_ref."
+    - "H1: Every support_ref must resolve to a logical Markdown section in the concern's canonical authority domain."
+    - "H1: A resolved support section must contain at least one non-heading, non-whitespace, non-HTML-comment content line within that section; heading-only or comment-only sections do not establish support."
+    - "H1: Preserve validator non-semantic boundary: it validates presence/location/structural support, not prose quality or factual correctness."
+    - "H2: Replace the V1 concept of exactly eight physical Markdown files with exactly eight canonical authority domains: PRODUCT, BEHAVIOR, ARCHITECTURE, DATA, INTERFACES, QUALITY, DELIVERY, DECISIONS."
+    - "H2: Keep the eight root Markdown templates as the default small-project shape, but allow target repositories to shard an authority domain one physical level deeper using docs/<lowercase-domain>/<file>.md."
+    - "H2: Supported canonical paths are either docs/<DOMAIN>.md or docs/<lowercase-domain>/<safe-file>.md. Nested shard directories deeper than one level are invalid."
+    - "H2: Sharding changes physical organization only; it does not create a ninth authority domain or a second authority for any concept. A shard becomes canonical only when referenced by the catalog/coverage model."
+    - "H2: Change model/coverage.v1.json concern metadata from a physical home path to an authority-domain identity so support refs may legally point to root or shard files within that authority."
+    - "H2: Entity-specific logical references must continue to resolve within their required authority domain, but may use a legal shard path."
+    - "H3: Add milestone.root_refs as an explicit array of non-feature material entity IDs that belong directly to the current milestone without needing a feature relationship."
+    - "H3: Orphan detection must use reachability from roots, not merely whether any other record references an entity. Roots are every current FTR record plus milestone.root_refs."
+    - "H3: Traverse deterministic catalog edges from reachable records. A disconnected cluster must remain orphaned even if its members reference each other."
+    - "H3: milestone.root_refs must resolve, must not contain FTR or UNK IDs, must not contain a DEFER capability, and duplicate root refs are invalid."
+    - "Preserve exactly the same 45 coverage concern keys. Do not add, remove, rename, or merge a concern in this task."
+    - "Create .agent/tasks/TASK-0001/report.yaml as the Executor-owned protocol report for revision 2."
   allowed_existing_files_or_components:
-    - ".agent/tasks/TASK-0001/task.yaml"
-  expected_files_are_restrictive: true
-
-invariants:
-  - no unrelated cleanup or adjacent fixes
-  - no undocumented scope expansion
-  - no architecture, roadmap, canonical spec, or public-contract change without revised Architect authority
-  - no unauthorized dependency change
-  - no unauthorized structural reorganization
-  - no orphan source files
-  - no speculative scale structure
-  - exactly 15 candidate/model files; protocol governance artifacts are not candidate/model files
-  - no agent-documents candidate file outside the approved 15-file set
-  - no YAML catalog layer
-  - no external runtime or validation dependency
-  - no GitHub Actions in this candidate
-  - no force push
-  - no history rewrite
-  - no main mutation
-  - no promotion during TASK-0001
-  - no tag or release creation
-
-forbidden_changes:
-  - "Any agent-documents candidate implementation file outside the approved 15-file set."
-  - "Any additional top-level directory beyond those implied by the approved 15-file candidate and existing .agent governance path."
-  - "Any additional Markdown specification, protocol document, catalog file, YAML catalog, package manifest, external dependency, workflow, Docker artifact, database, web/API/MCP service, orchestration artifact, task/review template, maturity-level definition, project-specific content, generated committed coverage report, generated index, archive, research directory, changelog, release artifact, or tag."
-  - "Any change to .agent/tasks/TASK-0001/task.yaml by the Executor."
-  - "Creation of .agent/tasks/TASK-0001/review.yaml by the Executor."
-  - "Force push, history rewrite, direct mutation of main, merge/promotion to main, release, or tag creation."
-
-gap_policy:
-  local_auto_fix: true
-  scope_expansion: forbidden
-  architecture_change: forbidden
-  spec_change: forbidden
-  dependency_change: revised_contract_required
-  public_contract_change: revised_contract_required
-  blocking_gap_behavior: BLOCKED
-
-structure_policy:
-  expected_new_files:
     - README.md
     - DOCUMENT_MODEL.md
     - model/coverage.v1.json
@@ -120,6 +94,105 @@ structure_policy:
     - templates/docs/catalog/project.json
     - tools/validate.py
     - tests/test_validate.py
+    - .agent/tasks/TASK-0001/task.yaml
+  expected_files_are_restrictive: true
+
+reference_model:
+  authority_domains:
+    PRODUCT:
+      root: docs/PRODUCT.md
+      shard_directory: docs/product/
+    BEHAVIOR:
+      root: docs/BEHAVIOR.md
+      shard_directory: docs/behavior/
+    ARCHITECTURE:
+      root: docs/ARCHITECTURE.md
+      shard_directory: docs/architecture/
+    DATA:
+      root: docs/DATA.md
+      shard_directory: docs/data/
+    INTERFACES:
+      root: docs/INTERFACES.md
+      shard_directory: docs/interfaces/
+    QUALITY:
+      root: docs/QUALITY.md
+      shard_directory: docs/quality/
+    DELIVERY:
+      root: docs/DELIVERY.md
+      shard_directory: docs/delivery/
+    DECISIONS:
+      root: docs/DECISIONS.md
+      shard_directory: docs/decisions/
+  shard_constraints:
+    maximum_directory_depth_below_docs: 1
+    filename_rule: "one non-empty safe Markdown filename; no subdirectory below the authority shard directory"
+  support_semantics:
+    actual_depth_none: "support_refs must be []"
+    actual_depth_resolved: "L0/L1/L2 requires >=1 support_ref"
+    authority_match_required: true
+    non_empty_section_required: true
+    semantic_quality_judgment: false
+  graph_roots:
+    implicit:
+      - "all current FTR records"
+    explicit_field: milestone.root_refs
+    explicit_allowed_classes:
+      - ACT
+      - ROL
+      - ACC
+      - SYS
+      - DAT
+      - IFC
+      - FLW
+      - EXT
+      - CAP
+      - DEC
+    forbidden_classes:
+      - FTR
+      - UNK
+
+invariants:
+  - no unrelated cleanup or adjacent fixes
+  - no concern-taxonomy change
+  - no ninth authority domain
+  - no one-file-per-concern or one-file-per-feature requirement
+  - no requirement that a target project physically shard documents
+  - no extra catalog file
+  - no YAML catalog layer
+  - no external runtime or validation dependency
+  - no natural-language quality scoring
+  - no generated committed coverage matrix
+  - no GitHub Actions in this candidate
+  - no force push
+  - no history rewrite
+  - no main mutation
+  - no promotion during TASK-0001 revision 2
+  - no tag or release creation
+  - Executor must not modify this task.yaml
+
+forbidden_changes:
+  - "Any new agent-documents candidate/model file outside the existing 15-file set."
+  - "Any new target-document authority domain beyond the approved eight."
+  - "Any change to the 45 concern keys."
+  - "Any database, service, web UI, API/MCP server, generator framework, package dependency, YAML layer, or orchestration mechanism."
+  - "Any semantic maturity/quality-level definition belonging to agent-standards."
+  - "Any agent-role or authority-protocol redesign belonging to agent-skills."
+  - "Any project-specific or IELTS-specific documentation content."
+  - "Any change to .agent/tasks/TASK-0001/task.yaml by the Executor."
+  - "Creation of review.yaml by the Executor."
+  - "Force push, history rewrite, direct mutation of main, merge/promotion to main, tag, or release."
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: revised_contract_required
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+structure_policy:
+  expected_new_files:
     - .agent/tasks/TASK-0001/report.yaml
   unlisted_new_files:
     allowed: false
@@ -131,35 +204,41 @@ structure_policy:
 
 acceptance_criteria:
   - id: AC-1
-    requirement: "Candidate structure contains exactly the 15 approved agent-documents candidate/model files; the pre-existing task.yaml and protocol-required Executor report.yaml are governance artifacts and excluded from that count. No other file or directory is introduced."
-    evidence_required: "Exact changed-file inventory and repository tree showing only the approved 15 candidate files plus authorized .agent task/report governance artifacts."
+    requirement: "The exact 45 concern keys remain unchanged and each concern now declares exactly one canonical authority domain rather than a fixed physical home path."
+    evidence_required: "Exact key-set comparison plus concern authority-domain inspection."
   - id: AC-2
-    requirement: "model/coverage.v1.json contains exactly the approved 45 finite coverage concerns with one canonical document home each."
-    evidence_required: "Deterministic validator/test evidence and direct catalog count/key-set evidence."
+    requirement: "APPLICABLE concerns cannot self-attest resolved depth without structural documentation support: NONE has zero support refs; L0/L1/L2 has at least one support ref in the concern's authority domain."
+    evidence_required: "Focused negative and positive validator tests."
   - id: AC-3
-    requirement: "Catalog and Markdown preserve field-level single authority: catalog owns inventory/identity/relationships and approved short state/outcome fields; Markdown owns normative explanation/specification."
-    evidence_required: "Cross-file review evidence demonstrating no duplicated normative behavior or second authoritative inventories."
+    requirement: "Heading-only, whitespace-only, or HTML-comment-only support sections do not establish support; a minimal real content line does."
+    evidence_required: "Focused validator tests for each empty-section case and one valid case."
   - id: AC-4
-    requirement: "project.schema.v1.json, DOCUMENT_MODEL.md, templates/docs/catalog/project.json, and tools/validate.py agree on the approved V1 fields, IDs, enums, relation states, depth, unknown, build/buy, closed-world, and closure semantics."
-    evidence_required: "Schema/validator tests plus consistency review evidence."
+    requirement: "The model defines eight authority domains, not an eight-physical-file ceiling; root files remain valid and one-level authority shards are accepted."
+    evidence_required: "DOCUMENT_MODEL/schema/validator consistency plus root and shard tests."
   - id: AC-5
-    requirement: "Exactly eight sparse canonical Markdown templates exist and do not create one-file-per-concern or one-file-per-feature structure or ceremonial empty sections."
-    evidence_required: "Exact template file inventory and content review evidence."
+    requirement: "Wrong-domain refs and shard nesting deeper than one level fail deterministically."
+    evidence_required: "Focused negative tests."
   - id: AC-6
-    requirement: "tools/validate.py is Python-standard-library-only, deterministic, read-only against target documentation, and does not judge prose quality."
-    evidence_required: "Source inspection, py_compile, and tests proving deterministic boundary behavior."
+    requirement: "milestone.root_refs provides explicit roots for legitimate cross-cutting entities and validates exact referenced IDs/classes."
+    evidence_required: "Schema/model/validator consistency and focused tests."
   - id: AC-7
-    requirement: "A minimal fully closed test target produces DOCS_READY = TRUE; every approved blocking/malformed case produces false/error for the correct reason."
-    evidence_required: "unittest output covering the approved positive case and all required negative cases."
+    requirement: "Orphan analysis is true reachability from all FTR roots plus milestone.root_refs; disconnected referenced clusters cannot game the orphan check."
+    evidence_required: "Tests proving orphan without root, valid with root, and disconnected cluster remains orphaned."
   - id: AC-8
-    requirement: "Normative documentation includes the stop rule requiring design expansion to stop after a FROZEN milestone reaches DOCS_READY absent an approved reopening trigger."
-    evidence_required: "Exact DOCUMENT_MODEL.md section/reference."
+    requirement: "Unknown root refs, FTR/UNK root refs, duplicate roots, and DEFER capability roots fail deterministically."
+    evidence_required: "Focused negative tests."
   - id: AC-9
-    requirement: "Repository documentation preserves system boundaries: agent-documents = what must be describable + closure; agent-standards = engineering quality meaning; agent-skills = working method/authority protocol; agent-runtime = optional bounded execution; target repository = actual product truth."
-    evidence_required: "README.md and DOCUMENT_MODEL.md references."
+    requirement: "The validator remains Python-standard-library-only, deterministic, read-only, and does not judge prose quality or factual correctness."
+    evidence_required: "Source inspection, py_compile, and tests."
   - id: AC-10
-    requirement: "Result is explicitly an unreleased candidate pending independent audit; no release, tag, promotion, or canonical-completeness claim is made."
-    evidence_required: "README/report evidence plus Git history/ref evidence."
+    requirement: "A genuinely closed minimal target using support_refs and root semantics produces DOCS_READY = TRUE; existing mandatory negative behavior remains covered."
+    evidence_required: "Full unittest result."
+  - id: AC-11
+    requirement: "No candidate/model file is added or removed; only authorized existing files plus report.yaml change. main remains unchanged."
+    evidence_required: "Exact changed-file inventory and Git ref evidence."
+  - id: AC-12
+    requirement: "The result remains explicitly an unreleased candidate pending Architect and independent audit."
+    evidence_required: "README/DOCUMENT_MODEL/report evidence and no release/tag/promotion."
 
 verification:
   executor_checks:
@@ -170,18 +249,27 @@ verification:
       command_or_check: "python -m py_compile tools/validate.py tests/test_validate.py"
       required: true
     - id: CHECK-3
-      command_or_check: "Parse every repository JSON file with Python standard library json and fail on any parse error."
+      command_or_check: "Parse every repository JSON file with Python stdlib json and fail on parse error."
       required: true
     - id: CHECK-4
-      command_or_check: "Verify exact candidate file set: 15 approved files, no unauthorized candidate file, no YAML catalog, no dependency/package manifest, no generated committed DOCS_READY artifact."
+      command_or_check: "Assert the 45 concern key set is byte-for-byte equivalent as a set to candidate f79d220ff700f5fa59cdb59365fe2a2e13634c76."
       required: true
     - id: CHECK-5
-      command_or_check: "Verify no main mutation, no force update, no release/tag/promotion, and report exact working-tree state."
+      command_or_check: "Run focused support-ref tests: missing support, wrong authority, empty/comment-only section, valid non-empty section."
+      required: true
+    - id: CHECK-6
+      command_or_check: "Run focused shard tests: valid root, valid one-level shard, wrong domain, excessive nesting."
+      required: true
+    - id: CHECK-7
+      command_or_check: "Run focused root/reachability tests: orphan without root, valid explicit root, unknown root ref, forbidden root class, DEFER root, disconnected cluster."
+      required: true
+    - id: CHECK-8
+      command_or_check: "Verify no unapproved new file, no dependency/package manifest, no YAML catalog, no generated committed DOCS_READY artifact, no main mutation, no force update, no tag/release/promotion."
       required: true
   authoritative_verification:
     required: false
-    mechanism: "Independent post-Executor design-review, gap-analysis, and adversarial audits are required before any later canonical/release decision."
-    expected_signal: "No authoritative promotion signal is produced by this task."
+    mechanism: "Architect exact-SHA review followed by independent blind audits before any release/promotion decision."
+    expected_signal: "Executor evidence only; Executor cannot author authoritative PASS."
 
 git_authority:
   create_branch: false

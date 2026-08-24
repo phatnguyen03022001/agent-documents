@@ -1,0 +1,193 @@
+protocol_version: 3
+
+task_id: TASK-0001
+task_revision: 1
+state: EXECUTION_READY
+
+origin:
+  type: user_request
+  task_id: ""
+  gap_id: ""
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-documents
+
+target:
+  repository: phatnguyen03022001/agent-documents
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "85bf97ad5aad4a89157e83e37655b805fc8ae280"
+
+architect_analysis_skills:
+  - architect
+
+execution_skills:
+  required:
+    - executor
+  recommended: []
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: "TASK-0001 revision 1 approved Architect handoff"
+    role: "canonical implementation scope and acceptance authority"
+    precedence: 1
+
+structure_authority:
+  status: RESOLVED
+  source: "TASK-0001 revision 1 structure_policy.expected_new_files"
+  rationale: "Exactly the previously approved 15 agent-documents V1 candidate files are authorized, plus the protocol-required Executor-owned report artifact. No architectural expansion is permitted."
+
+objective: "Instantiate the previously approved agent-documents V1 candidate exactly as specified: finite 45-concern coverage taxonomy; eight canonical Markdown templates; one JSON project catalog; stable identity and relationship model; L0/L1/L2 depth semantics; explicit unknown and build/buy models; closed-world milestone semantics; deterministic DOCS_READY; tiny Python-standard-library validator; and deterministic tests. The result remains an unreleased candidate pending independent audit."
+
+scope:
+  required_changes:
+    - "Create README.md as orientation only, preserving repository boundaries and candidate/unreleased status."
+    - "Create DOCUMENT_MODEL.md as the normative reusable V1 document-model specification defined by the approved Architect handoff."
+    - "Create model/coverage.v1.json containing exactly the approved 45 coverage concerns and canonical homes."
+    - "Create model/project.schema.v1.json using JSON Schema Draft 2020-12 and the exact approved V1 catalog semantics."
+    - "Create exactly eight canonical Markdown templates under templates/docs/: PRODUCT.md, BEHAVIOR.md, ARCHITECTURE.md, DATA.md, INTERFACES.md, QUALITY.md, DELIVERY.md, DECISIONS.md."
+    - "Create templates/docs/catalog/project.json as the single machine-readable starting manifest."
+    - "Create tools/validate.py as a deterministic Python-standard-library-only validator for structural/model invariants and DOCS_READY closure."
+    - "Create tests/test_validate.py using unittest and temporary directories for the approved positive and negative validator cases."
+    - "Create .agent/tasks/TASK-0001/report.yaml only as the protocol-required Executor-owned execution report; it is governance evidence and is not part of the 15-file agent-documents candidate architecture."
+  allowed_existing_files_or_components:
+    - ".agent/tasks/TASK-0001/task.yaml"
+  expected_files_are_restrictive: true
+
+invariants:
+  - no unrelated cleanup or adjacent fixes
+  - no undocumented scope expansion
+  - no architecture, roadmap, canonical spec, or public-contract change without revised Architect authority
+  - no unauthorized dependency change
+  - no unauthorized structural reorganization
+  - no orphan source files
+  - no speculative scale structure
+  - exactly 15 candidate/model files; protocol governance artifacts are not candidate/model files
+  - no agent-documents candidate file outside the approved 15-file set
+  - no YAML catalog layer
+  - no external runtime or validation dependency
+  - no GitHub Actions in this candidate
+  - no force push
+  - no history rewrite
+  - no main mutation
+  - no promotion during TASK-0001
+  - no tag or release creation
+
+forbidden_changes:
+  - "Any agent-documents candidate implementation file outside the approved 15-file set."
+  - "Any additional top-level directory beyond those implied by the approved 15-file candidate and existing .agent governance path."
+  - "Any additional Markdown specification, protocol document, catalog file, YAML catalog, package manifest, external dependency, workflow, Docker artifact, database, web/API/MCP service, orchestration artifact, task/review template, maturity-level definition, project-specific content, generated committed coverage report, generated index, archive, research directory, changelog, release artifact, or tag."
+  - "Any change to .agent/tasks/TASK-0001/task.yaml by the Executor."
+  - "Creation of .agent/tasks/TASK-0001/review.yaml by the Executor."
+  - "Force push, history rewrite, direct mutation of main, merge/promotion to main, release, or tag creation."
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+structure_policy:
+  expected_new_files:
+    - README.md
+    - DOCUMENT_MODEL.md
+    - model/coverage.v1.json
+    - model/project.schema.v1.json
+    - templates/docs/PRODUCT.md
+    - templates/docs/BEHAVIOR.md
+    - templates/docs/ARCHITECTURE.md
+    - templates/docs/DATA.md
+    - templates/docs/INTERFACES.md
+    - templates/docs/QUALITY.md
+    - templates/docs/DELIVERY.md
+    - templates/docs/DECISIONS.md
+    - templates/docs/catalog/project.json
+    - tools/validate.py
+    - tests/test_validate.py
+    - .agent/tasks/TASK-0001/report.yaml
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: ""
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Candidate structure contains exactly the 15 approved agent-documents candidate/model files; the pre-existing task.yaml and protocol-required Executor report.yaml are governance artifacts and excluded from that count. No other file or directory is introduced."
+    evidence_required: "Exact changed-file inventory and repository tree showing only the approved 15 candidate files plus authorized .agent task/report governance artifacts."
+  - id: AC-2
+    requirement: "model/coverage.v1.json contains exactly the approved 45 finite coverage concerns with one canonical document home each."
+    evidence_required: "Deterministic validator/test evidence and direct catalog count/key-set evidence."
+  - id: AC-3
+    requirement: "Catalog and Markdown preserve field-level single authority: catalog owns inventory/identity/relationships and approved short state/outcome fields; Markdown owns normative explanation/specification."
+    evidence_required: "Cross-file review evidence demonstrating no duplicated normative behavior or second authoritative inventories."
+  - id: AC-4
+    requirement: "project.schema.v1.json, DOCUMENT_MODEL.md, templates/docs/catalog/project.json, and tools/validate.py agree on the approved V1 fields, IDs, enums, relation states, depth, unknown, build/buy, closed-world, and closure semantics."
+    evidence_required: "Schema/validator tests plus consistency review evidence."
+  - id: AC-5
+    requirement: "Exactly eight sparse canonical Markdown templates exist and do not create one-file-per-concern or one-file-per-feature structure or ceremonial empty sections."
+    evidence_required: "Exact template file inventory and content review evidence."
+  - id: AC-6
+    requirement: "tools/validate.py is Python-standard-library-only, deterministic, read-only against target documentation, and does not judge prose quality."
+    evidence_required: "Source inspection, py_compile, and tests proving deterministic boundary behavior."
+  - id: AC-7
+    requirement: "A minimal fully closed test target produces DOCS_READY = TRUE; every approved blocking/malformed case produces false/error for the correct reason."
+    evidence_required: "unittest output covering the approved positive case and all required negative cases."
+  - id: AC-8
+    requirement: "Normative documentation includes the stop rule requiring design expansion to stop after a FROZEN milestone reaches DOCS_READY absent an approved reopening trigger."
+    evidence_required: "Exact DOCUMENT_MODEL.md section/reference."
+  - id: AC-9
+    requirement: "Repository documentation preserves system boundaries: agent-documents = what must be describable + closure; agent-standards = engineering quality meaning; agent-skills = working method/authority protocol; agent-runtime = optional bounded execution; target repository = actual product truth."
+    evidence_required: "README.md and DOCUMENT_MODEL.md references."
+  - id: AC-10
+    requirement: "Result is explicitly an unreleased candidate pending independent audit; no release, tag, promotion, or canonical-completeness claim is made."
+    evidence_required: "README/report evidence plus Git history/ref evidence."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "python -m unittest discover -s tests"
+      required: true
+    - id: CHECK-2
+      command_or_check: "python -m py_compile tools/validate.py tests/test_validate.py"
+      required: true
+    - id: CHECK-3
+      command_or_check: "Parse every repository JSON file with Python standard library json and fail on any parse error."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Verify exact candidate file set: 15 approved files, no unauthorized candidate file, no YAML catalog, no dependency/package manifest, no generated committed DOCS_READY artifact."
+      required: true
+    - id: CHECK-5
+      command_or_check: "Verify no main mutation, no force update, no release/tag/promotion, and report exact working-tree state."
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: "Independent post-Executor design-review, gap-analysis, and adversarial audits are required before any later canonical/release decision."
+    expected_signal: "No authoritative promotion signal is produced by this task."
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+blocking_decisions: []
+execution_ready: true

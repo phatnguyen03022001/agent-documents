@@ -1,185 +1,50 @@
 {
   "model_version": 1,
   "concerns": {
-    "product.objective": {
-      "home": "docs/PRODUCT.md",
-      "description": "What outcome is the product intended to achieve?"
-    },
-    "product.actors_roles": {
-      "home": "docs/PRODUCT.md",
-      "description": "Who participates and what roles do they hold?"
-    },
-    "product.features_capabilities": {
-      "home": "docs/PRODUCT.md",
-      "description": "What capabilities are in product scope?"
-    },
-    "product.scope_non_goals": {
-      "home": "docs/PRODUCT.md",
-      "description": "What is included and explicitly excluded?"
-    },
-    "product.domain_external_constraints": {
-      "home": "docs/PRODUCT.md",
-      "description": "What domain or external constraints shape the product?"
-    },
-    "behavior.functional": {
-      "home": "docs/BEHAVIOR.md",
-      "description": "What observable behavior must each feature provide?"
-    },
-    "behavior.state_transitions": {
-      "home": "docs/BEHAVIOR.md",
-      "description": "What states and transitions are observable?"
-    },
-    "behavior.invariants_permissions": {
-      "home": "docs/BEHAVIOR.md",
-      "description": "What behavioral invariants and permissions must hold?"
-    },
-    "behavior.errors_edges_failures": {
-      "home": "docs/BEHAVIOR.md",
-      "description": "How must errors, edge cases, and failures behave?"
-    },
-    "behavior.critical_flows": {
-      "home": "docs/BEHAVIOR.md",
-      "description": "Which end-to-end flows are critical and how do they proceed?"
-    },
-    "behavior.acceptance": {
-      "home": "docs/BEHAVIOR.md",
-      "description": "What observable criteria establish acceptance?"
-    },
-    "behavior.safety_human_control": {
-      "home": "docs/BEHAVIOR.md",
-      "description": "What safety and human-control behavior is required?"
-    },
-    "architecture.components_ownership": {
-      "home": "docs/ARCHITECTURE.md",
-      "description": "What systems or components exist and what do they own?"
-    },
-    "architecture.runtime_topology": {
-      "home": "docs/ARCHITECTURE.md",
-      "description": "How are runtime responsibilities arranged?"
-    },
-    "architecture.communication_boundaries": {
-      "home": "docs/ARCHITECTURE.md",
-      "description": "Where are communication boundaries and responsibilities?"
-    },
-    "architecture.technology_choices": {
-      "home": "docs/ARCHITECTURE.md",
-      "description": "What technology choices materially shape the design?"
-    },
-    "architecture.build_buy": {
-      "home": "docs/ARCHITECTURE.md",
-      "description": "Which capabilities are built, bought, hybrid, deferred, or unresolved?"
-    },
-    "data.entities_ownership": {
-      "home": "docs/DATA.md",
-      "description": "What material data entities exist and who owns them?"
-    },
-    "data.lifecycle_persistence": {
-      "home": "docs/DATA.md",
-      "description": "How does material data persist and move through its lifecycle?"
-    },
-    "data.retention_deletion": {
-      "home": "docs/DATA.md",
-      "description": "What retention and deletion behavior applies to data?"
-    },
-    "data.consistency_transactions": {
-      "home": "docs/DATA.md",
-      "description": "What consistency and transaction semantics are required?"
-    },
-    "data.migration_backfill": {
-      "home": "docs/DATA.md",
-      "description": "How are schema/data migrations and backfills handled?"
-    },
-    "data.provenance_lineage_quality": {
-      "home": "docs/DATA.md",
-      "description": "How are provenance, lineage, and data quality treated?"
-    },
-    "interfaces.contracts": {
-      "home": "docs/INTERFACES.md",
-      "description": "What material interfaces and contracts exist?"
-    },
-    "interfaces.async_jobs_commands": {
-      "home": "docs/INTERFACES.md",
-      "description": "What asynchronous jobs, events, or commands cross boundaries?"
-    },
-    "interfaces.external_dependencies": {
-      "home": "docs/INTERFACES.md",
-      "description": "Which material external dependencies are relied upon?"
-    },
-    "interfaces.data_exchange_trust": {
-      "home": "docs/INTERFACES.md",
-      "description": "What data crosses interfaces and what trust assumptions apply?"
-    },
-    "interfaces.dependency_failure_exit": {
-      "home": "docs/INTERFACES.md",
-      "description": "How are dependency failure, fallback, and exit handled?"
-    },
-    "quality.authentication": {
-      "home": "docs/QUALITY.md",
-      "description": "What authentication constraints apply?"
-    },
-    "quality.authorization_trust_boundaries": {
-      "home": "docs/QUALITY.md",
-      "description": "Where is authorization enforced and where are trust boundaries?"
-    },
-    "quality.secrets_sensitive_operations": {
-      "home": "docs/QUALITY.md",
-      "description": "How are secrets and sensitive operations constrained?"
-    },
-    "quality.privacy_sensitive_data": {
-      "home": "docs/QUALITY.md",
-      "description": "What privacy constraints apply to sensitive data?"
-    },
-    "quality.timeouts_retries_idempotency_recovery": {
-      "home": "docs/QUALITY.md",
-      "description": "What timeout, retry, idempotency, and recovery semantics are required?"
-    },
-    "quality.concurrency_failure_boundaries": {
-      "home": "docs/QUALITY.md",
-      "description": "What concurrency and failure-boundary constraints apply?"
-    },
-    "quality.performance_load_resources": {
-      "home": "docs/QUALITY.md",
-      "description": "What performance, load, and resource constraints matter?"
-    },
-    "quality.observability": {
-      "home": "docs/QUALITY.md",
-      "description": "What evidence must operations expose for observability?"
-    },
-    "quality.testing_evidence": {
-      "home": "docs/QUALITY.md",
-      "description": "What test and evidence strategy supports confidence?"
-    },
-    "quality.cost_usage_bounds": {
-      "home": "docs/QUALITY.md",
-      "description": "What cost or usage bounds constrain the system?"
-    },
-    "delivery.environments_config": {
-      "home": "docs/DELIVERY.md",
-      "description": "What environments and configuration boundaries exist?"
-    },
-    "delivery.deployment_migration_rollback": {
-      "home": "docs/DELIVERY.md",
-      "description": "How are deployment, migration, and rollback performed?"
-    },
-    "delivery.backup_restore": {
-      "home": "docs/DELIVERY.md",
-      "description": "What backup and restore behavior is required?"
-    },
-    "delivery.compatibility_versioning_platforms": {
-      "home": "docs/DELIVERY.md",
-      "description": "What compatibility, versioning, and platform constraints apply?"
-    },
-    "delivery.operational_ownership": {
-      "home": "docs/DELIVERY.md",
-      "description": "Who owns operation and intervention responsibilities?"
-    },
-    "decisions.material_choices": {
-      "home": "docs/DECISIONS.md",
-      "description": "Which material choices have been decided and why?"
-    },
-    "unknowns.open_questions": {
-      "home": "docs/DECISIONS.md",
-      "description": "Which material questions remain unresolved and what do they affect?"
-    }
+    "product.objective": {"description": "What outcome is the product intended to achieve?", "authority_domain": "PRODUCT"},
+    "product.actors_roles": {"description": "Who participates and what roles do they hold?", "authority_domain": "PRODUCT"},
+    "product.features_capabilities": {"description": "What capabilities are in product scope?", "authority_domain": "PRODUCT"},
+    "product.scope_non_goals": {"description": "What is included and explicitly excluded?", "authority_domain": "PRODUCT"},
+    "product.domain_external_constraints": {"description": "What domain or external constraints shape the product?", "authority_domain": "PRODUCT"},
+    "behavior.functional": {"description": "What observable behavior must each feature provide?", "authority_domain": "BEHAVIOR"},
+    "behavior.state_transitions": {"description": "What states and transitions are observable?", "authority_domain": "BEHAVIOR"},
+    "behavior.invariants_permissions": {"description": "What behavioral invariants and permissions must hold?", "authority_domain": "BEHAVIOR"},
+    "behavior.errors_edges_failures": {"description": "How must errors, edge cases, and failures behave?", "authority_domain": "BEHAVIOR"},
+    "behavior.critical_flows": {"description": "Which end-to-end flows are critical and how do they proceed?", "authority_domain": "BEHAVIOR"},
+    "behavior.acceptance": {"description": "What observable criteria establish acceptance?", "authority_domain": "BEHAVIOR"},
+    "behavior.safety_human_control": {"description": "What safety and human-control behavior is required?", "authority_domain": "BEHAVIOR"},
+    "architecture.components_ownership": {"description": "What systems or components exist and what do they own?", "authority_domain": "ARCHITECTURE"},
+    "architecture.runtime_topology": {"description": "How are runtime responsibilities arranged?", "authority_domain": "ARCHITECTURE"},
+    "architecture.communication_boundaries": {"description": "Where are communication boundaries and responsibilities?", "authority_domain": "ARCHITECTURE"},
+    "architecture.technology_choices": {"description": "What technology choices materially shape the design?", "authority_domain": "ARCHITECTURE"},
+    "architecture.build_buy": {"description": "Which capabilities are built, bought, hybrid, deferred, or unresolved?", "authority_domain": "ARCHITECTURE"},
+    "data.entities_ownership": {"description": "What material data entities exist and who owns them?", "authority_domain": "DATA"},
+    "data.lifecycle_persistence": {"description": "How does material data persist and move through its lifecycle?", "authority_domain": "DATA"},
+    "data.retention_deletion": {"description": "What retention and deletion behavior applies to data?", "authority_domain": "DATA"},
+    "data.consistency_transactions": {"description": "What consistency and transaction semantics are required?", "authority_domain": "DATA"},
+    "data.migration_backfill": {"description": "How are schema/data migrations and backfills handled?", "authority_domain": "DATA"},
+    "data.provenance_lineage_quality": {"description": "How are provenance, lineage, and data quality treated?", "authority_domain": "DATA"},
+    "interfaces.contracts": {"description": "What material interfaces and contracts exist?", "authority_domain": "INTERFACES"},
+    "interfaces.async_jobs_commands": {"description": "What asynchronous jobs, events, or commands cross boundaries?", "authority_domain": "INTERFACES"},
+    "interfaces.external_dependencies": {"description": "Which material external dependencies are relied upon?", "authority_domain": "INTERFACES"},
+    "interfaces.data_exchange_trust": {"description": "What data crosses interfaces and what trust assumptions apply?", "authority_domain": "INTERFACES"},
+    "interfaces.dependency_failure_exit": {"description": "How are dependency failure, fallback, and exit handled?", "authority_domain": "INTERFACES"},
+    "quality.authentication": {"description": "What authentication constraints apply?", "authority_domain": "QUALITY"},
+    "quality.authorization_trust_boundaries": {"description": "Where is authorization enforced and where are trust boundaries?", "authority_domain": "QUALITY"},
+    "quality.secrets_sensitive_operations": {"description": "How are secrets and sensitive operations constrained?", "authority_domain": "QUALITY"},
+    "quality.privacy_sensitive_data": {"description": "What privacy constraints apply to sensitive data?", "authority_domain": "QUALITY"},
+    "quality.timeouts_retries_idempotency_recovery": {"description": "What timeout, retry, idempotency, and recovery semantics are required?", "authority_domain": "QUALITY"},
+    "quality.concurrency_failure_boundaries": {"description": "What concurrency and failure-boundary constraints apply?", "authority_domain": "QUALITY"},
+    "quality.performance_load_resources": {"description": "What performance, load, and resource constraints matter?", "authority_domain": "QUALITY"},
+    "quality.observability": {"description": "What evidence must operations expose for observability?", "authority_domain": "QUALITY"},
+    "quality.testing_evidence": {"description": "What test and evidence strategy supports confidence?", "authority_domain": "QUALITY"},
+    "quality.cost_usage_bounds": {"description": "What cost or usage bounds constrain the system?", "authority_domain": "QUALITY"},
+    "delivery.environments_config": {"description": "What environments and configuration boundaries exist?", "authority_domain": "DELIVERY"},
+    "delivery.deployment_migration_rollback": {"description": "How are deployment, migration, and rollback performed?", "authority_domain": "DELIVERY"},
+    "delivery.backup_restore": {"description": "What backup and restore behavior is required?", "authority_domain": "DELIVERY"},
+    "delivery.compatibility_versioning_platforms": {"description": "What compatibility, versioning, and platform constraints apply?", "authority_domain": "DELIVERY"},
+    "delivery.operational_ownership": {"description": "Who owns operation and intervention responsibilities?", "authority_domain": "DELIVERY"},
+    "decisions.material_choices": {"description": "Which material choices have been decided and why?", "authority_domain": "DECISIONS"},
+    "unknowns.open_questions": {"description": "Which material questions remain unresolved and what do they affect?", "authority_domain": "DECISIONS"}
   }
 }

@@ -14,7 +14,7 @@ This repository currently contains an **unreleased V1 candidate pending independ
 
 The normative human-readable model is [`DOCUMENT_MODEL.md`](DOCUMENT_MODEL.md). The finite concern taxonomy and machine-readable catalog shape are under `model/`.
 
-An instantiated target repository has this documentation shape:
+A small target repository normally starts with eight root Markdown documents plus one catalog:
 
 ```text
 docs/
@@ -26,10 +26,11 @@ docs/
   QUALITY.md
   DELIVERY.md
   DECISIONS.md
-  catalog/
-    project.json
+  catalog/project.json
 ```
 
-The eight Markdown documents contain project explanation and specification. `docs/catalog/project.json` contains V1 inventory, stable identities, relationships, and the explicitly authorized compact state/outcome fields.
+Those eight names are authority domains, not a permanent eight-file ceiling. A large target may physically shard a domain one level under its lowercase directory while preserving the same authority ownership; `DOCUMENT_MODEL.md` defines the exact rule.
 
-`tools/validate.py` is a small Python-standard-library validator. Conceptually, run it with a target repository root; it reads `<target>/docs/catalog/project.json`, resolves logical Markdown references against the target's eight documents, applies the adjacent V1 model definitions, and prints either `DOCS_READY = TRUE` or `DOCS_READY = FALSE` with deterministic blocker categories. It does not mutate or auto-fix target documentation and does not judge prose quality.
+`docs/catalog/project.json` contains V1 inventory, stable identities, relationships, milestone roots, coverage state/support links, and the explicitly authorized compact state/outcome fields. Markdown contains project explanation and specification.
+
+`tools/validate.py` is a small Python-standard-library validator. Conceptually, run it with a target repository root; it reads `<target>/docs/catalog/project.json`, resolves logical Markdown references within the eight authority domains, applies the adjacent V1 model definitions, and prints either `DOCS_READY = TRUE` or `DOCS_READY = FALSE` with deterministic blocker categories. It does not mutate or auto-fix target documentation and does not judge prose quality or factual correctness.

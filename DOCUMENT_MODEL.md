@@ -4,11 +4,11 @@ This document is the normative human-readable specification for the V1 candidate
 
 ## 1. Purpose and system boundaries
 
-`agent-documents` defines **what must be describable** about a project and **when documentation is closed for a milestone**. It does not define how agents receive authority, how engineering quality levels are named, or how execution is hosted.
+`agent-documents` defines **what must be describable** about a project and **when documentation is closed for a milestone**. It does not define agent authority, engineering maturity levels, or execution infrastructure.
 
 Repository boundaries are strict:
 
-- `agent-documents` = describable project truth, identities/relationships, coverage, and documentation closure.
+- `agent-documents` = describable project truth, stable identities/relationships, finite coverage, and documentation closure.
 - `agent-standards` = engineering quality meaning and any quality/maturity semantics.
 - `agent-skills` = working method, handoff, authority, review, and Git protocol.
 - `agent-runtime` = optional bounded execution infrastructure.
@@ -16,45 +16,44 @@ Repository boundaries are strict:
 
 There is no runtime dependency among these repositories.
 
-V1 follows: **BROAD BY DEFAULT. DEEP BY EVIDENCE. CLOSED WHEN BLOCKERS REACH ZERO.** It also follows: **DESIGN TO CLOSURE, NOT TO EXHAUSTION.**
+V1 follows **BROAD BY DEFAULT. DEEP BY EVIDENCE. CLOSED WHEN BLOCKERS REACH ZERO.** It also follows **DESIGN TO CLOSURE, NOT TO EXHAUSTION.**
 
 ## 2. Eight-document ownership model
 
-A target repository uses exactly eight canonical Markdown documents plus one project catalog:
+V1 has exactly eight canonical **authority domains**. A domain owns meaning regardless of whether its content is held in its root file or legal physical shards.
 
-| Document | Owns |
-| --- | --- |
-| `docs/PRODUCT.md` | objective, actors/roles semantics, scope, non-goals, domain/external constraints |
-| `docs/BEHAVIOR.md` | feature behavior, state/transitions, invariants/observable permissions, failures/edges, critical flows, acceptance text, safety/human-control behavior |
-| `docs/ARCHITECTURE.md` | system responsibilities, runtime topology, communication boundaries, technology implications, capability boundaries, build/buy consequences |
-| `docs/DATA.md` | material data semantics/ownership, lifecycle/persistence, retention/deletion, consistency/transactions, migration/backfill, provenance/lineage/quality |
-| `docs/INTERFACES.md` | interface contracts, async/job/command/protocol details, external dependency assumptions, exchange/trust assumptions, dependency failure/fallback/exit treatment |
-| `docs/QUALITY.md` | authentication constraints, authorization enforcement/trust boundaries, secrets/sensitive operations, privacy constraints, reliability, concurrency/failure boundaries, performance, observability, evidence strategy, cost/resource constraints |
-| `docs/DELIVERY.md` | environments, configuration, deployment, migration/rollback, backup/restore, compatibility/versioning/platforms, operational ownership |
-| `docs/DECISIONS.md` | context, alternatives, rationale, consequences, and reversibility explanation for material `DEC-*` choices |
+| Authority domain | Root document | Owns |
+| --- | --- | --- |
+| `PRODUCT` | `docs/PRODUCT.md` | objective, actor/role semantics, scope, non-goals, domain/external constraints |
+| `BEHAVIOR` | `docs/BEHAVIOR.md` | feature behavior, state/transitions, invariants/observable permissions, failures/edges, critical flows, acceptance text, safety/human-control behavior |
+| `ARCHITECTURE` | `docs/ARCHITECTURE.md` | system responsibilities, topology, communication boundaries, technology implications, capability boundaries, build/buy consequences |
+| `DATA` | `docs/DATA.md` | material data semantics/ownership, lifecycle/persistence, retention/deletion, consistency/transactions, migration/backfill, provenance/lineage/quality |
+| `INTERFACES` | `docs/INTERFACES.md` | interface contracts, async/job/command/protocol details, external dependency assumptions, exchange/trust assumptions, dependency failure/fallback/exit treatment |
+| `QUALITY` | `docs/QUALITY.md` | authentication constraints, authorization enforcement/trust boundaries, secrets/sensitive operations, privacy constraints, reliability, concurrency/failure boundaries, performance, observability, evidence strategy, cost/resource constraints |
+| `DELIVERY` | `docs/DELIVERY.md` | environments, configuration, deployment, migration/rollback, backup/restore, compatibility/versioning/platforms, operational ownership |
+| `DECISIONS` | `docs/DECISIONS.md` | material decision explanation and unknown/open-question context |
 
-The catalog is `docs/catalog/project.json`. No per-entity or per-feature catalog files exist in V1.
+The eight root templates are the default small-project physical shape. Physical sharding does not create a ninth authority domain and does not change semantic ownership.
 
 ## 3. Field-level source-of-truth rules
 
-Authority is intentionally split by field, not duplicated by convenience.
-
-The project catalog is authoritative for inventory, IDs, names where modeled, typed relationships, milestone state, coverage applicability/depth state, capability status/disposition, decision kind/short outcome/reversibility, and unknown question/reason/status/resolution fields. Markdown is authoritative for normative project explanation and specification.
+The project catalog is authoritative for inventory, IDs, names where modeled, typed relationships, milestone state and roots, coverage applicability/depth/support links, capability status/disposition, decision kind/short outcome/reversibility, and unknown question/reason/status/resolution fields. Markdown is authoritative for normative project explanation and specification.
 
 Specific rules:
 
-- `FTR-*` inventory and relationships live in the catalog; feature behavior specification lives only under the feature's `spec_ref` in `BEHAVIOR.md`.
-- `ACC-*` identity lives in the catalog; criterion text lives only in `BEHAVIOR.md`.
-- `DEC-*` short selected `outcome` lives in the catalog; context, alternatives, rationale, consequences, and reversibility explanation live in `DECISIONS.md`.
-- `CAP-*` status/disposition and typed references live in the catalog; architectural boundary and build/buy consequences live in `ARCHITECTURE.md`.
-- `DAT-*` catalog records identify material data and owner; detailed lifecycle semantics live in `DATA.md`.
-- `IFC-*` and `EXT-*` catalogs are the only inventories for material interfaces and external dependencies; contract/dependency explanation lives in `INTERFACES.md`.
-- behavioral permission matrices belong in `BEHAVIOR.md`; `QUALITY.md` may describe enforcement/trust constraints but must reference rather than restate behavioral permissions.
-- retention/deletion values belong in `DATA.md`; `QUALITY.md` may describe privacy constraints but must reference rather than duplicate those values.
+- `FTR-*` inventory and relationships live in the catalog; feature behavior specification lives under its `spec_ref` in `BEHAVIOR`.
+- `ACC-*` identity lives in the catalog; criterion text lives only in `BEHAVIOR`.
+- `DEC-*` short selected `outcome` lives in the catalog; context, alternatives, rationale, consequences, and reversibility explanation live in `DECISIONS`.
+- `CAP-*` status/disposition and typed references live in the catalog; architectural boundary and build/buy consequences live in `ARCHITECTURE`.
+- `DAT-*` records identify material data and owner; detailed lifecycle semantics live in `DATA`.
+- `IFC-*` and `EXT-*` records are the only material interface/dependency inventories; explanation lives in `INTERFACES`.
+- behavioral permission matrices belong in `BEHAVIOR`; `QUALITY` references rather than restates them.
+- retention/deletion values belong in `DATA`; `QUALITY` references rather than duplicates them.
+- a shard is canonical only because an authorized catalog or coverage reference points into it; merely creating a file does not create authority.
 
 ## 4. The 45 coverage concerns
 
-`model/coverage.v1.json` is the canonical finite machine-readable taxonomy. The V1 key set is exactly the following; this list must not drift from that file.
+`model/coverage.v1.json` is the canonical finite machine-readable taxonomy. Each concern declares one `authority_domain`, not one fixed physical file. The V1 key set is exactly:
 
 **Product**
 
@@ -131,12 +130,14 @@ The taxonomy does not encode target maturity, required security levels, required
 
 Depth is concern-specific documentation depth, not project maturity.
 
-- `L0` — bounded acknowledgement: the concern is applicable and the project records the minimal explicit treatment needed to avoid ambiguity. Choosing `L0` as **required** depth requires a non-empty rationale explaining why bounded treatment is sufficient.
-- `L1` — design-sufficient treatment: the concern is described enough to support the current milestone's design, traceability, and implementation decisions. This is the normal broad-by-default depth.
-- `L2` — evidence-driven detail: the concern needs deeper treatment because current evidence, risk, irreversible cost, external contract, or other material pressure requires it. Choosing `L2` as **required** depth requires a non-empty rationale.
-- `NONE` — no actual treatment has been established. `NONE` is allowed only as an unfinished `actual_depth`, never as `required_depth`.
+- `L0` — bounded acknowledgement. Choosing `L0` as required depth needs a non-empty rationale explaining why bounded treatment is sufficient.
+- `L1` — design-sufficient treatment for the current milestone. This is the normal broad-by-default depth.
+- `L2` — evidence-driven detail required by current risk, irreversible cost, external contract, or another material pressure. Choosing `L2` as required depth needs a non-empty rationale.
+- `NONE` — no actual treatment has been established. `NONE` is only an unfinished `actual_depth`; it is never a `required_depth`.
 
-For applicable concerns, `actual_depth` must be at least `required_depth` for closure. N/A concerns have neither depth nor evidence fields and require a non-empty rationale.
+For an applicable concern, `actual_depth` must be at least `required_depth` for closure. N/A concerns have neither depth nor support fields and require a non-empty rationale.
+
+An applicable coverage record uses `support_refs`. `actual_depth: NONE` requires `support_refs: []`. `actual_depth: L0`, `L1`, or `L2` requires at least one support reference. Support links are structural evidence that treatment exists; they are not proof that the prose is correct or good.
 
 ## 6. Identity classes
 
@@ -157,113 +158,95 @@ IDs are globally unique across the catalog and use these classes:
 | Decision | `DEC-[0-9]{3,}` | material resolved decision |
 | Unknown | `UNK-[0-9]{3,}` | unresolved/resolved question or conflict record |
 
-Ordinary DTOs, transient local variables, trivial dependencies, and immaterial choices do not receive identities merely for completeness.
+Ordinary DTOs, transient variables, trivial dependencies, and immaterial choices do not receive identities merely for completeness.
 
 ## 7. Project catalog semantics
 
-The top-level V1 catalog requires exactly:
+The top-level V1 catalog requires exactly `model_version`, `milestone`, `coverage`, `actors`, `roles`, `features`, `acceptance`, `systems`, `data`, `interfaces`, `flows`, `dependencies`, `capabilities`, `decisions`, and `unknowns`. No unknown top-level properties are permitted. `model_version` is `1`; there is no `docs_ready` field.
 
-`model_version`, `milestone`, `coverage`, `actors`, `roles`, `features`, `acceptance`, `systems`, `data`, `interfaces`, `flows`, `dependencies`, `capabilities`, `decisions`, `unknowns`.
+`milestone` contains non-empty `id` and `name`, `scope_state` (`OPEN` or `FROZEN`), a `scope_ref` in `PRODUCT`, and `root_refs`.
 
-No unknown top-level properties are permitted. `model_version` is `1`. There is no `docs_ready` field; readiness is derived.
+A logical document reference has the form `docs/<file>.md#<TOKEN>` for a root document or `docs/<lowercase-domain>/<safe-file>.md#<TOKEN>` for a legal shard. `TOKEN` resolves against an ATX Markdown heading beginning with that exact token. This is a model reference and does not promise GitHub URL-slug behavior.
 
-`milestone` contains a non-empty `id`, non-empty `name`, `scope_state` (`OPEN` or `FROZEN`), and a `scope_ref` into `docs/PRODUCT.md`.
+Legal root paths are the eight root documents in section 2. Legal shard paths are exactly one physical level below `docs/`: `docs/product/<safe-file>.md`, `docs/behavior/<safe-file>.md`, `docs/architecture/<safe-file>.md`, `docs/data/<safe-file>.md`, `docs/interfaces/<safe-file>.md`, `docs/quality/<safe-file>.md`, `docs/delivery/<safe-file>.md`, or `docs/decisions/<safe-file>.md`. A safe filename is one non-empty Markdown filename using letters, digits, `.`, `_`, or `-`, beginning with a letter or digit. A subdirectory below an authority shard directory is invalid.
 
-A logical document reference has the form `docs/<file>.md#<TOKEN>`. `TOKEN` resolves against an ATX Markdown heading beginning with that exact token. This is a model reference and does not promise to reproduce GitHub URL-slug behavior.
-
-Entity records, enums, and conditional fields are exactly those described by `model/project.schema.v1.json`. The validator additionally enforces invariants that JSON Schema cannot express conveniently, including global uniqueness, cross-record references, subset relationships, heading resolution, orphan checks, and closure.
+Entity-specific document references must remain inside the entity's required authority domain even when sharded. The complete record shapes and enums are defined by `model/project.schema.v1.json`; the validator enforces cross-record invariants JSON Schema cannot conveniently express.
 
 ## 8. Feature traceability
 
-Every in-scope feature has at least one `ACT-*` actor, exactly one behavioral `spec_ref`, and at least one `ACC-*` acceptance criterion. Behavioral specification is never N/A for an in-scope feature.
+Every in-scope feature has at least one actor, a `BEHAVIOR` specification reference, and at least one acceptance criterion. Behavior specification is never N/A for an in-scope feature.
 
-Each feature has six applicability-aware relation states: roles, flows, data, interfaces, dependencies, and capabilities. A relation state is exactly one of:
+Applicability-aware relations (`roles`, `flows`, `data`, `interfaces`, `dependencies`, `capabilities`) contain exactly one of `{"refs": [...]}` with a non-empty array or `{"na": "reason"}` with a non-empty rationale. A feature's related flow may not use an interface, data entity, or external dependency omitted from the feature's corresponding relation mapping.
 
-- `{"refs": ["..."]}` with at least one reference; or
-- `{"na": "non-empty rationale"}`.
-
-When a feature references a flow, every interface, data entity, and external dependency used by that flow must be included in the corresponding feature relation. This makes feature-to-flow traceability deterministic rather than inferred from prose.
+All current `FTR-*` records are implicit graph roots for the milestone.
 
 ## 9. Unknown semantics
 
-`UNK-*` records represent `QUESTION`, `DECISION_REQUIRED`, `ASSUMPTION`, `AUTHORITY_CONFLICT`, or `CONTRADICTION`. They identify the question, affected record references, affected coverage concerns, whether the unknown blocks closure, why it matters, its resolution phase, and its status.
+An unknown is `QUESTION`, `DECISION_REQUIRED`, `ASSUMPTION`, `AUTHORITY_CONFLICT`, or `CONTRADICTION`; its resolution phase is `DESIGN`, `IMPLEMENTATION`, `VERIFICATION`, or `POST_MILESTONE`; its status is `OPEN` or `RESOLVED`.
 
-Resolution phases are `DESIGN`, `IMPLEMENTATION`, `VERIFICATION`, or `POST_MILESTONE`. Status is `OPEN` or `RESOLVED`.
+Resolved records require `resolved_by_ref`; resolved `DECISION_REQUIRED` records must resolve to `DEC-*`. Open `AUTHORITY_CONFLICT` and `CONTRADICTION` records are blocking. Every open blocking unknown has `resolution_phase: DESIGN`.
 
-A resolved unknown requires `resolved_by_ref`. A resolved `DECISION_REQUIRED` unknown must resolve to a `DEC-*` record. An open `AUTHORITY_CONFLICT` or `CONTRADICTION` must be blocking. Any open blocking unknown must have `resolution_phase: DESIGN`.
-
-Open non-blocking unknowns may remain after documentation closure only because the catalog explicitly states they do not block the current milestone; they remain visible and traceable rather than being silently discarded.
+`UNK-*` records participate in reference and closure semantics but are not material graph roots and are not scored as orphan material entities. They therefore cannot appear in `milestone.root_refs`.
 
 ## 10. Build/buy semantics
 
-`CAP-*` records model material capability disposition.
-
-An `OPEN` capability has `disposition: null` and must identify an open blocking `UNK-*`. A `RESOLVED` capability has one disposition: `BUILD`, `BUY`, `HYBRID`, or `DEFER`.
+A capability is either open or resolved. Open capabilities have `disposition: null` and an open blocking unknown. Resolved dispositions are `BUILD`, `BUY`, `HYBRID`, or `DEFER`.
 
 - `BUILD` requires at least one `SYS-*` reference.
 - `BUY` requires at least one `EXT-*` reference.
-- `HYBRID` requires at least one `SYS-*` and at least one `EXT-*` reference.
-- `DEFER` requires a `defer_ref` and must not be referenced by an in-scope feature.
+- `HYBRID` requires at least one system and at least one external dependency.
+- `DEFER` requires `defer_ref` and may not be referenced by an in-scope feature.
 
-Every non-DEFER resolved capability requires a `decision_ref`, an architectural `boundary_ref`, and an `exit` state. `exit` is exactly either a document `ref` or an explicit N/A rationale. The catalog owns disposition; `ARCHITECTURE.md` explains boundary and consequences rather than redefining that disposition.
+Every resolved non-DEFER capability requires an architectural boundary and a `DEC-*` reference. Exit treatment is either an `ARCHITECTURE` reference or an explicit non-empty N/A rationale. A DEFER capability is not an active orphan-scored entity and cannot be a milestone root.
 
 ## 11. Closed-world milestone rule
 
-`scope_state: OPEN` means scope is still changing and `DOCS_READY` is false.
+A milestone is closed-world only when `scope_state` is `FROZEN`. `scope_ref` identifies the authoritative scope section in `PRODUCT`.
 
-`scope_state: FROZEN` means the milestone's in-scope world is closed for the purpose of this predicate: the catalog inventory, scope reference, concern applicability, and required depth are the set against which closure is evaluated. Frozen scope does not claim the product can never change; it means changes require an explicit reopening event rather than silent expansion.
+`milestone.root_refs` explicitly roots non-feature material entities that belong directly to the current milestone without requiring an artificial feature relation. Each root must resolve to an existing `ACT`, `ROL`, `ACC`, `SYS`, `DAT`, `IFC`, `FLW`, `EXT`, `CAP`, or `DEC` record. `FTR` is forbidden because features are already implicit roots; `UNK` is forbidden because unknowns are closure records, not material graph roots. Root references are unique, and a DEFER capability cannot be a root.
+
+Reachability starts from every current `FTR-*` plus `milestone.root_refs`, then follows deterministic outgoing catalog ID references. An active material entity is orphaned when it is not reachable from those roots. A disconnected cluster remains orphaned merely referencing other members of the same disconnected cluster.
 
 ## 12. Coverage, resolution, and detail gaps
 
-A **coverage gap** exists when an applicable concern has `actual_depth: NONE`.
+A **coverage gap** exists when an applicable concern has `actual_depth: NONE`, actual depth below required depth, missing required structural support, or a support section that has no real content.
 
-A **detail gap** exists when an applicable concern has non-`NONE` actual treatment but `actual_depth` is below `required_depth`. The validator reports both coverage and detail failures under `COVERAGE_GAP` because both violate the same deterministic depth invariant.
+A **resolution gap** exists when a decision-required design issue, contradiction, capability choice, or other blocking unknown remains unresolved under its V1 rule.
 
-A **resolution gap** exists when the model says a material design issue required for the milestone is unresolved, including blocking unknowns, unresolved contradictions/authority conflicts, or build/buy state that cannot yet close.
+A **detail gap** exists when current evidence requires more depth than is actually documented; operationally this is represented by `actual_depth < required_depth`, not by an unbounded request for more prose.
 
-Reference, traceability, orphan, and structural N/A contradictions are separate deterministic blockers; they are not natural-language contradiction detection.
+A support reference is valid only when it resolves in the concern's canonical authority domain. The referenced section extends from the matching heading until the next heading of the same or higher level. To establish structural support, that section must contain at least one line that is not a heading, whitespace, or HTML-comment content. Heading-only, whitespace-only, and HTML-comment-only sections do not establish support.
 
 ## 13. Deterministic `DOCS_READY` predicate
 
-`DOCS_READY = TRUE` if and only if all of the following hold:
+`DOCS_READY` is derived; it is never stored in the catalog. It is `TRUE` exactly when all deterministic V1 checks succeed, including:
 
-1. the V1 model is syntactically and structurally valid and uses the exact 45-key taxonomy;
+1. the model version and catalog/taxonomy structures are supported and exact;
 2. all IDs and typed references are valid and globally unique;
-3. required logical Markdown references resolve to the expected canonical documents and heading tokens;
-4. milestone scope is `FROZEN`;
-5. every applicable concern has actual depth other than `NONE` and at least its required depth;
-6. every N/A and every required L0/L2 choice has its required non-empty rationale;
-7. feature traceability and feature-flow subset invariants hold;
-8. capability build/buy rules hold and no deferred capability is referenced by a current feature;
-9. there is no unresolved blocking unknown, authority conflict, or contradiction;
-10. there are no orphan active entities or obvious inventory-versus-N/A contradictions; and
-11. no other deterministic validator blocker remains.
+3. every logical Markdown reference uses a legal root/shard path, stays within its authority domain, and resolves its heading token;
+4. every applicable concern has structurally valid `support_refs`, actual depth is not `NONE`, and actual depth meets required depth;
+5. every resolved support reference points to a section containing structural support content;
+6. feature traceability, relation-state, and flow-subset invariants hold;
+7. build/buy and unknown-resolution invariants hold and no blocking unknown/conflict/contradiction remains open;
+8. every active orphan-scored entity is reachable from a feature root or explicit milestone root;
+9. structural N/A contradictions are absent; and
+10. milestone scope is `FROZEN`.
 
-No field stores this answer. Readiness is recomputed from project truth each time.
+Malformed/unsupported model or usage errors exit `2`. A valid model that has closure blockers exits `1`. A valid model with `DOCS_READY = TRUE` exits `0`.
 
 ## 14. Stop rule
 
-Once a milestone is `FROZEN` and evaluates to `DOCS_READY = TRUE`, design-document expansion for that milestone must stop. The goal is closure, not exhaustive elaboration.
-
-Expansion resumes only after a recognized reopening trigger: milestone scope is explicitly reopened; new material evidence invalidates an existing model claim; a new contradiction or authority conflict is recorded; or governing project authority explicitly changes the milestone's required project truth. A desire for more prose by itself is not a reopening trigger.
+Once a milestone is `FROZEN` and reaches `DOCS_READY = TRUE`, design expansion for that milestone **must stop**. Additional design work requires a recognized reopening trigger such as an approved scope change, newly discovered contradiction/unknown, invalidated evidence, changed external constraint, or another governing-authority event. Closure is not an instruction to exhaust every imaginable detail.
 
 ## 15. Validator boundary
 
-`tools/validate.py` uses only the Python standard library, performs no network access, and writes nothing to the target repository. It reads `docs/catalog/project.json`, the target Markdown documents needed to resolve logical references, and its own adjacent V1 model definition.
+`tools/validate.py` uses only the Python standard library, reads the target repository, uses its own adjacent V1 model definitions, and performs no network access or target mutation. It checks deterministic structure, references, support presence/location, graph reachability, and closure invariants.
 
-The validator checks deterministic structure, references, traceability, build/buy, unknown, orphan, coverage/depth, and closed-world invariants. It does not judge whether prose is elegant, comprehensive, secure, reliable, mature, or factually wise. Those require human/design review and, where applicable, `agent-standards`.
-
-Exit status is:
-
-- `0` — model valid and `DOCS_READY = TRUE`;
-- `1` — model valid but `DOCS_READY = FALSE`;
-- `2` — malformed/unsupported model or validator usage error.
-
-The validator never auto-fixes documentation.
+It does **not** judge whether prose is persuasive, complete in a literary sense, factually correct, secure, reliable, performant, mature, or otherwise high quality. In particular, the non-empty support-section check proves only that structural documentation content exists at the referenced location.
 
 ## 16. Target-repository structure
 
-The instantiated target structure is:
+The default target shape remains:
 
 ```text
 docs/
@@ -279,18 +262,16 @@ docs/
     project.json
 ```
 
-Product truth stays in that target repository. `agent-documents` supplies reusable templates/model definitions, not project-specific truth.
+When size requires physical scaling, any authority domain may additionally use its one-level lowercase shard directory, for example `docs/data/accounts.md` or `docs/behavior/onboarding.md`. Sharding is optional, creates no additional authority domain, and creates no extra catalog. One-file-per-concern and one-file-per-feature organization is neither required nor implied.
 
 ## 17. Non-goals
 
-V1 is not an orchestration platform, documentation CMS, API server, MCP server, database, release workflow, generated report system, maturity framework, engineering standards library, or agent authority protocol. It does not define project-specific feature content or split features into separate documentation files.
-
-It does not perform natural-language contradiction detection. It does not infer undocumented requirements, target quality levels, security grades, reliability grades, or maturity levels.
+V1 is not an orchestration platform, documentation CMS, generator framework, database, API server, MCP server, workflow engine, maturity model, engineering standard, or agent-authority protocol. It does not define SEC/REL/etc. levels, project-specific truth, product examples tied to a specific application, automatic prose scoring, or natural-language contradiction detection.
 
 ## 18. Versioning and evolution rules
 
-`model_version: 1` binds a catalog to these V1 semantics. `coverage.v1.json` is the finite V1 taxonomy and `project.schema.v1.json` is the V1 structural schema.
+`model_version: 1` identifies this catalog/model contract. The 45 concern keys and eight authority domains are closed for V1. Physical shards are organization within an existing authority, not model extension.
 
-Backward-incompatible changes to fields, identity classes, relation semantics, depth meaning, build/buy rules, unknown rules, taxonomy membership, or closure semantics require a new model/taxonomy version rather than silent reinterpretation. Compatible wording clarifications may be made only when they preserve existing machine semantics and authority boundaries.
+Changes that add/remove/rename a concern, add a ninth authority domain, change identity classes, alter field authority, or otherwise break the V1 machine contract require explicit versioned evolution rather than silent reinterpretation. Validator/model/schema/template changes within a version must remain mutually consistent and deterministic.
 
-A future version must define an explicit migration/evolution path before it can replace V1. This V1 repository state is only an unreleased candidate pending independent design-review, gap-analysis, and adversarial audit; it must not be described as canonical solely because its deterministic tests pass.
+This repository remains an unreleased candidate pending independent review; satisfying this model does not itself make V1 canonical or authorize release/promotion.

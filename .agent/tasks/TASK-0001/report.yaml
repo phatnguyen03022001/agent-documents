@@ -1,0 +1,179 @@
+protocol_version: 3
+
+task_id: TASK-0001
+task_revision: 2
+report_revision: 1
+state: REPORTED
+
+task_source:
+  path: .agent/tasks/TASK-0001/task.yaml
+
+execution:
+  repository: phatnguyen03022001/agent-documents
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: "600dff014bedc312f1a301bd7cd84cbf31e68772"
+  pre_execution_head: "600dff014bedc312f1a301bd7cd84cbf31e68772"
+  final_execution_head: "8c4c98cd91052c54f83e6a17bdd4147bd8da9783"
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: "85bf97ad5aad4a89157e83e37655b805fc8ae280"
+  observed_revision: "85bf97ad5aad4a89157e83e37655b805fc8ae280"
+
+execution_skills_used:
+  required:
+    - executor
+  recommended: []
+  external: []
+
+pre_execution_checks:
+  protocol_version_supported: true
+  handoff_type_confirmed: true
+  task_at_base_confirmed: true
+  task_identity_confirmed: true
+  architect_binding_confirmed: true
+  repository_confirmed: true
+  branch_confirmed: true
+  base_head_confirmed: true
+  skill_revision_confirmed: true
+  required_execution_skills_available: true
+  structure_authority_confirmed: true
+  working_tree_clean: true
+
+changed_files:
+  - path: README.md
+    summary: "Clarify eight authority domains and optional one-level physical sharding."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: DOCUMENT_MODEL.md
+    summary: "Normatively define support_refs, authority-domain shards, milestone roots, and rooted reachability."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: model/coverage.v1.json
+    summary: "Preserve the 45 concern keys while replacing physical home paths with authority_domain metadata."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: model/project.schema.v1.json
+    summary: "Model support_refs, legal root/shard document paths, and milestone.root_refs under Draft 2020-12."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: templates/docs/catalog/project.json
+    summary: "Use root_refs and unfinished support_refs in the V1 starting manifest."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: tools/validate.py
+    summary: "Validate structural support, authority-domain sharding, and root-based reachability using only the Python standard library."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: tests/test_validate.py
+    summary: "Cover revision-1 invariants plus H1 support, H2 sharding, and H3 rooted reachability behavior."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: .agent/tasks/TASK-0001/report.yaml
+    summary: "Record Executor-owned revision-2 implementation evidence."
+    new_file: true
+    in_scope: true
+    structure_authorized: true
+
+commits_created:
+  - sha: "8c4c98cd91052c54f83e6a17bdd4147bd8da9783"
+    message: "fix: close TASK-0001 revision 2 model gaps"
+
+pushed: true
+promoted_to_main: false
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: PASS
+    evidence: "Exact set comparison against candidate f79d220ff700f5fa59cdb59365fe2a2e13634c76: 45/45 concern keys unchanged; every concern has exactly description + authority_domain; exactly eight authority domains observed."
+  - criterion_id: AC-2
+    status: PASS
+    evidence: "Validator and schema require support_refs=[] for NONE and >=1 support_ref for L0/L1/L2; focused missing-support and wrong-authority tests pass."
+  - criterion_id: AC-3
+    status: PASS
+    evidence: "Focused tests prove heading-only, whitespace-only, and HTML-comment-only sections block closure while a real content line establishes structural support."
+  - criterion_id: AC-4
+    status: PASS
+    evidence: "DOCUMENT_MODEL defines eight authority domains; root references and legal one-level shard references both pass focused tests."
+  - criterion_id: AC-5
+    status: PASS
+    evidence: "Focused wrong-domain and excessive-nesting tests fail deterministically with REFERENCE_ERROR."
+  - criterion_id: AC-6
+    status: PASS
+    evidence: "Schema, catalog template, normative model, and validator agree on milestone.root_refs and allowed non-feature material identity classes."
+  - criterion_id: AC-7
+    status: PASS
+    evidence: "Rooted traversal tests prove orphan without root, valid explicit root, and disconnected internally referenced cluster remains ORPHAN."
+  - criterion_id: AC-8
+    status: PASS
+    evidence: "Focused tests cover unknown root ID, forbidden FTR/UNK classes, duplicate roots, and DEFER capability root rejection."
+  - criterion_id: AC-9
+    status: PASS
+    evidence: "AST import inspection found only collections,json,pathlib,re,sys; py_compile and deterministic tests pass; validator only checks structural content presence, not prose quality or factual correctness."
+  - criterion_id: AC-10
+    status: PASS
+    evidence: "python -m unittest discover -s tests: 59 tests passed; minimal closed target evaluates DOCS_READY = TRUE and required negative cases remain covered."
+  - criterion_id: AC-11
+    status: PASS
+    evidence: "Remote base-to-implementation comparison shows exactly seven authorized existing files modified and no candidate/model file added or removed; report.yaml is the only authorized new file; main remained bafad634d21550ccd0af2f67bcfbbd2435aef193."
+  - criterion_id: AC-12
+    status: PASS
+    evidence: "README and DOCUMENT_MODEL explicitly retain unreleased-candidate/pending-audit status; no release, tag, or promotion operation was performed."
+
+executor_checks:
+  - check_id: CHECK-1
+    result: PASS
+    evidence: "python -m unittest discover -s tests => Ran 59 tests; OK."
+  - check_id: CHECK-2
+    result: PASS
+    evidence: "python -m py_compile tools/validate.py tests/test_validate.py completed successfully."
+  - check_id: CHECK-3
+    result: PASS
+    evidence: "Every candidate JSON file parsed with Python stdlib json."
+  - check_id: CHECK-4
+    result: PASS
+    evidence: "Concern-key set equals the f79d220ff700f5fa59cdb59365fe2a2e13634c76 candidate set exactly; count=45."
+  - check_id: CHECK-5
+    result: PASS
+    evidence: "Focused support-ref suite passed missing support, wrong authority, empty/comment-only support, and valid non-empty support cases."
+  - check_id: CHECK-6
+    result: PASS
+    evidence: "Focused shard suite passed valid root, valid one-level support/entity shard, wrong-domain, and excessive-nesting cases."
+  - check_id: CHECK-7
+    result: PASS
+    evidence: "Focused root/reachability suite passed orphan-without-root, explicit-root, unknown/forbidden/duplicate/DEFER roots, and disconnected-cluster cases."
+  - check_id: CHECK-8
+    result: PASS
+    evidence: |
+      Exact candidate file set remains the authorized 15 files; no package/dependency manifest, YAML catalog, or generated DOCS_READY artifact exists.
+      main was not mutated; all dev ref updates used force=false.
+      No release created.
+      No tag created.
+      No promotion performed.
+      Candidate remains pending independent audit.
+
+authoritative_verification:
+  required: false
+  performed: false
+  result: NOT_APPLICABLE
+  evidence: "Task requires Architect exact-SHA review and independent blind audits after Executor reporting; Executor does not author authoritative PASS."
+
+discovered_gaps: []
+structural_observations: []
+deviations_from_task: []
+blockers: []
+
+working_tree_after:
+  clean: true
+  summary: "All authorized target-repository mutations are committed on dev; no uncommitted target checkout state is relied upon."
+
+result: NEEDS_REVIEW

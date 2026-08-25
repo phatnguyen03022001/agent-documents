@@ -1,13 +1,13 @@
 protocol_version: 3
 
 task_id: TASK-0001
-task_revision: 3
+task_revision: 4
 state: EXECUTION_READY
 
 origin:
   type: architect_revision
   task_id: TASK-0001
-  gap_id: "EXTREME-AUDIT-FALSE-GREEN"
+  gap_id: "ARCH-REVIEW-FENCE-COMMENT-PRECEDENCE"
 
 architect_binding:
   target_repository: phatnguyen03022001/agent-documents
@@ -37,8 +37,8 @@ execution_skills:
   required:
     - executor
     - verification
-  recommended:
     - debugging
+  recommended:
     - simplicity
     - adversarial-audit
 
@@ -48,8 +48,8 @@ external_skills:
   execution_recommended: []
 
 authority_sources:
-  - source: "Three independent extreme audits of revision-2 candidate dd998549ed54ea1a29efd3c41da1f89aac6eabc9, reconciled by the governing Architect against exact validator/schema/tests."
-    role: "bounded revision authority"
+  - source: "Architect exact-SHA review of TASK-0001 revision 3 report commit 25d2a1842283692636e367ce5833978cb5f29466 and implementation 65ac82083b20a55b3f1b78954376f6f0038aca58."
+    role: "bounded regression authority"
     precedence: 1
   - source: "phatnguyen03022001/agent-skills@1a9424fbd778472f79c152c0b42dd2bd495fbd8e"
     role: "governance"
@@ -57,25 +57,21 @@ authority_sources:
 
 structure_authority:
   status: RESOLVED
-  source: "Existing V1 candidate plus reconciled adversarial findings."
-  rationale: "Preserve the existing architecture; correct only deterministic false-green closure paths."
+  source: "TASK-0001 revision 3 architecture and exact Architect reproduction."
+  rationale: "Preserve the revision-3 model and fix only the parser precedence regression introduced while hardening fenced-code and HTML-comment heading resolution."
 
 objective: >-
-  Harden the unreleased V1 candidate against machine-detectable false-green DOCS_READY outcomes without redesigning the eight-domain, 45-concern, one-level-sharding, rooted-reachability, depth, or stop-rule model. Produce updated Executor evidence for Architect review and renewed independent audit.
+  Correct one deterministic revision-3 Markdown scanning regression without redesign. A literal HTML-comment opener inside a fenced code block must remain fenced content and must not erase later canonical headings after the fence closes. Preserve all revision-3 false-green protections, exact 45 concerns, eight authority domains, one-level sharding, rooted reachability, depth semantics, and validator boundary. Update Executor evidence and return NEEDS_REVIEW.
 
 scope:
   required_changes:
-    - "Use causal TDD: new regression tests must fail on revision-2 behavior before production validator changes."
-    - "Logical Markdown references must ignore ATX-looking headings inside fenced code blocks and HTML comments. Do not add an external Markdown parser."
-    - "Each logical <file, token> reference must resolve to exactly one canonical ATX heading; duplicate matches fail deterministically."
-    - "milestone.scope_ref and all existing canonical entity/specification/explanation refs (doc_ref, spec_ref, boundary_ref, defer_ref, exit.ref) must resolve to sections containing at least one non-heading, non-whitespace, non-HTML-comment content line. Existing support_refs retain the same rule."
-    - "OPEN + DECISION_REQUIRED + resolution_phase DESIGN requires blocking=true."
-    - "product.objective is always APPLICABLE in V1 and cannot be N/A. Do not require any arbitrary minimum FTR/entity count."
-    - "Keep DOCUMENT_MODEL.md, schema, validator, and tests consistent with these invariants."
-    - "Update the existing .agent/tasks/TASK-0001/report.yaml as revision-3 Executor evidence; create no second report artifact."
+    - "Use causal TDD: reproduce on exact revision-3 behavior that a fenced literal '<!--' can suppress a real canonical heading after the fence."
+    - "Make fenced-code context take precedence over HTML-comment interpretation: inside an active backtick or tilde fence, '<!--' and '-->' are ordinary fenced content."
+    - "A real canonical heading after a properly closed fence must resolve even when fenced content contains an unclosed literal '<!--'."
+    - "Preserve revision-3 behavior: headings inside fences remain ignored; headings inside actual HTML comments outside fences remain ignored; duplicate canonical heading tokens fail; canonical refs require structural content; design DECISION_REQUIRED blocking and product.objective applicability remain unchanged."
+    - "Do not implement a full CommonMark parser or broaden into inline-code/comment parsing beyond what is required to resolve this concrete fence/comment precedence defect."
+    - "Update the existing .agent/tasks/TASK-0001/report.yaml as revision-4 Executor evidence; create no second report artifact."
   allowed_existing_files_or_components:
-    - DOCUMENT_MODEL.md
-    - model/project.schema.v1.json
     - tools/validate.py
     - tests/test_validate.py
     - .agent/tasks/TASK-0001/report.yaml
@@ -83,28 +79,26 @@ scope:
   expected_files_are_restrictive: true
 
 invariants:
-  - "model/coverage.v1.json and the exact 45 concern taxonomy remain unchanged."
-  - "Exactly eight authority domains remain unchanged."
-  - "One-level sharding, graph-root semantics, L0/L1/L2 semantics, build/buy semantics, and STOP rule remain unchanged except product.objective cannot be N/A."
-  - "Do not add reason-code vocabularies, root-count heuristics, semantic scoring, NLP/LLM validation, new concerns, new domains, or arbitrary minimum feature/entity counts."
-  - "Structural checks prove presence only, never correctness or runtime evidence."
+  - "DOCUMENT_MODEL.md, model/coverage.v1.json, model/project.schema.v1.json, templates, and README remain unchanged."
+  - "Exactly 45 concerns and eight authority domains remain unchanged."
+  - "All revision-3 normative semantics remain unchanged; this task fixes implementation behavior only."
   - "Validator remains deterministic, read-only, network-free, and Python-standard-library-only."
-  - "No new candidate/model/template/workflow/dependency file or directory."
+  - "No external Markdown parser or dependency."
+  - "No new file or directory."
   - "Executor must not modify task.yaml."
   - "main is read-only; no promotion, tag, release, or repository metadata mutation."
 
 forbidden_changes:
-  - "Any redesign or unrelated cleanup."
-  - "Any change to model/coverage.v1.json."
-  - "Any new file except no new files are authorized; report.yaml already exists and may only be updated as Executor evidence."
-  - "Any external dependency or workflow."
+  - "Any architecture, schema, taxonomy, documentation-model, template, workflow, dependency, or unrelated cleanup change."
+  - "Any attempt to become a complete Markdown/CommonMark parser."
+  - "Any new file."
   - "Any main mutation, promotion, tag, release, or metadata mutation."
 
 gap_policy:
   local_auto_fix: true
   scope_expansion: forbidden
   architecture_change: forbidden
-  spec_change: revised_contract_required
+  spec_change: forbidden
   dependency_change: revised_contract_required
   public_contract_change: revised_contract_required
   blocking_gap_behavior: BLOCKED
@@ -140,60 +134,48 @@ capability_requirements:
 
 acceptance_criteria:
   - id: AC-1
-    requirement: "Revision-2 taxonomy/domains/sharding/root/depth foundation remains unchanged."
-    evidence_required: "Exact diff inventory and unchanged 45-key/domain mapping."
+    requirement: "The exact revision-3 fence/comment precedence defect is proven by causal RED before production mutation."
+    evidence_required: "Focused test showing a literal unclosed '<!--' inside a properly closed fence suppresses a later real canonical heading on revision-3 behavior."
   - id: AC-2
-    requirement: "Commented/fenced fake headings cannot satisfy logical references."
-    evidence_required: "Focused RED-before-fix and GREEN-after-fix tests."
+    requirement: "After the fix, real canonical headings after backtick and tilde fenced blocks remain resolvable even when fenced content contains literal HTML-comment delimiters."
+    evidence_required: "Focused positive tests for backtick and tilde fences."
   - id: AC-3
-    requirement: "Duplicate matching heading tokens fail deterministically."
-    evidence_required: "Focused duplicate-token regression plus valid reference controls."
+    requirement: "Revision-3 protections remain intact: fake headings inside fences/comments are ignored and duplicate canonical heading tokens fail."
+    evidence_required: "Focused negative/control tests."
   - id: AC-4
-    requirement: "Canonical scope/entity/spec/explanation refs require structural section content."
-    evidence_required: "Focused empty/comment-only negative cases and minimal-content positive cases."
+    requirement: "All prior required behavior remains green and no normative/schema/taxonomy/template file changes."
+    evidence_required: "Full unittest, py_compile, and exact changed-file inventory."
   - id: AC-5
-    requirement: "OPEN DESIGN DECISION_REQUIRED cannot be non-blocking."
-    evidence_required: "Focused regression test."
+    requirement: "Implementation changes only tools/validate.py and tests/test_validate.py; report.yaml is the sole post-implementation evidence change."
+    evidence_required: "Exact base-to-final and final-to-report compare."
   - id: AC-6
-    requirement: "product.objective cannot be N/A and scope_ref cannot be empty, without arbitrary entity-count requirements."
-    evidence_required: "Schema/validator/docs consistency and focused tests."
-  - id: AC-7
-    requirement: "All prior required behavior remains green except intentional tightening."
-    evidence_required: "Full unittest and py_compile PASS."
-  - id: AC-8
-    requirement: "Only DOCUMENT_MODEL.md, model/project.schema.v1.json, tools/validate.py, tests/test_validate.py change in implementation; report.yaml is the sole post-implementation evidence change."
-    evidence_required: "Exact base-to-final and final-to-report inventories."
-  - id: AC-9
-    requirement: "main remains unchanged, branches remain exactly {dev, main}, and candidate remains unreleased pending review/audit."
-    evidence_required: "Final remote refs plus report result NEEDS_REVIEW."
+    requirement: "main remains bafad634d21550ccd0af2f67bcfbbd2435aef193, branches remain exactly {dev, main}, and candidate remains unreleased pending renewed review/audits."
+    evidence_required: "Final remote refs and report result NEEDS_REVIEW."
 
 verification:
   executor_checks:
     - id: CHECK-1
-      command_or_check: "Preflight exact handoff/task/repo/branch/base, main bafad634d21550ccd0af2f67bcfbbd2435aef193, branches {dev, main}, pinned skills, authority, and execution capabilities."
+      command_or_check: "Preflight exact task/handoff/repository/branch/base, pinned skills, main bafad634d21550ccd0af2f67bcfbbd2435aef193, branches exactly {dev, main}, and execution capabilities."
       required: true
     - id: CHECK-2
-      command_or_check: "Causal RED tests for fenced/comment headings, duplicate tokens, empty canonical refs, non-blocking OPEN DESIGN DECISION_REQUIRED, and product.objective N/A before validator mutation."
+      command_or_check: "Causal RED on exact revision-3 parser for fenced literal '<!--' followed by a real canonical heading after the closed fence."
       required: true
     - id: CHECK-3
-      command_or_check: "python3 -m unittest discover -s tests"
+      command_or_check: "Run focused backtick/tilde fence precedence tests plus existing fenced/comment/duplicate-heading controls."
       required: true
     - id: CHECK-4
-      command_or_check: "python3 -m py_compile tools/validate.py tests/test_validate.py"
+      command_or_check: "python3 -m unittest discover -s tests"
       required: true
     - id: CHECK-5
-      command_or_check: "Parse every repository JSON file with Python stdlib json."
+      command_or_check: "python3 -m py_compile tools/validate.py tests/test_validate.py"
       required: true
     - id: CHECK-6
-      command_or_check: "Assert exact 45 concern keys and authority-domain mapping unchanged from 8c4c98cd91052c54f83e6a17bdd4147bd8da9783."
+      command_or_check: "Verify DOCUMENT_MODEL.md, model/coverage.v1.json, model/project.schema.v1.json, templates, README, dependencies, and workflows are unchanged from authorized base."
       required: true
     - id: CHECK-7
-      command_or_check: "git diff --check plus exact base-to-final implementation inventory; no unapproved files."
+      command_or_check: "git diff --check and exact base-to-final inventory; implementation changes only tools/validate.py and tests/test_validate.py."
       required: true
     - id: CHECK-8
-      command_or_check: "Bounded adversarial self-check of the exact revision-2 false-green shapes against final implementation."
-      required: true
-    - id: CHECK-9
       command_or_check: "After report update, prove report commit is a single-parent direct child of final_execution_head changing only report.yaml; refresh refs and prove main unchanged and branches exactly {dev, main}."
       required: true
   authoritative_verification:

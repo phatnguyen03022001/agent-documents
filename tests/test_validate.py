@@ -318,6 +318,22 @@ class ValidatorTests(unittest.TestCase):
         def docs_mutate(d): d["PRODUCT.md"] = d["PRODUCT.md"].replace("## ACT-001 Customer\nActor.\n", "```md\n## ACT-001 Customer\n```\n")
         self.assert_case(1, "REFERENCE_ERROR", docs_mutate=docs_mutate, contains="ACT-001.doc_ref")
 
+    def test_real_heading_after_backtick_fence_with_literal_comment_is_resolvable(self):
+        def docs_mutate(d):
+            d["PRODUCT.md"] = d["PRODUCT.md"].replace(
+                "## ACT-001 Customer\nActor.\n",
+                "```md\n<!-- literal fenced text\n```\n## ACT-001 Customer\nActor.\n",
+            )
+        self.assert_case(0, docs_mutate=docs_mutate)
+
+    def test_real_heading_after_tilde_fence_with_literal_comment_is_resolvable(self):
+        def docs_mutate(d):
+            d["PRODUCT.md"] = d["PRODUCT.md"].replace(
+                "## ACT-001 Customer\nActor.\n",
+                "~~~md\n<!-- literal fenced text\n~~~\n## ACT-001 Customer\nActor.\n",
+            )
+        self.assert_case(0, docs_mutate=docs_mutate)
+
     def test_html_commented_heading_does_not_satisfy_reference(self):
         def docs_mutate(d): d["PRODUCT.md"] = d["PRODUCT.md"].replace("## ACT-001 Customer\nActor.\n", "<!--\n## ACT-001 Customer\n-->\n")
         self.assert_case(1, "REFERENCE_ERROR", docs_mutate=docs_mutate, contains="ACT-001.doc_ref")

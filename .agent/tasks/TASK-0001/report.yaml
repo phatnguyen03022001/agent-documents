@@ -1,8 +1,8 @@
 protocol_version: 3
 
 task_id: TASK-0001
-task_revision: 3
-report_revision: 2
+task_revision: 4
+report_revision: 3
 state: REPORTED
 
 task_source:
@@ -13,9 +13,9 @@ execution:
   branch:
     name: dev
     role: integration
-  authorized_base_head: "e5c8759f15a17012443cb41eb5e2b1e405bcfa14"
-  pre_execution_head: "e5c8759f15a17012443cb41eb5e2b1e405bcfa14"
-  final_execution_head: "65ac82083b20a55b3f1b78954376f6f0038aca58"
+  authorized_base_head: "fa9dadb9273d4285bb2adf1b57a5a06f390e0e6e"
+  pre_execution_head: "fa9dadb9273d4285bb2adf1b57a5a06f390e0e6e"
+  final_execution_head: "77b1cd3111f144d36487a52bebe8fadc22821960"
 
 skill_library:
   repository: phatnguyen03022001/agent-skills
@@ -26,7 +26,10 @@ execution_skills_used:
   required:
     - executor
     - verification
-  recommended: []
+    - debugging
+  recommended:
+    - simplicity
+    - adversarial-audit
   external: []
 
 pre_execution_checks:
@@ -60,45 +63,37 @@ authoritative_verification:
   required: false
   performed: false
   result: NOT_REQUIRED
-  evidence: "Task requires Architect exact-SHA review followed by renewed independent extreme audits; Executor does not self-accept or promote."
+  evidence: "Task requires Architect exact-SHA review followed by renewed independent extreme audits; Executor does not self-accept, promote, tag, or release."
 
 local_hygiene:
   result: PASS
-  run_root: "/mnt/data/agent-documents-tdd"
+  run_root: "/tmp/agent-documents-r4-440"
   cleanup_performed: true
   retained: []
-  evidence: "Current-run-owned isolated test root was resolved under /mnt/data, verified non-symlink, recursively removed after evidence capture, and confirmed absent."
+  evidence: "Run-owned isolated snapshot was realpath-resolved, verified non-symlink, recursively removed, and confirmed absent after verification evidence capture."
 
 changed_files:
-  - path: DOCUMENT_MODEL.md
-    summary: "Define unique canonical heading resolution and revision-3 structural closure invariants."
-    new_file: false
-    in_scope: true
-    structure_authorized: true
-  - path: model/project.schema.v1.json
-    summary: "Encode always-applicable product objective and blocking OPEN DESIGN DECISION_REQUIRED without inventory minimums."
-    new_file: false
-    in_scope: true
-    structure_authorized: true
   - path: tools/validate.py
-    summary: "Block fenced/comment/duplicate-heading and empty-canonical-reference false greens using stdlib-only deterministic validation."
+    summary: "Give active fenced-code context precedence over HTML-comment interpretation while preserving bounded revision-3 heading semantics."
     new_file: false
     in_scope: true
     structure_authorized: true
   - path: tests/test_validate.py
-    summary: "Add causal revision-3 regressions while preserving prior behavior coverage."
+    summary: "Add causal backtick and tilde regressions for literal unclosed HTML-comment openers inside closed fences."
     new_file: false
     in_scope: true
     structure_authorized: true
   - path: .agent/tasks/TASK-0001/report.yaml
-    summary: "Update the existing canonical Executor evidence; sole post-implementation evidence change."
+    summary: "Update the existing canonical revision-4 Executor evidence; sole post-implementation evidence change."
     new_file: false
     in_scope: true
     structure_authorized: true
 
 commits_created:
-  - sha: "65ac82083b20a55b3f1b78954376f6f0038aca58"
-    message: "fix: harden TASK-0001 revision 3 validation"
+  - sha: "3893359ee0dcbe0a6764f7f8b67f43c2a6a48578"
+    message: "test: reproduce fenced comment precedence regression"
+  - sha: "77b1cd3111f144d36487a52bebe8fadc22821960"
+    message: "fix: preserve headings after fenced comment literals"
 
 pushed: true
 promoted_to_main: false
@@ -106,60 +101,60 @@ promoted_to_main: false
 acceptance_evidence:
   - criterion_id: AC-1
     status: PASS
-    evidence: "Base-to-implementation compare changes exactly four authorized files. model/coverage.v1.json remains blob cb500fb287a6b65832296e06d7e07e5ddeb6cf8c, identical to baseline 8c4c98cd91052c54f83e6a17bdd4147bd8da9783; the exact 45-key mapping and eight authority domains remain unchanged."
+    evidence: "Causal TDD order is explicit in history: test-only commit 3893359ee0dcbe0a6764f7f8b67f43c2a6a48578 precedes production fix 77b1cd3111f144d36487a52bebe8fadc22821960. Before production mutation, exact revision-3 parser behavior returned MISSING for both properly closed backtick and tilde fences containing a literal unclosed '<!--' before a later real ACT-001 heading."
   - criterion_id: AC-2
     status: PASS
-    evidence: "Before production mutation, 11 focused revision-3 cases were RED on revision-2 behavior, including fenced and HTML-comment fake headings returning DOCS_READY=TRUE. Final focused/full tests are GREEN and additional tilde/four-backtick/unclosed-comment probes block."
+    evidence: "Focused exact-final test run passes both test_real_heading_after_backtick_fence_with_literal_comment_is_resolvable and test_real_heading_after_tilde_fence_with_literal_comment_is_resolvable."
   - criterion_id: AC-3
     status: PASS
-    evidence: "Duplicate matching heading token was causal RED on revision 2 and now deterministically returns REFERENCE_ERROR; valid root and one-level-shard controls remain green."
+    evidence: "Focused exact-final controls also pass: fenced fake heading remains ignored, actual HTML-comment fake heading remains ignored, and duplicate canonical heading token remains REFERENCE_ERROR."
   - criterion_id: AC-4
     status: PASS
-    evidence: "Focused comment-only negatives cover milestone.scope_ref; every entity doc_ref class; FTR spec_ref; CAP boundary_ref, defer_ref, and exit.ref. Minimal non-comment content remains a valid positive control."
+    evidence: "Exact final blobs were materialized and hash-verified against remote. python3 -m unittest discover -s tests => Ran 73 tests in 0.184s, OK. python3 -m py_compile tools/validate.py tests/test_validate.py => PASS. Base-to-implementation compare changes only tools/validate.py and tests/test_validate.py; normative/schema/taxonomy/templates/README/dependencies/workflows remain unchanged."
   - criterion_id: AC-5
     status: PASS
-    evidence: "OPEN + DECISION_REQUIRED + DESIGN + blocking=false is rejected as MODEL_ERROR; validator, schema, tests, and DOCUMENT_MODEL agree."
+    evidence: "Base fa9dadb9273d4285bb2adf1b57a5a06f390e0e6e to final_execution_head 77b1cd3111f144d36487a52bebe8fadc22821960 changes exactly tools/validate.py and tests/test_validate.py. The report commit is constructed as the sole direct-child post-implementation change and is verified before the non-force dev ref update."
   - criterion_id: AC-6
     status: PASS
-    evidence: "product.objective N/A is rejected in validator and schema, DOCUMENT_MODEL matches, and direct structure/schema checks prove no arbitrary minimum feature/entity inventory was introduced."
-  - criterion_id: AC-7
-    status: PASS
-    evidence: "python3 -m unittest discover -s tests => 82 tests, OK; python3 -m py_compile tools/validate.py tests/test_validate.py => PASS; all three repository JSON artifacts parse with stdlib json."
-  - criterion_id: AC-8
-    status: PASS
-    evidence: "Implementation commit 65ac82083b20a55b3f1b78954376f6f0038aca58 is one commit ahead of base and changes only DOCUMENT_MODEL.md, model/project.schema.v1.json, tools/validate.py, and tests/test_validate.py. The commit containing this report is constructed as the sole direct-child post-implementation evidence change to report.yaml."
-  - criterion_id: AC-9
-    status: PASS
-    evidence: "main remains bafad634d21550ccd0af2f67bcfbbd2435aef193 and branches remain exactly {dev, main}. No branch creation, promotion, tag, release, or repository metadata mutation was performed; result remains NEEDS_REVIEW."
+    evidence: "Immediately before report construction, dev=77b1cd3111f144d36487a52bebe8fadc22821960, main=bafad634d21550ccd0af2f67bcfbbd2435aef193, branches exactly {dev, main}. Final ref verification is required after report ref update; result remains NEEDS_REVIEW and no release authority is exercised."
 
 executor_checks:
   - check_id: CHECK-1
     result: PASS
-    evidence: "Before first mutation, task/handoff/repository/branch/base matched exactly; dev=e5c8759f15a17012443cb41eb5e2b1e405bcfa14, main=bafad634d21550ccd0af2f67bcfbbd2435aef193, branches={dev, main}, pinned governance matched, and all EXECUTION capabilities were available."
+    evidence: "Before first mutation, canonical TASK-0001 revision 4 at base fa9dadb9273d4285bb2adf1b57a5a06f390e0e6e, repository/branch, pinned governance 1a9424fbd778472f79c152c0b42dd2bd495fbd8e, main bafad634d21550ccd0af2f67bcfbbd2435aef193, branches exactly {dev, main}, and all three EXECUTION capabilities matched authority."
   - check_id: CHECK-2
     result: PASS
-    evidence: "Causal RED: 11/11 focused revision-3 cases failed against revision-2 validator because they returned rc=0/DOCS_READY=TRUE; the same regression shapes are GREEN after the bounded fix."
+    evidence: "Causal RED was observed before production mutation on exact revision-3 parser blob e2f7d2d6158c3038d10434efe94c7f05b4ca3a8d: both backtick and tilde defect shapes returned MISSING for the later real ACT-001 heading."
   - check_id: CHECK-3
     result: PASS
-    evidence: "python3 -m unittest discover -s tests => Ran 82 tests in 0.144s; OK."
+    evidence: "Focused exact-final suite ran 5 tests: backtick positive, tilde positive, fenced-heading negative, HTML-comment-heading negative, and duplicate-heading negative; all 5 passed."
   - check_id: CHECK-4
     result: PASS
-    evidence: "python3 -m py_compile tools/validate.py tests/test_validate.py completed successfully."
+    evidence: "python3 -m unittest discover -s tests on exact final blobs => Ran 73 tests in 0.184s; OK."
   - check_id: CHECK-5
     result: PASS
-    evidence: "Python stdlib json parsed model/coverage.v1.json, model/project.schema.v1.json, and templates/docs/catalog/project.json."
+    evidence: "python3 -m py_compile tools/validate.py tests/test_validate.py on exact final blobs completed successfully."
   - check_id: CHECK-6
     result: PASS
-    evidence: "Exact baseline check preserved coverage blob cb500fb287a6b65832296e06d7e07e5ddeb6cf8c, all 45 concern keys, and their authority-domain mapping."
+    evidence: "Remote tree/blob inventory proves DOCUMENT_MODEL.md, model/coverage.v1.json (cb500fb287a6b65832296e06d7e07e5ddeb6cf8c), model/project.schema.v1.json (237c3202e0a6394b6ee668a48182483b825f4fb1), templates tree, README, dependency surface, and workflow surface unchanged from authorized base. Exact 45-concern/eight-domain artifacts are unchanged."
   - check_id: CHECK-7
     result: PASS
-    evidence: "git diff --no-index --check on exact base/final file pairs passed; remote compare proves exactly the four authorized implementation modifications and no unapproved file."
+    evidence: "git diff --check passed on exact base/final validate/test blobs reconstructed and hash-verified against GitHub. Remote base-to-final compare reports exactly two files: tests/test_validate.py and tools/validate.py."
   - check_id: CHECK-8
     result: PASS
-    evidence: "Final bounded adversarial probes for tilde fence, four-backtick fence, unclosed HTML comment, and duplicate root heading all block; validator imports only collections/json/pathlib/re/sys."
-  - check_id: CHECK-9
-    result: PASS
-    evidence: "The commit containing this report is constructed with final_execution_head as its sole parent and report.yaml as its sole tree change; Executor verifies that exact commit before the non-force dev update, then refreshes refs to require main unchanged and branches exactly {dev, main}."
+    evidence: "This report is constructed in an unreferenced Git commit with final_execution_head 77b1cd3111f144d36487a52bebe8fadc22821960 as its sole parent and report.yaml as its sole tree change. Executor resolves and compares that exact commit before a non-force dev ref update, then refreshes refs to require main unchanged and branches exactly {dev, main}."
+
+bounded_adversarial_checks:
+  result: PASS
+  evidence:
+    - "Active backtick fence containing literal unclosed '<!--' closes normally; later canonical heading resolves."
+    - "Active tilde fence containing literal unclosed '<!--' closes normally; later canonical heading resolves."
+    - "Fake canonical heading inside fenced code remains MISSING."
+    - "Fake canonical heading inside an actual HTML comment remains MISSING."
+    - "Two real matching canonical headings remain DUPLICATE."
+    - "Fence syntax inside an actual HTML comment remains inert; later real heading resolves."
+    - "Actual comment before a fenced literal comment does not poison later heading resolution."
+    - "Literal comment delimiters wholly inside an active fence remain ordinary fenced content."
 
 discovered_gaps: []
 structural_observations: []
@@ -168,6 +163,6 @@ blockers: []
 
 working_tree_after:
   clean: true
-  summary: "No uncommitted target state is relied upon; exact implementation blobs are remotely reachable and the isolated current-run test root was safely cleaned."
+  summary: "No uncommitted target state is relied upon. Exact implementation blobs are remotely reachable, verification used an isolated hash-matched snapshot, and the run-owned local snapshot was safely removed."
 
 result: NEEDS_REVIEW

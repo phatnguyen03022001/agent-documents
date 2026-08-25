@@ -135,7 +135,7 @@ Depth is concern-specific documentation depth, not project maturity.
 - `L2` — evidence-driven detail required by current risk, irreversible cost, external contract, or another material pressure. Choosing `L2` as required depth needs a non-empty rationale.
 - `NONE` — no actual treatment has been established. `NONE` is only an unfinished `actual_depth`; it is never a `required_depth`.
 
-For an applicable concern, `actual_depth` must be at least `required_depth` for closure. N/A concerns have neither depth nor support fields and require a non-empty rationale.
+For an applicable concern, `actual_depth` must be at least `required_depth` for closure. N/A concerns have neither depth nor support fields and require a non-empty rationale. `product.objective` is always `APPLICABLE` in V1 and cannot use the N/A form; this rule does not impose a minimum number of features or other entity records.
 
 An applicable coverage record uses `support_refs`. `actual_depth: NONE` requires `support_refs: []`. `actual_depth: L0`, `L1`, or `L2` requires at least one support reference. Support links are structural evidence that treatment exists; they are not proof that the prose is correct or good.
 
@@ -166,7 +166,9 @@ The top-level V1 catalog requires exactly `model_version`, `milestone`, `coverag
 
 `milestone` contains non-empty `id` and `name`, `scope_state` (`OPEN` or `FROZEN`), a `scope_ref` in `PRODUCT`, and `root_refs`.
 
-A logical document reference has the form `docs/<file>.md#<TOKEN>` for a root document or `docs/<lowercase-domain>/<safe-file>.md#<TOKEN>` for a legal shard. `TOKEN` resolves against an ATX Markdown heading beginning with that exact token. This is a model reference and does not promise GitHub URL-slug behavior.
+A logical document reference has the form `docs/<file>.md#<TOKEN>` for a root document or `docs/<lowercase-domain>/<safe-file>.md#<TOKEN>` for a legal shard. `TOKEN` must resolve to exactly one canonical ATX Markdown heading beginning with that exact token. ATX-looking lines inside fenced code blocks or HTML comments are ignored, and multiple matching canonical headings are invalid. This is a model reference and does not promise GitHub URL-slug behavior.
+
+Every `milestone.scope_ref`, entity `doc_ref`, feature `spec_ref`, capability `boundary_ref` or `defer_ref`, and `exit.ref` must resolve to a section containing at least one non-heading, non-whitespace, non-HTML-comment content line.
 
 Legal root paths are the eight root documents in section 2. Legal shard paths are exactly one physical level below `docs/`: `docs/product/<safe-file>.md`, `docs/behavior/<safe-file>.md`, `docs/architecture/<safe-file>.md`, `docs/data/<safe-file>.md`, `docs/interfaces/<safe-file>.md`, `docs/quality/<safe-file>.md`, `docs/delivery/<safe-file>.md`, or `docs/decisions/<safe-file>.md`. A safe filename is one non-empty Markdown filename using letters, digits, `.`, `_`, or `-`, beginning with a letter or digit. A subdirectory below an authority shard directory is invalid.
 
@@ -184,7 +186,7 @@ All current `FTR-*` records are implicit graph roots for the milestone.
 
 An unknown is `QUESTION`, `DECISION_REQUIRED`, `ASSUMPTION`, `AUTHORITY_CONFLICT`, or `CONTRADICTION`; its resolution phase is `DESIGN`, `IMPLEMENTATION`, `VERIFICATION`, or `POST_MILESTONE`; its status is `OPEN` or `RESOLVED`.
 
-Resolved records require `resolved_by_ref`; resolved `DECISION_REQUIRED` records must resolve to `DEC-*`. Open `AUTHORITY_CONFLICT` and `CONTRADICTION` records are blocking. Every open blocking unknown has `resolution_phase: DESIGN`.
+Resolved records require `resolved_by_ref`; resolved `DECISION_REQUIRED` records must resolve to `DEC-*`. Open `AUTHORITY_CONFLICT` and `CONTRADICTION` records are blocking. An open `DECISION_REQUIRED` record with `resolution_phase: DESIGN` is also blocking. Every open blocking unknown has `resolution_phase: DESIGN`.
 
 `UNK-*` records participate in reference and closure semantics but are not material graph roots and are not scored as orphan material entities. They therefore cannot appear in `milestone.root_refs`.
 
@@ -215,7 +217,7 @@ A **resolution gap** exists when a decision-required design issue, contradiction
 
 A **detail gap** exists when current evidence requires more depth than is actually documented; operationally this is represented by `actual_depth < required_depth`, not by an unbounded request for more prose.
 
-A support reference is valid only when it resolves in the concern's canonical authority domain. The referenced section extends from the matching heading until the next heading of the same or higher level. To establish structural support, that section must contain at least one line that is not a heading, whitespace, or HTML-comment content. Heading-only, whitespace-only, and HTML-comment-only sections do not establish support.
+A support reference is valid only when it resolves in the concern's canonical authority domain. Every logical reference resolves from its unique matching canonical heading until the next canonical heading of the same or higher level; headings inside fenced code blocks or HTML comments do not participate in resolution. Support references and the canonical scope/entity/specification/capability explanation references named in section 7 require at least one line that is not a heading, whitespace, or HTML-comment content. Heading-only, whitespace-only, and HTML-comment-only sections do not establish structural content.
 
 ## 13. Deterministic `DOCS_READY` predicate
 
@@ -223,13 +225,13 @@ A support reference is valid only when it resolves in the concern's canonical au
 
 1. the model version and catalog/taxonomy structures are supported and exact;
 2. all IDs and typed references are valid and globally unique;
-3. every logical Markdown reference uses a legal root/shard path, stays within its authority domain, and resolves its heading token;
+3. every logical Markdown reference uses a legal root/shard path, stays within its authority domain, resolves exactly one canonical heading token, and ignores ATX-looking headings inside fenced code blocks and HTML comments;
 4. every applicable concern has structurally valid `support_refs`, actual depth is not `NONE`, and actual depth meets required depth;
-5. every resolved support reference points to a section containing structural support content;
+5. every resolved support reference and every canonical scope/entity/specification/capability explanation reference points to a section containing structural content;
 6. feature traceability, relation-state, and flow-subset invariants hold;
-7. build/buy and unknown-resolution invariants hold and no blocking unknown/conflict/contradiction remains open;
+7. build/buy and unknown-resolution invariants hold, including blocking open design-phase `DECISION_REQUIRED` records, and no blocking unknown/conflict/contradiction remains open;
 8. every active orphan-scored entity is reachable from a feature root or explicit milestone root;
-9. structural N/A contradictions are absent; and
+9. structural N/A contradictions are absent and `product.objective` remains applicable; and
 10. milestone scope is `FROZEN`.
 
 Malformed/unsupported model or usage errors exit `2`. A valid model that has closure blockers exits `1`. A valid model with `DOCS_READY = TRUE` exits `0`.

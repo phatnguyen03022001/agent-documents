@@ -45,20 +45,30 @@ def dparse(x):
  if not m:return None
  low,f=m.groups();d=low.upper()
  return (d,f'{low}/{f}',tok) if d in DOM and SAFE.fullmatch(f) else None
-def section(t,tok):
- lines=t.splitlines();st=lv=None
+def markdown(t):
+ def drop(m):return '\n'*m.group(0).count('\n')
+ lines=re.sub(r'<!--.*?(?:-->|$)',drop,t,flags=re.S).splitlines();heads=[];fence=None
  for i,line in enumerate(lines):
+  if fence:
+   ch,n=fence
+   if re.fullmatch(rf'\s{{0,3}}{re.escape(ch)}{{{n},}}\s*',line):fence=None
+   continue
+  fm=re.match(r'^\s{0,3}(`{3,}|~{3,})',line)
+  if fm:
+   run=fm.group(1);fence=(run[0],len(run));continue
   m=HEAD.match(line)
-  if m and (m.group(2)==tok or m.group(2).startswith(tok+' ')):st=i;lv=len(m.group(1));break
- if st is None:return None
- end=len(lines)
- for i in range(st+1,len(lines)):
-  m=HEAD.match(lines[i])
-  if m and len(m.group(1))<=lv:end=i;break
- return lines[st+1:end]
+  if m:heads.append((i,len(m.group(1)),m.group(2)))
+ return lines,heads
+def section(t,tok):
+ lines,heads=markdown(t);matches=[h for h in heads if h[2]==tok or h[2].startswith(tok+' ')]
+ if not matches:return 'MISSING',None
+ if len(matches)!=1:return 'DUPLICATE',None
+ st,lv,_=matches[0];end=len(lines)
+ for i,n,_ in heads:
+  if i>st and n<=lv:end=i;break
+ return 'OK',lines[st+1:end]
 def has_content(lines):
- t=re.sub(r'<!--.*?-->','', '\n'.join(lines),flags=re.S)
- return any(line.strip() and not HEAD.match(line) for line in t.splitlines())
+ return any(line.strip() and not HEAD.match(line) for line in lines)
 def doc(target,x,want,p,l,support=False):
  q=dparse(x)
  if not q:p.r(l+' has invalid document path');return False
@@ -70,9 +80,13 @@ def doc(target,x,want,p,l,support=False):
   except OSError as e:p.r(f'{l} cannot read {fp}: {e}',True);return False
  k=(fp,tok)
  if k not in SC:SC[k]=section(TC[fp],tok)
- s=SC[k]
- if s is None:p.r(f'{l} missing heading token {tok}',True);return False
- if support and not has_content(s):p.x('COVERAGE_GAP',l+' resolves to a section without support content');return False
+ status,s=SC[k]
+ if status=='MISSING':p.r(f'{l} missing heading token {tok}',True);return False
+ if status=='DUPLICATE':p.r(f'{l} heading token {tok} matches multiple canonical headings',True);return False
+ if not has_content(s):
+  if support:p.x('COVERAGE_GAP',l+' resolves to a section without support content')
+  else:p.r(l+' resolves to a section without content',True)
+  return False
  return True
 def ref(x,want,ids,p,l):
  if x not in ids:p.r(f'{l} references unknown id {x!r}');return False
@@ -129,6 +143,7 @@ def recs(c,p):
   sl(r['affected_refs'],p,l+'.affected_refs');sl(r['affected_coverage'],p,l+'.affected_coverage')
   if not isinstance(r['blocking'],bool):p.m(l+'.blocking must be boolean')
   if r['status']=='OPEN' and r['kind'] in {'AUTHORITY_CONFLICT','CONTRADICTION'} and r['blocking'] is not True:p.m(l+' open conflict/contradiction must be blocking')
+  if r['status']=='OPEN' and r['kind']=='DECISION_REQUIRED' and r['resolution_phase']=='DESIGN' and r['blocking'] is not True:p.m(l+' open DESIGN DECISION_REQUIRED must be blocking')
   if r['status']=='OPEN' and r['blocking'] is True and r['resolution_phase']!='DESIGN':p.m(l+' open blocking unknown must resolve in DESIGN')
 def structure(c,t,p):
  if not isinstance(c,dict):p.m('catalog root must be an object');return
@@ -152,7 +167,8 @@ def structure(c,t,p):
    l='coverage.'+k
    if not isinstance(e,dict):p.m(l+' must be an object');continue
    if e.get('applicability')=='NA':
-    if exact(e,{'applicability','rationale'},p,l) and not ne(e['rationale']):p.m(l+' N/A requires a non-empty rationale')
+    if k=='product.objective':p.m(l+' is always APPLICABLE in V1')
+    elif exact(e,{'applicability','rationale'},p,l) and not ne(e['rationale']):p.m(l+' N/A requires a non-empty rationale')
    elif e.get('applicability')=='APPLICABLE':
     if exact(e,{'applicability','required_depth','actual_depth','support_refs','rationale'},p,l):
      en(e['required_depth'],{'L0','L1','L2'},p,l+'.required_depth');en(e['actual_depth'],set(DEP),p,l+'.actual_depth');sl(e['support_refs'],p,l+'.support_refs')

@@ -313,6 +313,76 @@ class ValidatorTests(unittest.TestCase):
         self.assertIn("DAT-002", result.stdout)
         self.assertIn("DEC-002", result.stdout)
 
+    # Revision-3 false-green regressions.
+    def test_fenced_heading_does_not_satisfy_reference(self):
+        def docs_mutate(d): d["PRODUCT.md"] = d["PRODUCT.md"].replace("## ACT-001 Customer\nActor.\n", "```md\n## ACT-001 Customer\n```\n")
+        self.assert_case(1, "REFERENCE_ERROR", docs_mutate=docs_mutate, contains="ACT-001.doc_ref")
+
+    def test_html_commented_heading_does_not_satisfy_reference(self):
+        def docs_mutate(d): d["PRODUCT.md"] = d["PRODUCT.md"].replace("## ACT-001 Customer\nActor.\n", "<!--\n## ACT-001 Customer\n-->\n")
+        self.assert_case(1, "REFERENCE_ERROR", docs_mutate=docs_mutate, contains="ACT-001.doc_ref")
+
+    def test_duplicate_heading_token_is_reference_error(self):
+        def docs_mutate(d): d["PRODUCT.md"] += "\n## ACT-001 Duplicate\nOther actor text.\n"
+        self.assert_case(1, "REFERENCE_ERROR", docs_mutate=docs_mutate, contains="matches multiple canonical headings")
+
+    def test_scope_ref_requires_structural_content(self):
+        def docs_mutate(d): d["PRODUCT.md"] = d["PRODUCT.md"].replace("## Scope\nClosed test scope.\n", "## Scope\n<!-- hidden -->\n")
+        self.assert_case(1, "REFERENCE_ERROR", docs_mutate=docs_mutate, contains="milestone.scope_ref")
+
+    def test_all_entity_doc_refs_require_structural_content(self):
+        cases = [
+            ("PRODUCT.md", "## ACT-001 Customer\nActor.\n", "## ACT-001 Customer\n<!-- hidden -->\n", "ACT-001.doc_ref"),
+            ("PRODUCT.md", "## ROL-001 Administrator\nRole.\n", "## ROL-001 Administrator\n<!-- hidden -->\n", "ROL-001.doc_ref"),
+            ("BEHAVIOR.md", "## ACC-001 Acceptance\nCriterion.\n", "## ACC-001 Acceptance\n<!-- hidden -->\n", "ACC-001.doc_ref"),
+            ("ARCHITECTURE.md", "## SYS-001 Application\nSystem.\n", "## SYS-001 Application\n<!-- hidden -->\n", "SYS-001.doc_ref"),
+            ("DATA.md", "## DAT-001 Account\nData.\n", "## DAT-001 Account\n<!-- hidden -->\n", "DAT-001.doc_ref"),
+            ("INTERFACES.md", "## IFC-001 Public account API\nInterface.\n", "## IFC-001 Public account API\n<!-- hidden -->\n", "IFC-001.doc_ref"),
+            ("BEHAVIOR.md", "## FLW-001 Create account\nFlow.\n", "## FLW-001 Create account\n<!-- hidden -->\n", "FLW-001.doc_ref"),
+            ("INTERFACES.md", "## EXT-001 External provider\nDependency.\n", "## EXT-001 External provider\n<!-- hidden -->\n", "EXT-001.doc_ref"),
+            ("DECISIONS.md", "## DEC-001 Primary language\nDecision.\n", "## DEC-001 Primary language\n<!-- hidden -->\n", "DEC-001.doc_ref"),
+        ]
+        for filename, before, after, ref_label in cases:
+            with self.subTest(ref_label=ref_label):
+                def docs_mutate(d, filename=filename, before=before, after=after): d[filename] = d[filename].replace(before, after)
+                self.assert_case(1, "REFERENCE_ERROR", docs_mutate=docs_mutate, contains=ref_label)
+
+    def test_spec_boundary_exit_and_defer_refs_require_structural_content(self):
+        def spec_docs(d): d["BEHAVIOR.md"] = d["BEHAVIOR.md"].replace("## FTR-001 Example feature\nBehavior.\n", "## FTR-001 Example feature\n<!-- hidden -->\n")
+        self.assert_case(1, "REFERENCE_ERROR", docs_mutate=spec_docs, contains="FTR-001.spec_ref")
+
+        def boundary_docs(d): d["ARCHITECTURE.md"] = d["ARCHITECTURE.md"].replace("## CAP-001 Identity\nBoundary.\n", "## CAP-001 Identity\n<!-- hidden -->\n")
+        self.assert_case(1, "REFERENCE_ERROR", docs_mutate=boundary_docs, contains="CAP-001.boundary_ref")
+
+        def exit_docs(d): d["ARCHITECTURE.md"] = d["ARCHITECTURE.md"].replace("## CAP-001-EXIT Identity exit\nExit.\n", "## CAP-001-EXIT Identity exit\n<!-- hidden -->\n")
+        self.assert_case(1, "REFERENCE_ERROR", docs_mutate=exit_docs, contains="CAP-001.exit.ref")
+
+        def defer_mutate(c):
+            c["features"][0]["relations"]["capabilities"] = {"na": "Capability deferred beyond this milestone."}
+            c["capabilities"][0] = {"id": "CAP-001", "name": "Identity", "status": "RESOLVED", "disposition": "DEFER", "system_refs": [], "dependency_refs": [], "defer_ref": "docs/ARCHITECTURE.md#CAP-001-DEFER"}
+        def defer_docs(d): d["ARCHITECTURE.md"] = d["ARCHITECTURE.md"].replace("## CAP-001-DEFER Deferred identity\nDeferral.\n", "## CAP-001-DEFER Deferred identity\n<!-- hidden -->\n")
+        self.assert_case(1, "REFERENCE_ERROR", mutate=defer_mutate, docs_mutate=defer_docs, contains="CAP-001.defer_ref")
+
+    def test_minimal_non_comment_content_satisfies_canonical_reference(self):
+        def docs_mutate(d): d["PRODUCT.md"] = d["PRODUCT.md"].replace("## Scope\nClosed test scope.\n", "## Scope\nx\n")
+        self.assert_case(0, docs_mutate=docs_mutate)
+
+    def test_open_design_decision_required_must_be_blocking(self):
+        def mutate(c): c["unknowns"].append({"id": "UNK-001", "kind": "DECISION_REQUIRED", "question": "Choose path?", "affected_refs": ["FTR-001"], "affected_coverage": [], "blocking": False, "reason": "Choice required.", "resolution_phase": "DESIGN", "status": "OPEN"})
+        self.assert_case(2, "MODEL_ERROR", mutate, contains="must be blocking")
+
+    def test_product_objective_cannot_be_na(self):
+        self.assert_case(2, "MODEL_ERROR", lambda c: c["coverage"].update({"product.objective": {"applicability": "NA", "rationale": "Not applicable."}}), contains="always APPLICABLE")
+
+    def test_product_objective_does_not_imply_minimum_inventory_count(self):
+        catalog = minimal_catalog()
+        for collection in validator.COL:
+            catalog[collection] = []
+        taxonomy = {key: {"authority_domain": DOMAIN[key], "description": "x"} for key in CONCERNS}
+        problems = validator.P()
+        validator.structure(catalog, taxonomy, problems)
+        self.assertEqual([], problems.e)
+
 
 class ModelArtifactTests(unittest.TestCase):
     def test_taxonomy_preserves_exact_45_keys_and_uses_authority_domains(self):
@@ -346,6 +416,21 @@ class ModelArtifactTests(unittest.TestCase):
         self.assertRegex("docs/data/account.md#DAT-001", rx)
         self.assertNotRegex("docs/data/nested/account.md#DAT-001", rx)
         self.assertNotRegex("docs/ARCHITECTURE.md#DAT-001", rx)
+
+    def test_schema_requires_product_objective_applicable_and_design_decision_blocking(self):
+        schema = json.loads((ROOT / "model" / "project.schema.v1.json").read_text(encoding="utf-8"))
+        objective = schema["properties"]["coverage"]["properties"]["product.objective"]
+        self.assertEqual("APPLICABLE", objective["allOf"][1]["properties"]["applicability"]["const"])
+        open_unknown = schema["$defs"]["unknown"]["oneOf"][0]
+        rule = open_unknown["allOf"][0]
+        self.assertEqual("DECISION_REQUIRED", rule["if"]["properties"]["kind"]["const"])
+        self.assertEqual("DESIGN", rule["if"]["properties"]["resolution_phase"]["const"])
+        self.assertIs(True, rule["then"]["properties"]["blocking"]["const"])
+
+    def test_schema_has_no_arbitrary_inventory_minimums(self):
+        schema = json.loads((ROOT / "model" / "project.schema.v1.json").read_text(encoding="utf-8"))
+        for collection in ["actors", "roles", "features", "acceptance", "systems", "data", "interfaces", "flows", "dependencies", "capabilities", "decisions", "unknowns"]:
+            self.assertNotIn("minItems", schema["properties"][collection])
 
     def test_starting_catalog_uses_open_scope_empty_roots_and_unfinished_support(self):
         catalog = json.loads((ROOT / "templates" / "docs" / "catalog" / "project.json").read_text(encoding="utf-8"))

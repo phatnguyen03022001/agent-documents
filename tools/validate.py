@@ -46,19 +46,35 @@ def dparse(x):
  low,f=m.groups();d=low.upper()
  return (d,f'{low}/{f}',tok) if d in DOM and SAFE.fullmatch(f) else None
 def markdown(t):
- def drop(m):return '\n'*m.group(0).count('\n')
- lines=re.sub(r'<!--.*?(?:-->|$)',drop,t,flags=re.S).splitlines();heads=[];fence=None
- for i,line in enumerate(lines):
+ lines=t.splitlines();heads=[];fence=None;comment=False;clean=[]
+ for i,raw in enumerate(lines):
   if fence:
-   ch,n=fence
-   if re.fullmatch(rf'\s{{0,3}}{re.escape(ch)}{{{n},}}\s*',line):fence=None
+   clean.append(raw);ch,n=fence
+   if re.fullmatch(rf'\s{{0,3}}{re.escape(ch)}{{{n},}}\s*',raw):fence=None
    continue
+  line=raw
+  if comment:
+   j=line.find('-->')
+   if j<0:clean.append('');continue
+   line=line[j+3:];comment=False
+  fm=re.match(r'^\s{0,3}(`{3,}|~{3,})',line)
+  if fm:
+   clean.append(line);run=fm.group(1);fence=(run[0],len(run));continue
+  out=''
+  while True:
+   j=line.find('<!--')
+   if j<0:out+=line;break
+   out+=line[:j];line=line[j+4:]
+   k=line.find('-->')
+   if k<0:comment=True;break
+   line=line[k+3:]
+  line=out;clean.append(line)
   fm=re.match(r'^\s{0,3}(`{3,}|~{3,})',line)
   if fm:
    run=fm.group(1);fence=(run[0],len(run));continue
   m=HEAD.match(line)
   if m:heads.append((i,len(m.group(1)),m.group(2)))
- return lines,heads
+ return clean,heads
 def section(t,tok):
  lines,heads=markdown(t);matches=[h for h in heads if h[2]==tok or h[2].startswith(tok+' ')]
  if not matches:return 'MISSING',None

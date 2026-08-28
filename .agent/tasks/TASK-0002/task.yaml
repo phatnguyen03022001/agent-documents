@@ -1,0 +1,209 @@
+protocol_version: 3
+
+task_id: TASK-0002
+task_revision: 1
+state: EXECUTION_READY
+
+origin:
+  type: follow_up
+  task_id: ""
+  gap_id: "EXTREME_AUDIT_ATTRIBUTION_ROLE_CLOSURE"
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-documents
+
+target:
+  repository: phatnguyen03022001/agent-documents
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "fe3fd6de46c6e2220edbcadfb27f12c8dd23b2d6"
+
+architect_analysis_skills:
+  - architect
+  - simplicity
+  - verification
+  - reliability
+
+execution_skills:
+  required:
+    - executor
+    - verification
+    - reliability
+  recommended:
+    - simplicity
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: "Independent extreme read-only audit of phatnguyen03022001/agent-documents@d95e56d098557bd2016041cfc995338c298a7d39 plus Governing Architect adjudication."
+    role: "Evidence and judgment that resolved-unknown attribution, actor/role association, and documentation stop-rule ownership contain bounded material defects; other audit findings are explicitly excluded."
+    precedence: 1
+  - source: "phatnguyen03022001/agent-documents@d95e56d098557bd2016041cfc995338c298a7d39"
+    role: "Exact audited unreleased V1 candidate subject."
+    precedence: 2
+  - source: "phatnguyen03022001/agent-skills@fe3fd6de46c6e2220edbcadfb27f12c8dd23b2d6"
+    role: "Pinned execution governance."
+    precedence: 3
+
+structure_authority:
+  status: RESOLVED
+  source: "Existing DOCUMENT_MODEL.md, V1 schema, deterministic validator/tests, and DECISIONS template."
+  rationale: "All defects fit current owners. No new authority domain, identity class, concern, registry, service, generator, database, workflow engine, or new top-level structure is justified."
+
+objective: >-
+  Correct only three audit-proven defects in the unreleased V1 candidate: make closure-relevant resolved unknowns carry attributable resolution evidence, make role/feature actor association internally consistent, and remove documentation-model ownership bleed that commands design workflow after DOCS_READY. Preserve the eight domains, 45 concerns, twelve identity classes, structural-only prose-validation boundary, shallow sharding, rooted reachability, and all unrelated V1 semantics.
+
+scope:
+  required_changes:
+    - "Use causal TDD on the exact authorized base before production mutation. Reproduce: (1) a resolved contradiction/authority conflict can close through an arbitrary non-resolution identity without dedicated resolution evidence; (2) a ROL record can have zero actor_refs and/or a feature can reference a role whose actor set has no intersection with the feature actor_refs; and (3) DOCUMENT_MODEL.md §14 normatively commands design expansion to stop rather than limiting itself to documentation closure/reopening semantics."
+    - "Resolved-unknown attribution: introduce the smallest deterministic V1-candidate representation that makes the resolution itself structurally attributable without forcing every QUESTION or ASSUMPTION into a DEC record. A RESOLVED UNK must retain resolved_by_ref and also carry an explicit resolution_ref in the DECISIONS authority domain. resolution_ref must resolve to structural content under a heading token bound to that exact UNK identity. DECISION_REQUIRED retains its existing requirement that resolved_by_ref is DEC-*. Do not globally require every entity doc_ref/spec_ref token to equal its catalog ID."
+    - "Update DOCUMENT_MODEL.md, model/project.schema.v1.json, tools/validate.py, tests/test_validate.py, and templates/docs/DECISIONS.md only as necessary for the resolved-unknown correction. The DECISIONS template may describe resolved UNK sections alongside DEC sections; do not create a ninth document or new catalog."
+    - "Actor/role association: require every ROL actor_refs array to contain at least one ACT reference. When a feature relation names ROL refs, each referenced role must share at least one ACT with that feature's actor_refs. Preserve globally reusable roles; do not require a role's full actor set to equal or be a subset of one feature's actors."
+    - "Stop-rule ownership: rewrite DOCUMENT_MODEL.md §14 so agent-documents defines documentation closure stability/invalidation/reopening only. DOCS_READY may mean no further documentation expansion is required to satisfy the current milestone closure predicate, but it must not authorize, forbid, stop, resume, or otherwise govern design/execution workflow. Preserve DESIGN TO CLOSURE, NOT TO EXHAUSTION as a documentation-scope principle rather than a workflow command."
+    - "Because the current V1 is explicitly unreleased and pending audit, this task is authorized as a pre-release candidate correction while retaining model_version 1 and existing V1 filenames. Do not create a parallel V2 model merely to repair these candidate defects. If fresh evidence establishes an external/released compatibility obligation, stop BLOCKED instead of silently breaking it."
+    - "Run focused regressions, full repository unit tests, py_compile, and git diff --check on the exact final implementation. Produce TASK-0002 report evidence in a separate report-only commit and stop at Governing Architect review."
+  allowed_existing_files_or_components:
+    - DOCUMENT_MODEL.md
+    - model/project.schema.v1.json
+    - tools/validate.py
+    - tests/test_validate.py
+    - templates/docs/DECISIONS.md
+    - .agent/tasks/TASK-0002/task.yaml
+  expected_files_are_restrictive: true
+
+invariants:
+  - "Exactly eight authority domains, 45 concern keys, and twelve ID classes remain unchanged."
+  - "model_version remains 1 and coverage.v1.json remains unchanged."
+  - "F-04 audit concern remains intentionally unchanged: ordinary entity doc_ref/spec_ref references may legally share a broader section when current field semantics allow it; this task binds only the new unknown resolution_ref to its UNK identity."
+  - "Depth remains declared documentation depth plus structural support evidence; validator does not judge factual/prose quality, maturity, security, reliability, performance, or design correctness."
+  - "coverage.rationale normal-L1 shape, capability.status, dependencies[].critical, taxonomy/schema duplication, root-file structure, and naming are unchanged."
+  - "Unknown kinds, blocking/open semantics, DECISION_REQUIRED->DEC semantics, capability build/buy/defer semantics, reachability/orphan semantics, sharding rules, and exit codes remain unchanged except where directly required by the three authorized fixes."
+  - "Validator remains deterministic, read-only, network-free, and Python-standard-library-only."
+  - "No workflow authority is imported from agent-skills into agent-documents; the fix is subtraction of workflow command, not replacement with another workflow rule."
+  - "main remains read-only and branches remain exactly {dev, main}."
+
+forbidden_changes:
+  - "Do not merge/remove/rename authority domains, concern keys, ID classes, or root documents."
+  - "Do not implement global ID-token binding for existing doc_ref/spec_ref fields."
+  - "Do not add AI/NLP prose scoring, semantic-quality grading, maturity levels, evidence-strength scores, natural-language contradiction detection, or external dependencies."
+  - "Do not remove rationale/status/critical fields, redesign capability/coverage/dependency shapes, shard the catalog, add a manifest/generator/database/registry, or solve predicted monorepo scale."
+  - "Do not create V2 files, a migration framework, compatibility service, alternate validator, or new model subsystem."
+  - "Do not modify README.md, model/coverage.v1.json, other templates, workflows, repository metadata, historical tasks/reports, other repositories, branch topology, main, tags, releases, or promotion state."
+  - "Do not create branches, force-push, rebase, rewrite history, promote, tag, or release."
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+structure_policy:
+  expected_new_files:
+    - .agent/tasks/TASK-0002/report.yaml
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: ""
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - isolated_test_execution
+  REVIEW:
+    - exact_commit_report_resolution
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Resolved unknown closure evidence is attributable without forcing every unknown into a DEC record."
+    evidence_required: "Causal RED proves the old false-positive; final schema/model/validator/tests require RESOLVED UNK records to retain resolved_by_ref plus an exact-UNK-bound DECISIONS resolution_ref with structural content, while DECISION_REQUIRED still requires resolved_by_ref to DEC-* and QUESTION/ASSUMPTION remain semantically flexible."
+  - id: AC-2
+    requirement: "Role and feature actor semantics cannot be structurally disconnected."
+    evidence_required: "Focused tests reject empty ROL.actor_refs and reject feature->ROL relations with zero actor intersection; valid reusable roles with at least one intersecting feature actor pass."
+  - id: AC-3
+    requirement: "DOCS_READY remains documentation closure rather than workflow authority."
+    evidence_required: "DOCUMENT_MODEL.md §14 no longer commands design work to stop or requires governing workflow permission to continue; it defines only what closure means and how changed facts invalidate/reopen documentation closure."
+  - id: AC-4
+    requirement: "Core model decomposition and explicit audit no-change decisions remain intact."
+    evidence_required: "Exact diff proves no changes to eight domains, 45 concerns, twelve identity classes, coverage taxonomy, global doc-ref token semantics, depth quality boundary, cleanup-candidate fields, catalog sharding, or unrelated model behavior."
+  - id: AC-5
+    requirement: "The pre-release V1 candidate remains internally consistent and deterministic."
+    evidence_required: "DOCUMENT_MODEL.md, project.schema.v1.json, validator, DECISIONS template, and tests agree on the new bounded invariants; full unittest and py_compile pass."
+  - id: AC-6
+    requirement: "Publication lineage and topology remain exact."
+    evidence_required: "Implementation is a non-force descendant of the TASK-0002 base; separate report-only commit changes only .agent/tasks/TASK-0002/report.yaml; main remains d95e56d098557bd2016041cfc995338c298a7d39 and branches remain exactly {dev, main}."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "At start resolve TASK-0002 revision 1 and pinned agent-skills@fe3fd6de46c6e2220edbcadfb27f12c8dd23b2d6; refresh refs; require dev equals exact TASK-0002 handoff base, main equals d95e56d098557bd2016041cfc995338c298a7d39, branches exactly {dev, main}; preflight all required EXECUTION capabilities before mutation."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Causal RED on the exact base for resolved-unknown attribution and both actor/role consistency failures. Preserve exact failing evidence before production edits. The §14 ownership defect is normative-text evidence and does not require a synthetic runtime test."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Implement the smallest correction only in DOCUMENT_MODEL.md, project.schema.v1.json, validate.py, test_validate.py, and DECISIONS.md where materially required."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Run focused tests for resolution_ref path/domain/token/content semantics, DECISION_REQUIRED compatibility, empty role actors, feature-role actor intersection, and valid reusable-role controls."
+      required: true
+    - id: CHECK-5
+      command_or_check: "python3 -m unittest discover -s tests"
+      required: true
+    - id: CHECK-6
+      command_or_check: "python3 -m py_compile tools/validate.py tests/test_validate.py"
+      required: true
+    - id: CHECK-7
+      command_or_check: "git diff --check plus exact base-to-final changed-file and semantic audit. Use the smallest sufficient trusted/native execution surface; Terminal/local shell is fallback only after native/connected/trusted alternatives are insufficient."
+      required: true
+    - id: CHECK-8
+      command_or_check: "Commit/push implementation non-force to dev only. Then create/update .agent/tasks/TASK-0002/report.yaml in a separate report-only commit, verify its sole parent/diff, refresh dev/main/topology, and stop at Governing Architect review."
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true

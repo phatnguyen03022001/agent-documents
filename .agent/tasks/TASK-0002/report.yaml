@@ -1,0 +1,184 @@
+protocol_version: 3
+
+task_id: TASK-0002
+task_revision: 1
+report_revision: 1
+state: REPORTED
+
+task_source:
+  path: .agent/tasks/TASK-0002/task.yaml
+
+execution:
+  repository: phatnguyen03022001/agent-documents
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: "d6337c02c5e87b92bdf97696f05186fd35c9fe99"
+  pre_execution_head: "d6337c02c5e87b92bdf97696f05186fd35c9fe99"
+  final_execution_head: "f7200ce763b16c16bff4ee203d9b67346fa0ac40"
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: "fe3fd6de46c6e2220edbcadfb27f12c8dd23b2d6"
+  observed_revision: "fe3fd6de46c6e2220edbcadfb27f12c8dd23b2d6"
+
+execution_skills_used:
+  required:
+    - executor
+    - verification
+    - reliability
+  recommended:
+    - simplicity
+  external: []
+
+pre_execution_checks:
+  protocol_version_supported: true
+  handoff_type_confirmed: true
+  task_at_base_confirmed: true
+  task_identity_confirmed: true
+  architect_binding_confirmed: true
+  repository_confirmed: true
+  branch_confirmed: true
+  base_head_confirmed: true
+  skill_revision_confirmed: true
+  required_execution_skills_available: true
+  structure_authority_confirmed: true
+  working_tree_clean: true
+
+capability_preflight:
+  phase: EXECUTION
+  required:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - isolated_test_execution
+  available:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - isolated_test_execution
+  missing: []
+  passed: true
+
+authoritative_verification:
+  required: false
+  performed: false
+  result: NOT_REQUIRED
+  evidence: "Task requires Governing Architect review of the exact committed report; Executor does not self-accept, promote, tag, or release."
+
+local_hygiene:
+  result: RETAINED_FOR_EVIDENCE
+  run_root: "/tmp/task0002-full"
+  cleanup_performed: false
+  retained:
+    - "/tmp/task0002-full"
+    - "/tmp/task0002-diff"
+  evidence: "Run-owned isolated exact-base/candidate snapshots are retained only for execution evidence. No target-repository state depends on them, and no cleanup was performed during this continuation."
+
+changed_files:
+  - path: DOCUMENT_MODEL.md
+    summary: "Define exact-UNK-bound resolution evidence, role/feature actor consistency, and documentation-only closure/reopening semantics."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: model/project.schema.v1.json
+    summary: "Require non-empty role actor_refs and RESOLVED UNK resolution_ref in the DECISIONS authority domain with an UNK fragment shape."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: tools/validate.py
+    summary: "Enforce resolution_ref domain/token/content semantics plus role actor minimum and feature-role actor intersection while preserving existing DECISION_REQUIRED attribution."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: tests/test_validate.py
+    summary: "Add focused regressions and controls for resolved-unknown evidence and role/feature actor consistency while updating existing resolved-unknown fixtures."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: templates/docs/DECISIONS.md
+    summary: "Document the dedicated RESOLVED UNK resolution section convention without forcing non-DECISION_REQUIRED unknowns to DEC records."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: .agent/tasks/TASK-0002/report.yaml
+    summary: "Canonical Executor evidence for TASK-0002 revision 1; sole post-implementation report change."
+    new_file: true
+    in_scope: true
+    structure_authorized: true
+
+commits_created:
+  - sha: "f7200ce763b16c16bff4ee203d9b67346fa0ac40"
+    message: "fix(docs): close attribution and role gaps"
+
+pushed: true
+promoted_to_main: false
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: PASS
+    evidence: "Preserved causal RED from the exact authorized base showed resolved conflict/unknown records could close through arbitrary attribution without dedicated resolution evidence. Exact final model/schema/validator/tests require RESOLVED UNK records to retain resolved_by_ref plus resolution_ref in DECISIONS, bind the fragment token exactly to the same UNK identity, and require structural content. DECISION_REQUIRED still requires resolved_by_ref to DEC-*, while a QUESTION can validly attribute resolution to a non-DEC catalog record when dedicated resolution evidence exists."
+  - criterion_id: AC-2
+    status: PASS
+    evidence: "Focused exact-candidate tests reject empty ROL.actor_refs, reject feature->ROL relations with zero actor intersection, and accept a reusable role whose actor set contains additional actors while sharing at least one feature actor."
+  - criterion_id: AC-3
+    status: PASS
+    evidence: "DOCUMENT_MODEL.md section 14 is now 'Documentation closure and reopening': it defines closure, invalidation, and restoration of documentation closure only and explicitly states that it does not direct or authorize design, execution, review, promotion, release, or other workflow."
+  - criterion_id: AC-4
+    status: PASS
+    evidence: "Exact base-to-implementation compare changes only the five authorized files. The eight authority domains, 45 concern keys, twelve ID classes, model_version 1, model/coverage.v1.json, ordinary doc_ref/spec_ref token semantics, depth/prose-quality boundary, build/buy semantics, reachability, sharding, root structure, and unrelated model behavior remain unchanged."
+  - criterion_id: AC-5
+    status: PASS
+    evidence: "Exact recovered candidate passed focused regressions 11/11, python3 -m unittest discover -s tests => Ran 82 tests, OK, python3 -m py_compile tools/validate.py tests/test_validate.py => PASS, git diff --check => PASS, and semantic/scope audit => PASS. Published implementation tree resolves the exact verified candidate blobs."
+  - criterion_id: AC-6
+    status: PASS
+    evidence: "Implementation f7200ce763b16c16bff4ee203d9b67346fa0ac40 is one non-force descendant of exact base d6337c02c5e87b92bdf97696f05186fd35c9fe99 and changes exactly the five authorized implementation files. Immediately before report construction, dev=f7200ce763b16c16bff4ee203d9b67346fa0ac40, main=d95e56d098557bd2016041cfc995338c298a7d39, and branches are exactly {dev, main}. This report is constructed as the sole direct-child report change; final parent/diff/ref/topology verification is required after its non-force dev ref update."
+
+executor_checks:
+  - check_id: CHECK-1
+    result: PASS
+    evidence: "Before canonical mutation, TASK-0002 revision 1 resolved at exact base d6337c02c5e87b92bdf97696f05186fd35c9fe99; pinned agent-skills resolved at fe3fd6de46c6e2220edbcadfb27f12c8dd23b2d6; dev equaled the exact base, main equaled d95e56d098557bd2016041cfc995338c298a7d39, branches were exactly {dev, main}, no TASK-0002 report/implementation had appeared, and all required EXECUTION capabilities were available."
+  - check_id: CHECK-2
+    result: PASS
+    evidence: "Preserved exact-base causal RED remains attributable to the recovered candidate: resolved unknown/conflict without dedicated resolution evidence falsely closed; a role with actor_refs=[] falsely closed; and a feature referencing a role with disjoint actors falsely closed. DOCUMENT_MODEL.md section 14 workflow-ownership defect was established by normative text evidence as authorized."
+  - check_id: CHECK-3
+    result: PASS
+    evidence: "Implementation is limited to DOCUMENT_MODEL.md, model/project.schema.v1.json, tools/validate.py, tests/test_validate.py, and templates/docs/DECISIONS.md. Remote compare from base to final_execution_head reports exactly those five paths."
+  - check_id: CHECK-4
+    result: PASS
+    evidence: "Focused exact-candidate regression set passed 11/11, covering resolution_ref presence/path-domain/token/heading/content, DECISION_REQUIRED compatibility, valid non-DEC QUESTION attribution, empty role actors, disjoint feature-role actors, and reusable-role control."
+  - check_id: CHECK-5
+    result: PASS
+    evidence: "python3 -m unittest discover -s tests on the exact hash-matched final candidate => Ran 82 tests; OK."
+  - check_id: CHECK-6
+    result: PASS
+    evidence: "python3 -m py_compile tools/validate.py tests/test_validate.py on the exact hash-matched final candidate completed successfully."
+  - check_id: CHECK-7
+    result: PASS
+    evidence: "git diff --check passed on an exact reconstructed base-to-candidate git wrapper. Semantic audit confirmed exactly 8 authority domains, 45 concern keys, 12 ID classes, model_version 1, unchanged coverage blob, exact five-file scope, and documentation-only section 14. Publication used connected GitHub surfaces; shell was used only as a final fallback transport capability check after connected staging serialization mismatches."
+  - check_id: CHECK-8
+    result: PASS
+    evidence: "Implementation commit f7200ce763b16c16bff4ee203d9b67346fa0ac40 was constructed from exact content-addressed candidate blobs with sole parent d6337c02c5e87b92bdf97696f05186fd35c9fe99, compared as exactly five authorized changes, and moved to dev with force=false only after a fresh stale-state check. This report is constructed as an unreferenced direct child changing only .agent/tasks/TASK-0002/report.yaml; Executor verifies its sole parent/diff before a non-force dev ref update, then refreshes final dev/main/topology."
+
+publication_evidence:
+  result: PASS
+  implementation_commit: "f7200ce763b16c16bff4ee203d9b67346fa0ac40"
+  implementation_tree: "3d35bdd3719dd13cf5aacaa097df5f68c3f7da77"
+  candidate_blobs:
+    DOCUMENT_MODEL.md: "d8ae9ea50c6aad92e8ab4a1a95d24f722502070b"
+    model/project.schema.v1.json: "52cfe8353518024c6419b35511a4152472355d0f"
+    tools/validate.py: "3ffc0c9a4625bf6f4ecc46f8d7fb030f78d488d3"
+    tests/test_validate.py: "f1f39a208ffee62e7d82c5bf37b1fded5d218c79"
+    templates/docs/DECISIONS.md: "e29d11f17b2af93df8067cb7472a81b4cde41d33"
+  evidence: "Remote implementation commit and recursive tree resolve exactly the precomputed verified candidate blob SHAs. Earlier mismatching unattached staging blobs were never referenced, adopted, cleaned up, or used as repository authority."
+
+discovered_gaps: []
+structural_observations: []
+deviations_from_task: []
+blockers: []
+
+working_tree_after:
+  clean: true
+  summary: "No uncommitted target-repository state is relied upon. The exact implementation is remotely reachable at final_execution_head; local run-owned snapshots are retained only for evidence."
+
+result: NEEDS_REVIEW

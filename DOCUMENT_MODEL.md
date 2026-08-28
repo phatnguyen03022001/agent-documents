@@ -11,7 +11,6 @@ Repository boundaries are strict:
 - `agent-documents` = describable project truth, stable identities/relationships, finite coverage, and documentation closure.
 - `agent-standards` = engineering quality meaning and any quality/maturity semantics.
 - `agent-skills` = working method, handoff, authority, review, and Git protocol.
-- `agent-runtime` = optional bounded execution infrastructure.
 - target repository = actual product truth and instantiated documentation.
 
 There is no runtime dependency among these repositories.

@@ -2,7 +2,7 @@
 
 `agent-documents` defines what a project must be able to describe and when its documentation reaches closure. It is deliberately narrower than an orchestration or documentation platform.
 
-This repository does **not** define engineering quality or maturity levels; those meanings belong to `agent-standards`. It does **not** define agent workflow authority or execution protocol; those belong to `agent-skills`. `agent-runtime` is optional bounded execution infrastructure and is not a dependency of this model. Actual product truth belongs visibly in the target repository where the product is built.
+This repository does **not** define engineering quality or maturity levels; those meanings belong to `agent-standards`. It does **not** define agent workflow authority or execution protocol; those belong to `agent-skills`. Actual product truth belongs visibly in the target repository where the product is built.
 
 V1 is guided by two principles:
 

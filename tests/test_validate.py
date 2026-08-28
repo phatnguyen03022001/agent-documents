@@ -174,6 +174,22 @@ class ValidatorTests(unittest.TestCase):
     def test_missing_feature_spec_is_model_error(self): self.assert_case(2, "MODEL_ERROR", lambda c: c["features"][0].pop("spec_ref"))
     def test_missing_acceptance_is_model_error(self): self.assert_case(2, "MODEL_ERROR", lambda c: c["features"][0].update(acceptance_refs=[]))
     def test_malformed_relation_state_is_model_error(self): self.assert_case(2, "MODEL_ERROR", lambda c: c["features"][0]["relations"].update(roles={"refs": ["ROL-001"], "na": "bad"}))
+    def test_role_requires_at_least_one_actor(self): self.assert_case(2, "MODEL_ERROR", lambda c: c["roles"][0].update(actor_refs=[]), contains="must contain at least 1 item")
+
+    def test_feature_role_requires_actor_intersection(self):
+        def mutate(c):
+            c["actors"].append({"id": "ACT-002", "name": "Operator", "kind": "HUMAN", "doc_ref": "docs/PRODUCT.md#ACT-002"})
+            c["roles"][0]["actor_refs"] = ["ACT-002"]
+        def docs_mutate(d): d["PRODUCT.md"] += "\n## ACT-002 Operator\nActor.\n"
+        self.assert_case(1, "TRACEABILITY_GAP", mutate, docs_mutate, contains="shares no actor")
+
+    def test_reusable_role_with_one_feature_actor_intersection_is_valid(self):
+        def mutate(c):
+            c["actors"].append({"id": "ACT-002", "name": "Operator", "kind": "HUMAN", "doc_ref": "docs/PRODUCT.md#ACT-002"})
+            c["roles"][0]["actor_refs"] = ["ACT-001", "ACT-002"]
+        def docs_mutate(d): d["PRODUCT.md"] += "\n## ACT-002 Operator\nActor.\n"
+        self.assert_case(0, mutate=mutate, docs_mutate=docs_mutate)
+
     def test_flow_relation_must_be_subset_of_feature_interface_mapping(self): self.assert_case(1, "TRACEABILITY_GAP", lambda c: c["features"][0]["relations"].update(interfaces={"na": "No direct interface."}))
 
     def test_orphan_entity_is_not_ready(self):
@@ -208,8 +224,35 @@ class ValidatorTests(unittest.TestCase):
         self.assert_case(1, "RESOLUTION_GAP", mutate)
 
     def test_decision_required_resolution_must_point_to_decision(self):
-        def mutate(c): c["unknowns"].append({"id": "UNK-001", "kind": "DECISION_REQUIRED", "question": "Choose path?", "affected_refs": ["FTR-001"], "affected_coverage": [], "blocking": False, "reason": "Choice required.", "resolution_phase": "DESIGN", "status": "RESOLVED", "resolved_by_ref": "FTR-001"})
-        self.assert_case(2, "REFERENCE_ERROR", mutate)
+        def mutate(c): c["unknowns"].append({"id": "UNK-001", "kind": "DECISION_REQUIRED", "question": "Choose path?", "affected_refs": ["FTR-001"], "affected_coverage": [], "blocking": False, "reason": "Choice required.", "resolution_phase": "DESIGN", "status": "RESOLVED", "resolved_by_ref": "FTR-001", "resolution_ref": "docs/DECISIONS.md#UNK-001"})
+        def docs_mutate(d): d["DECISIONS.md"] += "\n## UNK-001 Resolution\nChoice was resolved.\n"
+        self.assert_case(2, "REFERENCE_ERROR", mutate, docs_mutate)
+
+    def test_resolved_unknown_requires_resolution_ref(self):
+        def mutate(c): c["unknowns"].append({"id": "UNK-001", "kind": "QUESTION", "question": "Historical?", "affected_refs": ["FTR-001"], "affected_coverage": [], "blocking": False, "reason": "Resolved.", "resolution_phase": "DESIGN", "status": "RESOLVED", "resolved_by_ref": "FTR-001"})
+        self.assert_case(2, "MODEL_ERROR", mutate, contains="resolution_ref")
+
+    def test_resolution_ref_requires_decisions_domain(self):
+        def mutate(c): c["unknowns"].append({"id": "UNK-001", "kind": "QUESTION", "question": "Historical?", "affected_refs": ["FTR-001"], "affected_coverage": [], "blocking": False, "reason": "Resolved.", "resolution_phase": "DESIGN", "status": "RESOLVED", "resolved_by_ref": "FTR-001", "resolution_ref": "docs/BEHAVIOR.md#UNK-001"})
+        self.assert_case(2, "REFERENCE_ERROR", mutate, contains="authority domain DECISIONS")
+
+    def test_resolution_ref_token_must_equal_unknown_id(self):
+        def mutate(c): c["unknowns"].append({"id": "UNK-001", "kind": "QUESTION", "question": "Historical?", "affected_refs": ["FTR-001"], "affected_coverage": [], "blocking": False, "reason": "Resolved.", "resolution_phase": "DESIGN", "status": "RESOLVED", "resolved_by_ref": "FTR-001", "resolution_ref": "docs/DECISIONS.md#DEC-001"})
+        self.assert_case(2, "REFERENCE_ERROR", mutate, contains="heading token must equal UNK-001")
+
+    def test_resolution_ref_requires_matching_heading(self):
+        def mutate(c): c["unknowns"].append({"id": "UNK-001", "kind": "QUESTION", "question": "Historical?", "affected_refs": ["FTR-001"], "affected_coverage": [], "blocking": False, "reason": "Resolved.", "resolution_phase": "DESIGN", "status": "RESOLVED", "resolved_by_ref": "FTR-001", "resolution_ref": "docs/DECISIONS.md#UNK-001"})
+        self.assert_case(1, "REFERENCE_ERROR", mutate, contains="missing heading token UNK-001")
+
+    def test_resolution_ref_requires_structural_content(self):
+        def mutate(c): c["unknowns"].append({"id": "UNK-001", "kind": "QUESTION", "question": "Historical?", "affected_refs": ["FTR-001"], "affected_coverage": [], "blocking": False, "reason": "Resolved.", "resolution_phase": "DESIGN", "status": "RESOLVED", "resolved_by_ref": "FTR-001", "resolution_ref": "docs/DECISIONS.md#UNK-001"})
+        def docs_mutate(d): d["DECISIONS.md"] += "\n## UNK-001 Resolution\n<!-- hidden -->\n"
+        self.assert_case(1, "REFERENCE_ERROR", mutate, docs_mutate, contains="without content")
+
+    def test_resolved_question_can_attribute_non_dec_with_dedicated_resolution_evidence(self):
+        def mutate(c): c["unknowns"].append({"id": "UNK-001", "kind": "QUESTION", "question": "Historical?", "affected_refs": ["FTR-001"], "affected_coverage": [], "blocking": False, "reason": "Resolved.", "resolution_phase": "DESIGN", "status": "RESOLVED", "resolved_by_ref": "FTR-001", "resolution_ref": "docs/DECISIONS.md#UNK-001"})
+        def docs_mutate(d): d["DECISIONS.md"] += "\n## UNK-001 Resolution\nResolution evidence.\n"
+        self.assert_case(0, mutate=mutate, docs_mutate=docs_mutate)
 
     def test_actor_inventory_contradicts_na_actor_coverage(self): self.assert_case(1, "TRACEABILITY_GAP", lambda c: c["coverage"].update({"product.actors_roles": {"applicability": "NA", "rationale": "No actors."}}))
     def test_cap_inventory_contradicts_na_build_buy_coverage(self): self.assert_case(1, "TRACEABILITY_GAP", lambda c: c["coverage"].update({"architecture.build_buy": {"applicability": "NA", "rationale": "No capabilities."}}))
@@ -218,9 +261,10 @@ class ValidatorTests(unittest.TestCase):
 
     def test_unknown_inventory_contradicts_na_unknown_coverage(self):
         def mutate(c):
-            c["unknowns"].append({"id": "UNK-001", "kind": "QUESTION", "question": "Historical question?", "affected_refs": ["FTR-001"], "affected_coverage": [], "blocking": False, "reason": "Resolved for record.", "resolution_phase": "DESIGN", "status": "RESOLVED", "resolved_by_ref": "DEC-001"})
+            c["unknowns"].append({"id": "UNK-001", "kind": "QUESTION", "question": "Historical question?", "affected_refs": ["FTR-001"], "affected_coverage": [], "blocking": False, "reason": "Resolved for record.", "resolution_phase": "DESIGN", "status": "RESOLVED", "resolved_by_ref": "DEC-001", "resolution_ref": "docs/DECISIONS.md#UNK-001"})
             c["coverage"]["unknowns.open_questions"] = {"applicability": "NA", "rationale": "No unknowns."}
-        self.assert_case(1, "TRACEABILITY_GAP", mutate)
+        def docs_mutate(d): d["DECISIONS.md"] += "\n## UNK-001 Resolution\nHistorical resolution.\n"
+        self.assert_case(1, "TRACEABILITY_GAP", mutate, docs_mutate)
 
     def test_missing_referenced_markdown_heading_is_reference_error(self):
         def docs_mutate(d): d["PRODUCT.md"] = d["PRODUCT.md"].replace("## ACT-001 Customer\nActor.\n\n", "")
@@ -286,7 +330,7 @@ class ValidatorTests(unittest.TestCase):
 
     def test_unknown_record_root_ref_is_forbidden(self):
         def mutate(c):
-            c["unknowns"].append({"id": "UNK-001", "kind": "QUESTION", "question": "Historical?", "affected_refs": ["FTR-001"], "affected_coverage": [], "blocking": False, "reason": "Recorded.", "resolution_phase": "DESIGN", "status": "RESOLVED", "resolved_by_ref": "DEC-001"})
+            c["unknowns"].append({"id": "UNK-001", "kind": "QUESTION", "question": "Historical?", "affected_refs": ["FTR-001"], "affected_coverage": [], "blocking": False, "reason": "Recorded.", "resolution_phase": "DESIGN", "status": "RESOLVED", "resolved_by_ref": "DEC-001", "resolution_ref": "docs/DECISIONS.md#UNK-001"})
             c["milestone"]["root_refs"] = ["UNK-001"]
         self.assert_case(2, "MODEL_ERROR", mutate)
 
@@ -442,6 +486,10 @@ class ModelArtifactTests(unittest.TestCase):
         self.assertEqual("DECISION_REQUIRED", rule["if"]["properties"]["kind"]["const"])
         self.assertEqual("DESIGN", rule["if"]["properties"]["resolution_phase"]["const"])
         self.assertIs(True, rule["then"]["properties"]["blocking"]["const"])
+        self.assertEqual(1, schema["$defs"]["role"]["properties"]["actor_refs"]["minItems"])
+        resolved_unknown = schema["$defs"]["unknown"]["oneOf"][1]
+        self.assertIn("resolution_ref", resolved_unknown["required"])
+        self.assertEqual("^docs/(?:DECISIONS\\.md|decisions/[A-Za-z0-9][A-Za-z0-9._-]*\\.md)#UNK-[0-9]{3,}$", resolved_unknown["properties"]["resolution_ref"]["pattern"])
 
     def test_schema_has_no_arbitrary_inventory_minimums(self):
         schema = json.loads((ROOT / "model" / "project.schema.v1.json").read_text(encoding="utf-8"))

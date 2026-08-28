@@ -37,7 +37,7 @@ The eight root templates are the default small-project physical shape. Physical 
 
 ## 3. Field-level source-of-truth rules
 
-The project catalog is authoritative for inventory, IDs, names where modeled, typed relationships, milestone state and roots, coverage applicability/depth/support links, capability status/disposition, decision kind/short outcome/reversibility, and unknown question/reason/status/resolution fields. Markdown is authoritative for normative project explanation and specification.
+The project catalog is authoritative for inventory, IDs, names where modeled, typed relationships, milestone state and roots, coverage applicability/depth/support links, capability status/disposition, decision kind/short outcome/reversibility, and unknown question/reason/status/resolution attribution/reference fields. Markdown is authoritative for normative project explanation and specification.
 
 Specific rules:
 
@@ -170,6 +170,8 @@ A logical document reference has the form `docs/<file>.md#<TOKEN>` for a root do
 
 Every `milestone.scope_ref`, entity `doc_ref`, feature `spec_ref`, capability `boundary_ref` or `defer_ref`, and `exit.ref` must resolve to a section containing at least one non-heading, non-whitespace, non-HTML-comment content line.
 
+A resolved unknown additionally carries `resolution_ref`. This reference must stay in the `DECISIONS` authority domain, its fragment token must be exactly the record's own `UNK-*` identity, and the resolved section must contain structural content. This exact-token binding is specific to `resolution_ref`; ordinary document/specification references are not globally required to use their catalog ID as the heading token.
+
 Legal root paths are the eight root documents in section 2. Legal shard paths are exactly one physical level below `docs/`: `docs/product/<safe-file>.md`, `docs/behavior/<safe-file>.md`, `docs/architecture/<safe-file>.md`, `docs/data/<safe-file>.md`, `docs/interfaces/<safe-file>.md`, `docs/quality/<safe-file>.md`, `docs/delivery/<safe-file>.md`, or `docs/decisions/<safe-file>.md`. A safe filename is one non-empty Markdown filename using letters, digits, `.`, `_`, or `-`, beginning with a letter or digit. A subdirectory below an authority shard directory is invalid.
 
 Entity-specific document references must remain inside the entity's required authority domain even when sharded. The complete record shapes and enums are defined by `model/project.schema.v1.json`; the validator enforces cross-record invariants JSON Schema cannot conveniently express.
@@ -177,6 +179,8 @@ Entity-specific document references must remain inside the entity's required aut
 ## 8. Feature traceability
 
 Every in-scope feature has at least one actor, a `BEHAVIOR` specification reference, and at least one acceptance criterion. Behavior specification is never N/A for an in-scope feature.
+
+Every `ROL-*` record has at least one `ACT-*` reference. When a feature relates to a role, the feature's `actor_refs` and that role's `actor_refs` must share at least one actor. Roles remain reusable and may include additional actors that are not attached to every feature using the role.
 
 Applicability-aware relations (`roles`, `flows`, `data`, `interfaces`, `dependencies`, `capabilities`) contain exactly one of `{"refs": [...]}` with a non-empty array or `{"na": "reason"}` with a non-empty rationale. A feature's related flow may not use an interface, data entity, or external dependency omitted from the feature's corresponding relation mapping.
 
@@ -186,7 +190,7 @@ All current `FTR-*` records are implicit graph roots for the milestone.
 
 An unknown is `QUESTION`, `DECISION_REQUIRED`, `ASSUMPTION`, `AUTHORITY_CONFLICT`, or `CONTRADICTION`; its resolution phase is `DESIGN`, `IMPLEMENTATION`, `VERIFICATION`, or `POST_MILESTONE`; its status is `OPEN` or `RESOLVED`.
 
-Resolved records require `resolved_by_ref`; resolved `DECISION_REQUIRED` records must resolve to `DEC-*`. Open `AUTHORITY_CONFLICT` and `CONTRADICTION` records are blocking. An open `DECISION_REQUIRED` record with `resolution_phase: DESIGN` is also blocking. Every open blocking unknown has `resolution_phase: DESIGN`.
+Resolved records require both `resolved_by_ref` and `resolution_ref`. `resolved_by_ref` identifies the catalog record associated with the resolution; resolved `DECISION_REQUIRED` records must still resolve to `DEC-*`, while other unknown kinds are not forced to resolve to a decision record. `resolution_ref` points to dedicated resolution evidence in `DECISIONS`, with a fragment token exactly equal to the resolved `UNK-*` identity and structural content in that section. Open `AUTHORITY_CONFLICT` and `CONTRADICTION` records are blocking. An open `DECISION_REQUIRED` record with `resolution_phase: DESIGN` is also blocking. Every open blocking unknown has `resolution_phase: DESIGN`.
 
 `UNK-*` records participate in reference and closure semantics but are not material graph roots and are not scored as orphan material entities. They therefore cannot appear in `milestone.root_refs`.
 
@@ -227,18 +231,22 @@ A support reference is valid only when it resolves in the concern's canonical au
 2. all IDs and typed references are valid and globally unique;
 3. every logical Markdown reference uses a legal root/shard path, stays within its authority domain, resolves exactly one canonical heading token, and ignores ATX-looking headings inside fenced code blocks and HTML comments;
 4. every applicable concern has structurally valid `support_refs`, actual depth is not `NONE`, and actual depth meets required depth;
-5. every resolved support reference and every canonical scope/entity/specification/capability explanation reference points to a section containing structural content;
-6. feature traceability, relation-state, and flow-subset invariants hold;
-7. build/buy and unknown-resolution invariants hold, including blocking open design-phase `DECISION_REQUIRED` records, and no blocking unknown/conflict/contradiction remains open;
+5. every resolved support reference, every canonical scope/entity/specification/capability explanation reference, and every resolved unknown `resolution_ref` points to a section containing structural content; resolved unknown resolution references stay in `DECISIONS` and bind their fragment token exactly to their own `UNK-*` identity;
+6. feature traceability, relation-state, role/feature actor-intersection, and flow-subset invariants hold, and every role has at least one actor;
+7. build/buy and unknown-resolution invariants hold, including the existing `DECISION_REQUIRED` attribution rule, blocking open design-phase `DECISION_REQUIRED` records, and no blocking unknown/conflict/contradiction remains open;
 8. every active orphan-scored entity is reachable from a feature root or explicit milestone root;
 9. structural N/A contradictions are absent and `product.objective` remains applicable; and
 10. milestone scope is `FROZEN`.
 
 Malformed/unsupported model or usage errors exit `2`. A valid model that has closure blockers exits `1`. A valid model with `DOCS_READY = TRUE` exits `0`.
 
-## 14. Stop rule
+## 14. Documentation closure and reopening
 
-Once a milestone is `FROZEN` and reaches `DOCS_READY = TRUE`, design expansion for that milestone **must stop**. Additional design work requires a recognized reopening trigger such as an approved scope change, newly discovered contradiction/unknown, invalidated evidence, changed external constraint, or another governing-authority event. Closure is not an instruction to exhaust every imaginable detail.
+For documentation purposes, a milestone that is `FROZEN` and reaches `DOCS_READY = TRUE` is closed: the current V1 documentation requirements are satisfied, and this model requires no additional documentation depth for that milestone.
+
+Documentation closure reopens whenever authoritative project facts change such that the deterministic V1 predicate becomes false, for example after a scope change, a newly represented blocking unknown or contradiction, invalidated support/reference evidence, or a changed external constraint. Closure is restored when the predicate is true again.
+
+This section defines documentation closure only. It does not direct or authorize design, execution, review, promotion, release, or any other workflow. **DESIGN TO CLOSURE, NOT TO EXHAUSTION** is a documentation-scope principle, not a workflow-control rule.
 
 ## 15. Validator boundary
 

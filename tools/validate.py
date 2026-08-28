@@ -117,7 +117,7 @@ def recs(c,p):
    for k in ('name','subject','outcome'):
     if k in r and not ne(r[k]):p.m(l+'.'+k+' must be non-empty')
    for k,v in es.items():en(r[k],v,p,l+'.'+k)
-   if n=='roles':sl(r['actor_refs'],p,l+'.actor_refs')
+   if n=='roles':sl(r['actor_refs'],p,l+'.actor_refs',1)
    if n=='systems':sl(r['decision_refs'],p,l+'.decision_refs')
    if n=='interfaces':sl(r['peer_refs'],p,l+'.peer_refs')
    if n=='flows':
@@ -153,7 +153,7 @@ def recs(c,p):
  for i,r in enumerate(c['unknowns']):
   l=f'unknowns[{i}]';base={'id','kind','question','affected_refs','affected_coverage','blocking','reason','resolution_phase','status'}
   if not isinstance(r,dict):p.m(l+' must be object');continue
-  if not exact(r,base|({'resolved_by_ref'} if r.get('status')=='RESOLVED' else set()),p,l):continue
+  if not exact(r,base|({'resolved_by_ref','resolution_ref'} if r.get('status')=='RESOLVED' else set()),p,l):continue
   en(r['kind'],K,p,l+'.kind');en(r['resolution_phase'],PH,p,l+'.resolution_phase');en(r['status'],{'OPEN','RESOLVED'},p,l+'.status')
   if not ne(r['question']) or not ne(r['reason']):p.m(l+' question/reason must be non-empty')
   sl(r['affected_refs'],p,l+'.affected_refs');sl(r['affected_coverage'],p,l+'.affected_coverage')
@@ -243,6 +243,9 @@ def references(c,t,target,p):
    if x not in cc:p.r(f"{r['id']}.affected_coverage references unknown concern {x!r}")
   if r['status']=='RESOLVED':
    ref(r['resolved_by_ref'],None,ids,p,r['id']+'.resolved_by_ref')
+   q=dparse(r['resolution_ref'])
+   if q and q[2]!=r['id']:p.r(r['id']+'.resolution_ref heading token must equal '+r['id'])
+   doc(target,r['resolution_ref'],'DECISIONS',p,r['id']+'.resolution_ref')
    if r['kind']=='DECISION_REQUIRED' and ids.get(r['resolved_by_ref'])!='DEC':p.r(r['id']+' DECISION_REQUIRED resolution must point to DEC')
 def edges(c):
  e={}
@@ -291,6 +294,11 @@ def closure(c,p):
  pairs=[(c['actors']or c['roles'],'product.actors_roles'),(c['features'],'product.features_capabilities'),(c['features'],'behavior.functional'),(c['features']or c['acceptance'],'behavior.acceptance'),(c['systems'],'architecture.components_ownership'),(c['data'],'data.entities_ownership'),(c['interfaces'],'interfaces.contracts'),([x for x in c['flows'] if x['critical']],'behavior.critical_flows'),(c['dependencies'],'interfaces.external_dependencies'),(c['capabilities'],'architecture.build_buy'),(c['decisions'],'decisions.material_choices'),(c['unknowns'],'unknowns.open_questions')]
  for a,k in pairs:
   if a and na(k):p.x('TRACEABILITY_GAP',k+' is N/A but matching inventory exists')
+ rm={x['id']:set(x['actor_refs']) for x in c['roles']}
+ for f in c['features']:
+  fa=set(f['actor_refs'])
+  for x in rr(f['relations']['roles']):
+   if not fa & rm.get(x,set()):p.x('TRACEABILITY_GAP',f"{f['id']} relation role {x} shares no actor with feature actor_refs")
  fm={x['id']:x for x in c['flows']}
  for f in c['features']:
   for x in rr(f['relations']['flows']):

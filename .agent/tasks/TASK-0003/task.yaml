@@ -1,0 +1,193 @@
+protocol_version: 3
+
+task_id: TASK-0003
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: discovered_gap
+  task_id: TASK-0007
+  gap_id: "AGENT_RUNTIME_CURRENT_REFERENCE_RECONCILIATION"
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-documents
+
+target:
+  repository: phatnguyen03022001/agent-documents
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "33f138c56dee6a2a1e8b8a6dc52b1399452ef177"
+
+architect_analysis_skills:
+  - architect
+  - executor
+  - simplicity
+  - verification
+
+execution_skills:
+  required:
+    - executor
+    - simplicity
+    - verification
+  recommended: []
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: "phatnguyen03022001/agent-runtime TASK-0007 revision 2 accepted review at 3acaffd35c7a353153356f734b548b4d43fa43a2."
+    role: "Accepted READY_FOR_DELETION_PLANNING evidence identifying exactly two current agent-documents operational references requiring reconciliation: README.md and DOCUMENT_MODEL.md."
+    precedence: 1
+  - source: "phatnguyen03022001/architect-profile TASK-0003 accepted review at fefd4f8b7b7fa965524b42ff8a42087609936388."
+    role: "Already accepted operator-facing removal of live agent-runtime references while preserving trusted direct Terminal/local execution semantics; confirms ecosystem is moving to four governance/document repositories rather than replacing runtime with another subsystem."
+    precedence: 2
+  - source: "phatnguyen03022001/agent-skills@33f138c56dee6a2a1e8b8a6dc52b1399452ef177"
+    role: "Current accepted protocol-v3 durable-review and trusted generic execution governance."
+    precedence: 3
+  - source: "phatnguyen03022001/agent-documents@c13b4f51639b34f7c6417bfb10afe0eeee290b8e"
+    role: "Exact current agent-documents subject after TASK-0002 current Architect re-review acceptance."
+    precedence: 4
+
+structure_authority:
+  status: RESOLVED
+  source: "Current README.md and DOCUMENT_MODEL.md only."
+  rationale: "This is a bounded subtractive documentation-boundary correction. No model/schema/validator/template/test or execution subsystem change is justified."
+
+objective: "Remove or rewrite the two current operational agent-runtime references in agent-documents so the repository boundary accurately reflects the accepted four-repository ecosystem and generic execution governance, while preserving agent-documents ownership of describable project truth and documentation closure and preserving all historical task evidence."
+
+scope:
+  required_changes:
+    - "In README.md, remove or rewrite the current sentence that describes agent-runtime as optional bounded execution infrastructure. Preserve the strict boundary that agent-documents does not own agent workflow authority/execution protocol and that actual product truth belongs in the target repository."
+    - "In DOCUMENT_MODEL.md section 1, remove agent-runtime from the current repository-boundary list. Preserve the statement that agent-documents does not define execution infrastructure and preserve the remaining agent-documents/agent-standards/agent-skills/target-repository ownership boundaries."
+    - "Do not replace agent-runtime with another named runtime, broker, shell wrapper, sandbox, daemon, registry, orchestrator, execution repository, or sixth system component. Generic execution remains governed by agent-skills/operator policy and is outside agent-documents ownership."
+    - "Do not alter the V1 document model, eight authority domains, 45 concern taxonomy, schema, validator behavior, templates, tests, documentation-closure predicate, identity classes, reference semantics, build/buy semantics, or any TASK-0002 correction."
+    - "Historical .agent/tasks/** references to agent-runtime or prior ecosystem state remain historical evidence and must not be rewritten merely because current operational references are being removed."
+    - "Verify exact current README.md and DOCUMENT_MODEL.md contain no remaining live operational dependency/reference requiring agent-runtime after correction. Literal historical references outside these current semantic owners are not a failure."
+    - "Commit/push the implementation non-force to dev, produce TASK-0003/report.yaml as a separate report-only commit, verify exact implementation/report lineage, unchanged main, exact {dev, main} topology, and stop at Governing Architect review."
+
+  allowed_existing_files_or_components:
+    - README.md
+    - DOCUMENT_MODEL.md
+    - .agent/tasks/TASK-0003/task.yaml
+  expected_files_are_restrictive: true
+
+invariants:
+  - "agent-documents remains owner only of what a project must be able to describe and when documentation is closed for a milestone."
+  - "agent-skills remains owner of working method, handoff, authority, review, Git protocol, and generic execution governance."
+  - "agent-standards remains owner of engineering quality/maturity meaning."
+  - "Target repository remains owner of actual product truth and instantiated documentation."
+  - "No new execution infrastructure owner or replacement subsystem is introduced."
+  - "V1 model/schema/validator/template/test behavior remains unchanged."
+  - "Historical .agent/tasks/** evidence remains unchanged."
+  - "Branches remain exactly {dev, main}; main remains unchanged."
+
+forbidden_changes:
+  - "Do not modify model/*, tools/*, tests/*, templates/*, requirements, workflows, or any file other than README.md, DOCUMENT_MODEL.md, and the new TASK-0003 report artifact."
+  - "Do not modify TASK-0001/TASK-0002 task/report/review history."
+  - "Do not mutate architect-profile, agent-skills, agent-standards, agent-runtime, target repositories, local runtime/tunnel/config/state, branches other than non-force dev advancement, tags, releases, or repository metadata."
+  - "Do not create a replacement runtime, broker, wrapper, sandbox, daemon, registry, orchestration layer, shared state system, or central authority."
+  - "Do not perform unrelated wording cleanup or redesign the document model."
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: revised_contract_required
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+structure_policy:
+  expected_new_files:
+    - .agent/tasks/TASK-0003/report.yaml
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: ""
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+  REVIEW:
+    - exact_commit_report_resolution
+    - repository_content_write
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "README current repository-boundary text no longer presents agent-runtime as current optional infrastructure."
+    evidence_required: "Exact README diff/content proves the live runtime reference is removed or rewritten while preserving agent-documents, agent-skills, agent-standards, and target-repository ownership boundaries."
+  - id: AC-2
+    requirement: "DOCUMENT_MODEL current system-boundary list no longer includes agent-runtime."
+    evidence_required: "Exact section-1 diff/content proves the current list is reconciled while preserving that agent-documents does not define execution infrastructure."
+  - id: AC-3
+    requirement: "No model or behavior expansion occurs."
+    evidence_required: "Exact implementation diff changes only README.md and DOCUMENT_MODEL.md; schema/validator/tests/templates/taxonomy/model semantics are unchanged and no replacement subsystem is introduced."
+  - id: AC-4
+    requirement: "Historical evidence remains truthful."
+    evidence_required: "No pre-existing .agent/tasks/** artifact is modified; historical runtime references are retained as historical evidence."
+  - id: AC-5
+    requirement: "Publication is exact and bounded."
+    evidence_required: "Implementation is a direct non-force child of the exact execution base, report is a separate report-only direct child, main is unchanged, branches remain exactly {dev, main}."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Refresh GitHub truth; require dev equals the exact handoff base, main equals d95e56d098557bd2016041cfc995338c298a7d39, branches exactly {dev, main}; resolve TASK-0003 revision 1, accepted agent-runtime TASK-0007 review, accepted architect-profile TASK-0003 review, pinned agent-skills, and current TASK-0002 accepted review; preflight required EXECUTION capabilities."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Inspect exact current README.md and DOCUMENT_MODEL.md and identify only the two current operational agent-runtime references authorized for correction."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Apply the smallest subtractive wording correction. Preserve ownership boundaries and all V1 model semantics; introduce no replacement execution subsystem."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Verify exact base-to-implementation diff changes only README.md and DOCUMENT_MODEL.md; verify no current live operational agent-runtime dependency/reference remains in those two current semantic owners and no historical task artifact changed."
+      required: true
+    - id: CHECK-5
+      command_or_check: "Before publication refresh dev/main/topology; publish implementation non-force to dev; produce TASK-0003/report.yaml as separate report-only commit; verify sole parents, exact diffs, final dev, unchanged main, exact {dev, main}; stop at Governing Architect review."
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true

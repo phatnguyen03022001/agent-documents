@@ -1,0 +1,210 @@
+protocol_version: 3
+
+task_id: TASK-0004
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: discovered_gap
+  task_id: TASK-0002
+  gap_id: "V1_UNRESOLVED_FEATURE_RELATION_STATE"
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-documents
+
+target:
+  repository: phatnguyen03022001/agent-documents
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "533eaef0dbed13c5bbfdad1195218d8382a38e5c"
+
+architect_analysis_skills:
+  - architect
+  - executor
+  - simplicity
+  - verification
+
+execution_skills:
+  required:
+    - executor
+    - simplicity
+    - verification
+  recommended: []
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: "phatnguyen03022001/ilets@2f54b7c6003399ccf7abff8cda2277d68d0048e8 .agent/tasks/TASK-0002/report.yaml + review.yaml"
+    role: "Real target-pilot evidence: staged BEHAVIOR/catalog migration correctly stopped BLOCKED because V1 relationState cannot represent a material feature relation whose typed target domain is not yet materialized without false N/A or premature neighboring-domain identities."
+    precedence: 1
+  - source: "phatnguyen03022001/agent-documents@e6728594b0371e2e941c1457fc8efdc14a90deee"
+    role: "Exact current unreleased V1 candidate whose relationState permits only non-empty typed refs or explicit N/A while separately defining UNK-* unresolved design truth."
+    precedence: 2
+  - source: "phatnguyen03022001/agent-skills@533eaef0dbed13c5bbfdad1195218d8382a38e5c"
+    role: "Exact current protocol-v3 governance authority."
+    precedence: 3
+
+structure_authority:
+  status: RESOLVED
+  source: "DOCUMENT_MODEL.md sections 7-9 and 13-18; model/project.schema.v1.json relationState; tools/validate.py relation/reference/closure validation; tests/test_validate.py."
+  rationale: "The target pilot reproduced a missing state in the existing V1 candidate. The smallest correct repair is a backward-compatible unresolved relation state owned by the existing catalog plus deterministic validation/closure semantics; no new domain, identity class, registry, migration subsystem, or model version is justified."
+
+objective: "Correct the unreleased V1 candidate so a feature relation can truthfully be represented as unresolved while its target DAT/IFC/EXT/CAP/other typed identity is not yet materialized, without abusing N/A or inventing neighboring-domain records. Add one explicit catalog relation state bound to an existing open design-phase UNK-* record; keep it structurally valid but deterministically blocking for DOCS_READY until replaced by typed refs or genuine N/A. Preserve all existing valid V1 refs/na behavior and keep model_version 1."
+
+scope:
+  required_changes:
+    - "Extend the existing applicability-aware feature relationState with exactly one third state: {\"unresolved_ref\": \"UNK-...\"}. The catalog remains owner of relation state; the referenced UNK record remains owner of the unresolved question/reason/context."
+    - "Update DOCUMENT_MODEL.md so refs means a resolved applicable typed relationship, na means genuine demonstrated non-applicability, and unresolved_ref means the relation may/materially does apply but cannot yet be resolved to the required typed identity. Migration incompleteness or unresolved design must never be encoded as na."
+    - "Require unresolved_ref to reference an existing UNK-* record that is OPEN and has resolution_phase DESIGN. A missing, RESOLVED, non-DESIGN, or wrong-class target is invalid. Once the unknown is resolved, the feature relation must be replaced with refs or genuine na rather than retaining unresolved_ref."
+    - "Update model/project.schema.v1.json relationState to admit the exact unresolved_ref shape while preserving mutual exclusivity/additionalProperties=false and all existing refs/na shapes. Keep model_version 1 and all 45 concern keys, eight authority domains, and twelve identity classes unchanged."
+    - "Update tools/validate.py cross-reference and closure logic so unresolved_ref is type-checked to UNK, does not create a material graph edge to a not-yet-existing target entity, and is a deterministic documentation-resolution blocker. A structurally valid OPEN milestone may contain unresolved_ref; DOCS_READY can never be TRUE while any feature relation retains unresolved_ref."
+    - "Preserve flow-subset and typed-reference safety: unresolved_ref does not authorize a FLW/DAT/IFC/EXT/CAP record to reference a missing target, and it cannot satisfy another entity's typed reference requirement."
+    - "Add focused regression/control tests proving: valid unresolved_ref to an OPEN DESIGN unknown is structurally accepted but closure-blocking; missing/wrong-class/resolved/non-DESIGN targets are rejected; false na is not introduced; existing refs and genuine na fixtures remain valid; replacing unresolved_ref with valid typed refs allows that relation blocker to disappear."
+    - "Run the full existing unit suite and Python compile checks in an isolated execution surface. No GitHub Actions workflow exists or is required; do not add one merely for this task."
+    - "Do not modify templates unless an existing template contains relationState semantics that would become materially false after this correction. The empty project template does not need ceremonial churn."
+    - "Do not modify README.md unless exact current text becomes materially false; prefer no README change."
+    - "Publish one implementation commit non-force to dev, then create .agent/tasks/TASK-0004/report.yaml as a separate report-only direct child and stop at Governing Architect review."
+
+  allowed_existing_files_or_components:
+    - DOCUMENT_MODEL.md
+    - model/project.schema.v1.json
+    - tools/validate.py
+    - tests/test_validate.py
+    - .agent/tasks/TASK-0004/task.yaml
+  expected_files_are_restrictive: true
+
+invariants:
+  - "The eight authority domains remain unchanged."
+  - "The 45 coverage concern keys remain unchanged."
+  - "The twelve identity classes remain unchanged."
+  - "model_version remains 1; this is a backward-compatible correction to an unreleased candidate, not a V2 redesign."
+  - "Catalog remains authoritative for feature relation state; Markdown remains authoritative for project explanation/specification."
+  - "refs remains non-empty and typed; na remains genuine non-applicability with rationale; unresolved_ref is distinct from both."
+  - "An unresolved relation always prevents DOCS_READY and cannot survive as a resolved relation representation."
+  - "No target-specific IELTS semantics are copied into the generic model or tests beyond minimal anonymous fixtures reproducing the defect class."
+  - "No new orchestration, migration registry, lifecycle engine, database, queue, ninth authority domain, or identity class is introduced."
+  - "Branches remain exactly {dev, main}; main remains d95e56d098557bd2016041cfc995338c298a7d39."
+
+forbidden_changes:
+  - "Do not modify model/coverage.v1.json, root templates without material need, README without material need, requirements, workflows, prior task/report/review history, or any external repository."
+  - "Do not add a generic PENDING status to all entities, nullable typed references, empty refs arrays, wildcard IDs, or another relation registry."
+  - "Do not reinterpret na as migration-incomplete/unknown."
+  - "Do not permit unresolved_ref to target arbitrary strings, non-UNK identities, RESOLVED unknowns, or POST_MILESTONE/IMPLEMENTATION/VERIFICATION unknowns."
+  - "Do not let unresolved_ref satisfy DOCS_READY, graph reachability to an absent entity, flow-subset requirements, or assurance/maturity claims."
+  - "Do not change agent-standards or agent-skills semantics."
+  - "Do not create branch, PR, tag, release, repository metadata mutation, or main mutation."
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: revised_contract_required
+  dependency_change: forbidden
+  public_contract_change: revised_contract_required
+  blocking_gap_behavior: BLOCKED
+
+structure_policy:
+  expected_new_files:
+    - .agent/tasks/TASK-0004/report.yaml
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: ""
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - isolated_test_execution
+  REVIEW:
+    - exact_commit_report_resolution
+    - repository_content_write
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "V1 can represent a truthful unresolved feature relation without false N/A or premature typed-domain identities."
+    evidence_required: "Model/schema/validator accept exactly unresolved_ref -> existing OPEN DESIGN UNK as a third relation state while preserving refs and na semantics."
+  - id: AC-2
+    requirement: "Unresolved relation state is fail-closed for documentation closure."
+    evidence_required: "Validator deterministically prevents DOCS_READY while any feature relation uses unresolved_ref; resolved/missing/non-DESIGN/wrong-class unknown targets are invalid."
+  - id: AC-3
+    requirement: "Typed graph and subset integrity are not weakened."
+    evidence_required: "unresolved_ref creates no typed material-entity edge and cannot make a flow/entity typed reference to a missing DAT/IFC/EXT/CAP valid; existing graph/reachability/subset controls remain intact."
+  - id: AC-4
+    requirement: "Correction remains backward-compatible and minimal."
+    evidence_required: "Existing refs and genuine na tests remain green; model_version=1, eight domains, 45 concerns and 12 identity classes remain exact; implementation diff is limited to DOCUMENT_MODEL.md, project schema, validator and tests unless a material contradiction proves one additional existing semantic owner must change under revised authority."
+  - id: AC-5
+    requirement: "The reproduced target blocker has a generic supported representation after correction."
+    evidence_required: "A minimal anonymous regression fixture equivalent to the IELTS staged-migration condition validates structurally with unresolved relation(s) and reports closure blocked rather than schema/cross-reference failure."
+  - id: AC-6
+    requirement: "Verification and publication are exact."
+    evidence_required: "Focused regressions pass, full unittest suite passes, Python compile checks pass, implementation is a direct non-force child of exact base, report is separate report-only child, main unchanged and topology exactly {dev, main}."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Refresh GitHub truth; require dev equals exact handoff base, main equals d95e56d098557bd2016041cfc995338c298a7d39, topology exactly {dev, main}; resolve TASK-0004 revision 1, pinned agent-skills, exact IELTS blocked report/review evidence, and preflight repository read/write plus isolated_test_execution."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Reproduce the defect from the exact base with a minimal isolated target fixture: a feature relation that is unresolved because the typed target domain is not yet materialized cannot be represented truthfully using current refs/na. Preserve causal RED evidence before correction."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Implement the smallest mutually consistent DOCUMENT_MODEL/schema/validator/test correction. Prefer unresolved_ref -> UNK over nullable refs, empty arrays, false na, or premature domain identities."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Run focused tests covering valid unresolved relation, invalid target/status/phase, closure blocker, replacement with typed refs, and controls for existing refs/na plus graph/subset behavior."
+      required: true
+    - id: CHECK-5
+      command_or_check: "Run python3 -m unittest discover -s tests and python3 -m py_compile tools/validate.py tests/test_validate.py on the exact candidate."
+      required: true
+    - id: CHECK-6
+      command_or_check: "Audit exact candidate: model_version=1, exactly 8 domains, 45 concern keys, 12 identity classes, unchanged coverage taxonomy, no target-specific semantics, no new framework/state machinery, and exact authorized implementation paths only."
+      required: true
+    - id: CHECK-7
+      command_or_check: "Before publication refresh dev/main/topology and require exact expected parent. Publish implementation non-force to dev; create TASK-0004/report.yaml as separate report-only child; verify exact parentage/diffs/final refs/topology and stop at NEEDS_REVIEW."
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true

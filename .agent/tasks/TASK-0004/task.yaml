@@ -1,7 +1,7 @@
 protocol_version: 3
 
 task_id: TASK-0004
-task_revision: 2
+task_revision: 3
 state: APPROVED
 
 origin:
@@ -55,14 +55,14 @@ authority_sources:
   - source: "phatnguyen03022001/agent-skills@533eaef0dbed13c5bbfdad1195218d8382a38e5c"
     role: "Exact current protocol-v3 governance authority."
     precedence: 3
-  - source: "Two independent TASK-0004 execution attempts against revision 1"
-    role: "Execution-surface evidence: the semantic correction repeatedly reached 93/93 tests plus py_compile PASS, but the ChatGPT-native isolated filesystem was reclaimed before exact verified candidate bytes could be bound to Git publication. No branch/ref/history mutation occurred in either attempt."
+  - source: "Three independent TASK-0004 execution attempts across revisions 1-2"
+    role: "Execution-surface evidence: the semantic correction repeatedly reached 93/93 tests plus py_compile PASS, but transient isolated filesystems expired before a verified candidate could be durably bound and published. No implementation branch/ref/history mutation occurred."
     precedence: 4
 
 structure_authority:
   status: RESOLVED
   source: "DOCUMENT_MODEL.md sections 7-9 and 13-18; model/project.schema.v1.json relationState; tools/validate.py relation/reference/closure validation; tests/test_validate.py."
-  rationale: "The target pilot reproduced a missing state in the existing V1 candidate. The smallest correct repair is a backward-compatible unresolved relation state owned by the existing catalog plus deterministic validation/closure semantics. Revision 2 changes only execution/verification ordering so exact remote committed bytes, not a fragile transient sandbox snapshot, become the final verification subject."
+  rationale: "The target pilot reproduced a missing state in the existing V1 candidate. The semantic correction remains unchanged. Revision 3 changes only execution persistence: exact candidate bytes are first stored as unreferenced Git objects and assembled into an immutable unreferenced candidate commit, which is then verified from a fresh isolated surface before dev is fast-forwarded to that exact verified commit."
 
 objective: "Correct the unreleased V1 candidate so a feature relation can truthfully be represented as unresolved while its target typed identity is not yet materialized, without abusing N/A or inventing neighboring-domain records. Add one explicit catalog relation state bound to an existing open design-phase UNK-* record; keep it structurally valid but deterministically blocking for DOCS_READY until replaced by typed refs or genuine N/A. Preserve all existing valid V1 refs/na behavior and keep model_version 1."
 
@@ -75,10 +75,12 @@ scope:
     - "Update tools/validate.py cross-reference and closure logic so unresolved_ref is type-checked to UNK, does not create a material graph edge to a not-yet-existing target entity, and is a deterministic documentation-resolution blocker. A structurally valid OPEN milestone may contain unresolved_ref; DOCS_READY can never be TRUE while any feature relation retains unresolved_ref."
     - "Preserve flow-subset and typed-reference safety: unresolved_ref does not authorize a FLW/DAT/IFC/EXT/CAP record to reference a missing target, and it cannot satisfy another entity's typed reference requirement."
     - "Add focused regression/control tests proving: valid unresolved_ref to an OPEN DESIGN unknown is structurally accepted but closure-blocking; missing/wrong-class/resolved/non-DESIGN targets are rejected; false na is not introduced; existing refs and genuine na fixtures remain valid; replacing unresolved_ref with valid typed refs allows that relation blocker to disappear."
-    - "Reproduce the exact-base defect in an isolated execution surface before mutation. Pre-publication tests may be used as construction evidence but are not the final exact-candidate proof."
-    - "After the bounded implementation content is constructed and stale-state is refreshed, publish exactly one implementation commit non-force to dev. The implementation commit may be published before final full verification specifically so the immutable remote commit becomes the durable verification subject; this is not acceptance and does not authorize report success."
-    - "Immediately re-fetch/reconstruct the exact published implementation SHA in a fresh isolated execution surface and run the focused regressions, full unittest suite, py_compile, and semantic/scope audit against that exact remote commit. Final verification evidence must name the exact implementation SHA."
-    - "If exact-published-SHA verification passes, create .agent/tasks/TASK-0004/report.yaml as a separate report-only direct child and stop at NEEDS_REVIEW. If exact-published-SHA verification fails or cannot be completed, do not claim NEEDS_REVIEW; produce a truthful terminal report when capability permits, with BLOCKED or REVERIFY_REQUIRED evidence bound to the exact published implementation SHA, and stop for Architect action."
+    - "Before expensive reconstruction, preflight an atomic Git-object publication path capable of create_blob, create_tree, create_commit, and non-force update_ref semantics. If that path is not currently available, stop CURRENT_PHASE_CAPABILITY_UNAVAILABLE before rebuilding the candidate."
+    - "Reproduce the exact-base defect in an isolated execution surface and construct only the authorized bounded correction. Construction-time tests may be used as evidence but are not the final exact-candidate proof."
+    - "As soon as each changed candidate file is finalized, persist its exact bytes as an unreferenced Git blob. Assemble those blobs with the unchanged exact-base tree into one unreferenced candidate tree and one unreferenced candidate commit whose sole parent is the exact execution base. Do not move dev yet. Unreferenced Git objects are durable staging/evidence only and create no branch authority or accepted repository state."
+    - "From a fresh isolated execution surface, fetch/reconstruct the exact unreferenced candidate commit and run focused regressions, the full unittest suite, py_compile, and semantic/scope audit against that exact immutable candidate SHA. Final verification evidence must name that SHA."
+    - "Only if exact-candidate-SHA verification passes, refresh dev/main/topology and require dev still equals the exact execution base, then fast-forward dev non-force to the already verified candidate commit. Do not rebuild or substitute candidate bytes between verification and ref advancement."
+    - "After successful dev advancement, create .agent/tasks/TASK-0004/report.yaml as a separate report-only direct child and stop at NEEDS_REVIEW. If candidate verification fails, leave dev at the execution base and publish a truthful BLOCKED report-only child when capability permits. If verification cannot be completed, fail closed without moving dev."
     - "Do not modify templates unless an existing template contains relationState semantics that would become materially false after this correction. The empty project template does not need ceremonial churn."
     - "Do not modify README.md unless exact current text becomes materially false; prefer no README change."
 
@@ -100,8 +102,8 @@ invariants:
   - "An unresolved relation always prevents DOCS_READY and cannot survive as a resolved relation representation."
   - "No target-specific IELTS semantics are copied into the generic model or tests beyond minimal anonymous fixtures reproducing the defect class."
   - "No new orchestration, migration registry, lifecycle engine, database, queue, ninth authority domain, or identity class is introduced."
-  - "Publication of an implementation commit is not verification PASS, Architect acceptance, promotion, or release."
-  - "Final successful Executor evidence must verify the exact immutable published implementation SHA, not merely a transient pre-publication sandbox candidate."
+  - "Unreferenced Git blobs/trees/commits are immutable staging/evidence only; they do not alter branch history, create target authority, or constitute publication."
+  - "Only a candidate commit verified by exact immutable SHA may become dev for a successful execution."
   - "Branches remain exactly {dev, main}; main remains d95e56d098557bd2016041cfc995338c298a7d39."
 
 forbidden_changes:
@@ -110,7 +112,8 @@ forbidden_changes:
   - "Do not reinterpret na as migration-incomplete/unknown."
   - "Do not permit unresolved_ref to target arbitrary strings, non-UNK identities, RESOLVED unknowns, or POST_MILESTONE/IMPLEMENTATION/VERIFICATION unknowns."
   - "Do not let unresolved_ref satisfy DOCS_READY, graph reachability to an absent entity, flow-subset requirements, or assurance/maturity claims."
-  - "Do not claim successful verification from pre-publication sandbox tests alone."
+  - "Do not move dev to an unverified candidate SHA."
+  - "Do not treat unreferenced Git staging objects as repository authority or evidence of successful execution."
   - "Do not change agent-standards or agent-skills semantics."
   - "Do not create branch, PR, tag, release, repository metadata mutation, or main mutation."
 
@@ -172,34 +175,34 @@ acceptance_criteria:
     requirement: "The reproduced target blocker has a generic supported representation after correction."
     evidence_required: "A minimal anonymous regression fixture equivalent to the IELTS staged-migration condition validates structurally with unresolved relation(s) and reports closure blocked rather than schema/cross-reference failure."
   - id: AC-6
-    requirement: "Verification and publication are exact."
-    evidence_required: "Focused regressions, full unittest suite, Python compile checks, and semantic/scope audit PASS against the exact published implementation SHA; implementation is one direct non-force child of exact execution base; successful report is a separate report-only child; main unchanged and topology exactly {dev, main}."
+    requirement: "Verification and publication are exact and resilient to sandbox loss."
+    evidence_required: "Focused regressions, full unittest suite, Python compile checks, and semantic/scope audit PASS against one exact immutable unreferenced candidate commit SHA; dev is then non-force advanced from the exact execution base to that same verified SHA without content reconstruction; successful report is a separate report-only child; main unchanged and topology exactly {dev, main}."
 
 verification:
   executor_checks:
     - id: CHECK-1
-      command_or_check: "Refresh GitHub truth; require dev equals exact handoff base, main equals d95e56d098557bd2016041cfc995338c298a7d39, topology exactly {dev, main}; resolve TASK-0004 revision 2, pinned agent-skills, exact IELTS blocked report/review evidence, and preflight repository read/write plus isolated_test_execution."
+      command_or_check: "Refresh GitHub truth; require dev equals exact handoff base, main equals d95e56d098557bd2016041cfc995338c298a7d39, topology exactly {dev, main}; resolve TASK-0004 revision 3 and pinned authorities; preflight repository read/write, isolated_test_execution, and concrete atomic Git-object operations create_blob/create_tree/create_commit/update_ref."
       required: true
     - id: CHECK-2
-      command_or_check: "Reproduce the defect from the exact base with a minimal isolated target fixture: a feature relation that is unresolved because the typed target domain is not yet materialized cannot be represented truthfully using current refs/na. Preserve causal RED evidence before correction."
+      command_or_check: "Reproduce the defect from the exact base with a minimal isolated target fixture and preserve causal RED evidence."
       required: true
     - id: CHECK-3
       command_or_check: "Implement the smallest mutually consistent DOCUMENT_MODEL/schema/validator/test correction. Prefer unresolved_ref -> UNK over nullable refs, empty arrays, false na, or premature domain identities."
       required: true
     - id: CHECK-4
-      command_or_check: "Use isolated tests during construction as useful evidence, then refresh dev/main/topology and publish exactly one bounded implementation commit non-force to dev. Publication is a candidate materialization step, not a verification PASS."
+      command_or_check: "Persist finalized changed-file bytes immediately as unreferenced Git blobs, then construct one unreferenced candidate tree/commit with sole parent equal to exact execution base. Verify the candidate commit diff contains only authorized implementation paths. Do not move dev."
       required: true
     - id: CHECK-5
-      command_or_check: "From a fresh isolated surface, fetch/reconstruct the exact published implementation SHA and run focused tests covering valid unresolved relation, invalid target/status/phase, closure blocker, replacement with typed refs, controls for existing refs/na, and graph/subset behavior."
+      command_or_check: "From a fresh isolated surface, fetch/reconstruct the exact unreferenced candidate SHA and run focused tests covering valid unresolved relation, invalid target/status/phase, closure blocker, replacement with typed refs, controls for existing refs/na, and graph/subset behavior."
       required: true
     - id: CHECK-6
-      command_or_check: "On that same exact published SHA, run python3 -m unittest discover -s tests and python3 -m py_compile tools/validate.py tests/test_validate.py."
+      command_or_check: "On that exact candidate SHA run python3 -m unittest discover -s tests and python3 -m py_compile tools/validate.py tests/test_validate.py."
       required: true
     - id: CHECK-7
-      command_or_check: "Audit the exact published SHA: model_version=1, exactly 8 domains, 45 concern keys, 12 identity classes, unchanged coverage taxonomy, no target-specific semantics, no new framework/state machinery, and exact authorized implementation paths only."
+      command_or_check: "Audit that exact candidate SHA: model_version=1, exactly 8 domains, 45 concern keys, 12 identity classes, unchanged coverage taxonomy, no target-specific semantics, no new framework/state machinery, exact authorized implementation paths only."
       required: true
     - id: CHECK-8
-      command_or_check: "If CHECK-5..7 PASS, create TASK-0004/report.yaml as a separate report-only direct child, verify exact implementation/report parentage, diffs, final refs/topology, and stop at NEEDS_REVIEW. If exact published SHA cannot be proven, fail closed and do not claim NEEDS_REVIEW."
+      command_or_check: "If CHECK-5..7 PASS, refresh refs and require dev still equals exact execution base; non-force update dev to the already verified candidate SHA. Create TASK-0004/report.yaml as a separate report-only child, verify parentage/diffs/final refs/topology, and stop at NEEDS_REVIEW. If verification does not PASS, do not move dev and fail closed."
       required: true
   authoritative_verification:
     required: false

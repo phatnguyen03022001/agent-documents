@@ -1,0 +1,211 @@
+protocol_version: 3
+
+task_id: TASK-0004
+task_revision: 3
+report_revision: 1
+state: REPORTED
+
+task_source:
+  path: .agent/tasks/TASK-0004/task.yaml
+  commit: "a874e385c8adc5c2a0ed02e5f919dc38cdd50cb9"
+  blob_sha: "98de0ce4323353917139041751f47f5dd279996c"
+
+execution:
+  repository: phatnguyen03022001/agent-documents
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: "a874e385c8adc5c2a0ed02e5f919dc38cdd50cb9"
+  pre_execution_head: "a874e385c8adc5c2a0ed02e5f919dc38cdd50cb9"
+  final_execution_head: "fb217c86b690f013bb386a7ecaa56d0927569b79"
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: "533eaef0dbed13c5bbfdad1195218d8382a38e5c"
+  observed_revision: "533eaef0dbed13c5bbfdad1195218d8382a38e5c"
+
+execution_skills_used:
+  required:
+    - executor
+    - simplicity
+    - verification
+  recommended: []
+  external: []
+
+pre_execution_checks:
+  protocol_version_supported: true
+  task_at_base_confirmed: true
+  task_identity_confirmed: true
+  architect_binding_confirmed: true
+  repository_confirmed: true
+  branch_confirmed: true
+  base_head_confirmed: true
+  skill_revision_confirmed: true
+  required_execution_skills_available: true
+  structure_authority_confirmed: true
+  git_object_publication_preflight_passed: true
+
+capability_preflight:
+  phase: EXECUTION
+  required:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - isolated_test_execution
+    - create_blob
+    - create_tree
+    - create_commit
+    - non_force_update_ref
+  available:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - isolated_test_execution
+    - create_blob
+    - create_tree
+    - create_commit
+    - non_force_update_ref
+  missing: []
+  passed: true
+  evidence: "Revision-3 Git-object publication preflight proved create_blob/create_tree/create_commit and non-force update_ref before candidate reconstruction. This continuation re-resolved durable finalized blob identities and used a fresh isolated execution root for exact-candidate verification."
+
+authoritative_verification:
+  required: false
+  performed: false
+  result: NOT_REQUIRED
+  evidence: "TASK-0004 designates no separate authoritative verifier. Mandatory Executor exact-SHA verification was completed against immutable candidate fb217c86b690f013bb386a7ecaa56d0927569b79 before dev moved."
+
+local_hygiene:
+  result: PASS
+  run_root: "/tmp/task0004-verify-fb217c86"
+  cleanup_performed: true
+  retained:
+    - "/tmp/task0004-build (pre-existing retained construction evidence from the prior execution turn; not created or deleted by this continuation)"
+  evidence: "Fresh verification root was created only for this continuation, reconstructed from bytes whose Git blob hashes matched the immutable candidate tree, and removed after verification."
+
+implementation:
+  commit: "fb217c86b690f013bb386a7ecaa56d0927569b79"
+  parent: "a874e385c8adc5c2a0ed02e5f919dc38cdd50cb9"
+  tree: "3453efd02225bf1605fbd36e5b08dd6acdefb8c4"
+  message: "fix(TASK-0004): support unresolved feature relations"
+  published_non_force_to_dev: true
+  verified_before_publication: true
+  changed_files_exactly:
+    - DOCUMENT_MODEL.md
+    - model/project.schema.v1.json
+    - tools/validate.py
+    - tests/test_validate.py
+  finalized_blobs:
+    DOCUMENT_MODEL.md: "4bf589507119a83dba9aae4d251858fe5b1722c5"
+    model/project.schema.v1.json: "54da14c7a4c1bd7ee9dd37a484973c653b599260"
+    tools/validate.py: "b97566b49f0a3eff8b93e2ea27121dfc16c7251f"
+    tests/test_validate.py: "da52720047625f72b24003c92e5da5cfae000925"
+  unchanged_control_blobs:
+    model/coverage.v1.json: "cb500fb287a6b65832296e06d7e07e5ddeb6cf8c"
+    templates/docs/catalog/project.json: "ede02b1c8eea336678b7629e717f88a779c75ef1"
+
+verification_evidence:
+  exact_candidate_sha: "fb217c86b690f013bb386a7ecaa56d0927569b79"
+  fresh_isolated_surface: true
+  exact_blob_reconstruction: PASS
+  focused_regressions:
+    result: PASS
+    tests_run: 11
+    evidence: "Valid OPEN DESIGN unresolved_ref closure blocker; missing/wrong-class/resolved/non-DESIGN targets; replacement with refs; refs and genuine-na controls; graph-edge exclusion; flow-subset preservation; schema third-form control all passed."
+  full_unittest:
+    command: "python3 -m unittest discover -s tests"
+    result: PASS
+    tests_run: 93
+  py_compile:
+    command: "python3 -m py_compile tools/validate.py tests/test_validate.py"
+    result: PASS
+  semantic_scope_audit:
+    result: PASS
+    evidence: "model_version=1; exactly 8 authority domains; exactly 45 concern keys; exactly 12 identity classes; relationState exactly refs|na|unresolved_ref; coverage taxonomy unchanged; no IELTS/target-specific semantics; base-to-candidate diff exactly the four authorized implementation paths."
+
+changed_files:
+  - path: DOCUMENT_MODEL.md
+    summary: "Define unresolved_ref semantics, validity, closure behavior, and distinction from refs and genuine N/A."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: model/project.schema.v1.json
+    summary: "Admit the exact third relationState form unresolved_ref -> UNK-* while preserving refs/na exclusivity."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: tools/validate.py
+    summary: "Validate unresolved_ref against existing OPEN DESIGN UNK, exclude it from material graph edges, and block DOCS_READY until resolved."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: tests/test_validate.py
+    summary: "Add focused regression and control coverage for unresolved relation structure, closure, typed-reference, graph, and subset semantics."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+
+commits_created:
+  - sha: "fb217c86b690f013bb386a7ecaa56d0927569b79"
+    message: "fix(TASK-0004): support unresolved feature relations"
+
+pushed: true
+promoted_to_main: false
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: PROVEN
+    evidence: "Exact candidate schema/model/validator accept the third relation state unresolved_ref -> existing OPEN DESIGN UNK while preserving existing refs and genuine N/A controls."
+  - criterion_id: AC-2
+    status: PROVEN
+    evidence: "Focused exact-SHA tests prove unresolved_ref is structurally valid only for an existing OPEN DESIGN UNK and always emits an UNRESOLVED_RELATION closure blocker; missing, resolved, non-DESIGN, and wrong-class targets fail."
+  - criterion_id: AC-3
+    status: PROVEN
+    evidence: "Focused exact-SHA tests prove unresolved_ref creates no material graph edge and does not satisfy flow typed-subset requirements; existing typed-reference behavior remains intact."
+  - criterion_id: AC-4
+    status: PROVEN
+    evidence: "Full exact-SHA suite is 93/93 PASS and semantic audit confirms model_version=1, 8 domains, 45 concerns, 12 identity classes, unchanged coverage taxonomy, and exactly four authorized implementation paths."
+  - criterion_id: AC-5
+    status: PROVEN
+    evidence: "Anonymous target-equivalent fixture with an unresolved capability relation validates structurally and returns closure-blocked rather than model/cross-reference failure."
+  - criterion_id: AC-6
+    status: PROVEN
+    evidence: "Four finalized Git blobs were assembled into immutable tree 3453efd02225bf1605fbd36e5b08dd6acdefb8c4 and sole-parent candidate fb217c86b690f013bb386a7ecaa56d0927569b79. Focused 11/11, full 93/93, py_compile, and semantic/scope audit PASS against that exact SHA before non-force dev advancement."
+
+executor_checks:
+  - check_id: CHECK-1
+    result: PASS
+    evidence: "Fresh refs showed dev=a874e385c8adc5c2a0ed02e5f919dc38cdd50cb9, main=d95e56d098557bd2016041cfc995338c298a7d39, topology exactly {dev, main}. Revision 3 and pinned authorities were already resolved; Git-object and isolated-test capabilities were available."
+  - check_id: CHECK-2
+    result: PASS
+    evidence: "Causal RED reproduction was completed in the preceding execution turn from the exact base; this continuation intentionally reused that established evidence and did not repeat it."
+  - check_id: CHECK-3
+    result: PASS
+    evidence: "The previously finalized bounded correction was recovered without redesign; the three durable finalized blobs were reused unchanged and only the remaining finalized tests blob was persisted for the candidate."
+  - check_id: CHECK-4
+    result: PASS
+    evidence: "Candidate tree 3453efd02225bf1605fbd36e5b08dd6acdefb8c4 contains the four exact finalized blobs over base tree 97b1694ae84572d840345ed3e046138b2c436706. Candidate fb217c86b690f013bb386a7ecaa56d0927569b79 has sole parent a874e385c8adc5c2a0ed02e5f919dc38cdd50cb9 and compare shows exactly four authorized implementation paths."
+  - check_id: CHECK-5
+    result: PASS
+    evidence: "Fresh exact-SHA focused verification ran 11 relevant tests and all passed."
+  - check_id: CHECK-6
+    result: PASS
+    evidence: "On exact candidate fb217c86b690f013bb386a7ecaa56d0927569b79, unittest discovery ran 93 tests PASS and py_compile PASS."
+  - check_id: CHECK-7
+    result: PASS
+    evidence: "Exact-SHA semantic/scope audit passed: V1 identity/domain/taxonomy invariants preserved, no target-specific semantics, no new framework/state machinery, and exact authorized paths only."
+  - check_id: CHECK-8
+    result: PENDING_POST_COMMIT
+    evidence: "Immediately before publication, dev still equaled exact base, main was unchanged, and topology was exactly {dev, main}; dev then advanced non-force to the already verified candidate SHA. This report is constructed as its separate report-only child; sole-parent/report-only-diff/final-ref/topology verification occurs after this report commit is created."
+
+discovered_gaps: []
+structural_observations: []
+deviations_from_task:
+  - "During continuation, one irrelevant unreferenced blob a8b6c9477b693176aa811d7fc0fd5374d44e3557 containing 'noop' was created accidentally. It is not referenced by the candidate tree, implementation commit, report tree, any branch, tag, or repository history and has no authority/state effect. The three finalized candidate blobs were not reconstructed or re-persisted."
+blockers: []
+
+working_tree_after:
+  clean: true
+  summary: "Fresh verification root was cleaned. Canonical implementation state is the exact verified candidate on dev; this report is the only additional authorized history mutation pending publication."
+
+result: NEEDS_REVIEW

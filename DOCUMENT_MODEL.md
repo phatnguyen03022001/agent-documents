@@ -181,7 +181,7 @@ Every in-scope feature has at least one actor, a `BEHAVIOR` specification refere
 
 Every `ROL-*` record has at least one `ACT-*` reference. When a feature relates to a role, the feature's `actor_refs` and that role's `actor_refs` must share at least one actor. Roles remain reusable and may include additional actors that are not attached to every feature using the role.
 
-Applicability-aware relations (`roles`, `flows`, `data`, `interfaces`, `dependencies`, `capabilities`) contain exactly one of `{"refs": [...]}` with a non-empty array or `{"na": "reason"}` with a non-empty rationale. A feature's related flow may not use an interface, data entity, or external dependency omitted from the feature's corresponding relation mapping.
+Applicability-aware relations (`roles`, `flows`, `data`, `interfaces`, `dependencies`, `capabilities`) contain exactly one of `{"refs": [...]}` with a non-empty array, `{"na": "reason"}` with a non-empty rationale, or `{"unresolved_ref": "UNK-..."}`. `refs` means the applicable relationship is resolved to its required typed identities. `na` means genuine demonstrated non-applicability; migration incompleteness or unresolved design must never be encoded as N/A. `unresolved_ref` means the relation may or materially does apply but cannot yet be resolved to the required typed identity, and it points to the `UNK-*` record that owns the unresolved question, reason, and context. Once that unknown is resolved, the relation must be replaced with typed `refs` or genuine `na`. A feature's related flow may not use an interface, data entity, or external dependency omitted from the feature's corresponding relation mapping; `unresolved_ref` cannot satisfy that typed subset requirement.
 
 All current `FTR-*` records are implicit graph roots for the milestone.
 
@@ -190,6 +190,8 @@ All current `FTR-*` records are implicit graph roots for the milestone.
 An unknown is `QUESTION`, `DECISION_REQUIRED`, `ASSUMPTION`, `AUTHORITY_CONFLICT`, or `CONTRADICTION`; its resolution phase is `DESIGN`, `IMPLEMENTATION`, `VERIFICATION`, or `POST_MILESTONE`; its status is `OPEN` or `RESOLVED`.
 
 Resolved records require both `resolved_by_ref` and `resolution_ref`. `resolved_by_ref` identifies the catalog record associated with the resolution; resolved `DECISION_REQUIRED` records must still resolve to `DEC-*`, while other unknown kinds are not forced to resolve to a decision record. `resolution_ref` points to dedicated resolution evidence in `DECISIONS`, with a fragment token exactly equal to the resolved `UNK-*` identity and structural content in that section. Open `AUTHORITY_CONFLICT` and `CONTRADICTION` records are blocking. An open `DECISION_REQUIRED` record with `resolution_phase: DESIGN` is also blocking. Every open blocking unknown has `resolution_phase: DESIGN`.
+
+A feature relation `unresolved_ref` may point only to an existing `UNK-*` record that is `OPEN` with `resolution_phase: DESIGN`. Missing, resolved, non-design, and non-`UNK` targets are invalid. The relation remains a documentation-resolution blocker regardless of the unknown's own `blocking` field, and it creates no material graph edge or substitute typed target identity.
 
 `UNK-*` records participate in reference and closure semantics but are not material graph roots and are not scored as orphan material entities. They therefore cannot appear in `milestone.root_refs`.
 
@@ -231,7 +233,7 @@ A support reference is valid only when it resolves in the concern's canonical au
 3. every logical Markdown reference uses a legal root/shard path, stays within its authority domain, resolves exactly one canonical heading token, and ignores ATX-looking headings inside fenced code blocks and HTML comments;
 4. every applicable concern has structurally valid `support_refs`, actual depth is not `NONE`, and actual depth meets required depth;
 5. every resolved support reference, every canonical scope/entity/specification/capability explanation reference, and every resolved unknown `resolution_ref` points to a section containing structural content; resolved unknown resolution references stay in `DECISIONS` and bind their fragment token exactly to their own `UNK-*` identity;
-6. feature traceability, relation-state, role/feature actor-intersection, and flow-subset invariants hold, and every role has at least one actor;
+6. feature traceability, relation-state, role/feature actor-intersection, and flow-subset invariants hold, every role has at least one actor, and no feature relation remains in the `unresolved_ref` state;
 7. build/buy and unknown-resolution invariants hold, including the existing `DECISION_REQUIRED` attribution rule, blocking open design-phase `DECISION_REQUIRED` records, and no blocking unknown/conflict/contradiction remains open;
 8. every active orphan-scored entity is reachable from a feature root or explicit milestone root;
 9. structural N/A contradictions are absent and `product.objective` remains applicable; and
@@ -243,7 +245,7 @@ Malformed/unsupported model or usage errors exit `2`. A valid model that has clo
 
 For documentation purposes, a milestone that is `FROZEN` and reaches `DOCS_READY = TRUE` is closed: the current V1 documentation requirements are satisfied, and this model requires no additional documentation depth for that milestone.
 
-Documentation closure reopens whenever authoritative project facts change such that the deterministic V1 predicate becomes false, for example after a scope change, a newly represented blocking unknown or contradiction, invalidated support/reference evidence, or a changed external constraint. Closure is restored when the predicate is true again.
+Documentation closure reopens whenever authoritative project facts change such that the deterministic V1 predicate becomes false, for example after a scope change, a newly represented unresolved feature relation, blocking unknown or contradiction, invalidated support/reference evidence, or a changed external constraint. Closure is restored when the predicate is true again.
 
 This section defines documentation closure only. It does not direct or authorize design, execution, review, promotion, release, or any other workflow. **DESIGN TO CLOSURE, NOT TO EXHAUSTION** is a documentation-scope principle, not a workflow-control rule.
 

@@ -11,6 +11,7 @@ PAT={x:re.compile(r'^'+x+r'-[0-9]{3,}$') for x in COL.values()};SAFE=re.compile(
 TC={};SC={}
 def ne(x):return isinstance(x,str) and bool(x.strip())
 def rr(x):return set(x.get('refs',[])) if isinstance(x,dict) and set(x)=={'refs'} and isinstance(x.get('refs'),list) else set()
+def ur(x):return x.get('unresolved_ref') if isinstance(x,dict) and set(x)=={'unresolved_ref'} else None
 class P:
  def __init__(s):s.e=[];s.b=[]
  def m(s,x):s.e.append(('MODEL_ERROR',x))
@@ -31,8 +32,11 @@ def sl(x,p,l,n=0):
 def en(v,a,p,l):
  if v not in a:p.m(l+' is invalid')
 def rel(x,p,l):
- if not isinstance(x,dict) or set(x) not in ({'refs'},{'na'}):p.m(l+' must contain exactly one of refs or na');return False
+ if not isinstance(x,dict) or set(x) not in ({'refs'},{'na'},{'unresolved_ref'}):p.m(l+' must contain exactly one of refs, na, or unresolved_ref');return False
  if 'refs' in x:return sl(x['refs'],p,l+'.refs',1)
+ if 'unresolved_ref' in x:
+  if not isinstance(x['unresolved_ref'],str) or not PAT['UNK'].fullmatch(x['unresolved_ref']):p.m(l+'.unresolved_ref must be a UNK-* reference');return False
+  return True
  if not ne(x['na']):p.m(l+'.na must be a non-empty rationale');return False
  return True
 def dparse(x):
@@ -205,7 +209,7 @@ def structure(c,t,p):
    if x in seen:p.m('duplicate global id '+x)
    seen[x]=a
 def references(c,t,target,p):
- ids={r['id']:COL[n] for n in COL for r in c[n]};cc=set(c['coverage']);doc(target,c['milestone']['scope_ref'],'PRODUCT',p,'milestone.scope_ref')
+ ids={r['id']:COL[n] for n in COL for r in c[n]};cc=set(c['coverage']);um={r['id']:r for r in c['unknowns']};doc(target,c['milestone']['scope_ref'],'PRODUCT',p,'milestone.scope_ref')
  for x in c['milestone']['root_refs']:
   if ref(x,ROOT,ids,p,'milestone.root_refs') and ids[x]=='CAP':
    q=next(z for z in c['capabilities'] if z['id']==x)
@@ -218,7 +222,12 @@ def references(c,t,target,p):
   doc(target,r['doc_ref'],'PRODUCT',p,r['id']+'.doc_ref');[ref(x,{'ACT'},ids,p,r['id']+'.actor_refs') for x in r['actor_refs']]
  for r in c['features']:
   doc(target,r['spec_ref'],'BEHAVIOR',p,r['id']+'.spec_ref');[ref(x,{'ACT'},ids,p,r['id']+'.actor_refs') for x in r['actor_refs']];[ref(x,{'ACC'},ids,p,r['id']+'.acceptance_refs') for x in r['acceptance_refs']];[ref(x,{'DEC'},ids,p,r['id']+'.decision_refs') for x in r['decision_refs']]
-  for k,w in [('roles',{'ROL'}),('flows',{'FLW'}),('data',{'DAT'}),('interfaces',{'IFC'}),('dependencies',{'EXT'}),('capabilities',{'CAP'})]:[ref(x,w,ids,p,r['id']+'.relations.'+k) for x in rr(r['relations'][k])]
+  for k,w in [('roles',{'ROL'}),('flows',{'FLW'}),('data',{'DAT'}),('interfaces',{'IFC'}),('dependencies',{'EXT'}),('capabilities',{'CAP'})]:
+   state=r['relations'][k];[ref(x,w,ids,p,r['id']+'.relations.'+k) for x in rr(state)]
+   x=ur(state)
+   if x and ref(x,{'UNK'},ids,p,r['id']+'.relations.'+k+'.unresolved_ref'):
+    u=um[x]
+    if u['status']!='OPEN' or u['resolution_phase']!='DESIGN':p.r(r['id']+'.relations.'+k+'.unresolved_ref must reference an OPEN DESIGN unknown')
  for r in c['acceptance']:doc(target,r['doc_ref'],'BEHAVIOR',p,r['id']+'.doc_ref')
  for r in c['systems']:
   doc(target,r['doc_ref'],'ARCHITECTURE',p,r['id']+'.doc_ref');[ref(x,{'DEC'},ids,p,r['id']+'.decision_refs') for x in r['decision_refs']]
@@ -297,6 +306,9 @@ def closure(c,p):
  rm={x['id']:set(x['actor_refs']) for x in c['roles']}
  for f in c['features']:
   fa=set(f['actor_refs'])
+  for k,state in f['relations'].items():
+   x=ur(state)
+   if x:p.x('UNRESOLVED_RELATION',f"{f['id']} relation {k} remains unresolved via {x}")
   for x in rr(f['relations']['roles']):
    if not fa & rm.get(x,set()):p.x('TRACEABILITY_GAP',f"{f['id']} relation role {x} shares no actor with feature actor_refs")
  fm={x['id']:x for x in c['flows']}

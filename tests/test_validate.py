@@ -443,6 +443,71 @@ class ValidatorTests(unittest.TestCase):
         validator.structure(catalog, taxonomy, problems)
         self.assertEqual([], problems.e)
 
+    # TASK-0004: unresolved feature relation state.
+    def test_unresolved_relation_to_open_design_unknown_is_structurally_valid_but_blocks_closure(self):
+        def mutate(c):
+            c["features"][0]["relations"]["capabilities"] = {"unresolved_ref": "UNK-001"}
+            c["capabilities"] = []
+            c["unknowns"].append({"id": "UNK-001", "kind": "QUESTION", "question": "Which capability identity applies?", "affected_refs": ["FTR-001"], "affected_coverage": ["architecture.build_buy"], "blocking": False, "reason": "The relation is material but the typed target identity is not yet established.", "resolution_phase": "DESIGN", "status": "OPEN"})
+        self.assert_case(1, "UNRESOLVED_RELATION", mutate, contains="FTR-001 relation capabilities remains unresolved via UNK-001")
+
+    def test_unresolved_relation_missing_unknown_is_reference_error(self):
+        def mutate(c): c["features"][0]["relations"]["capabilities"] = {"unresolved_ref": "UNK-999"}
+        self.assert_case(2, "REFERENCE_ERROR", mutate, contains="references unknown id 'UNK-999'")
+
+    def test_unresolved_relation_wrong_identity_class_is_model_error(self):
+        def mutate(c): c["features"][0]["relations"]["capabilities"] = {"unresolved_ref": "DEC-001"}
+        self.assert_case(2, "MODEL_ERROR", mutate, contains="must be a UNK-* reference")
+
+    def test_unresolved_relation_resolved_unknown_is_reference_error(self):
+        def mutate(c):
+            c["features"][0]["relations"]["capabilities"] = {"unresolved_ref": "UNK-001"}
+            c["unknowns"].append({"id": "UNK-001", "kind": "QUESTION", "question": "Historical?", "affected_refs": ["FTR-001"], "affected_coverage": [], "blocking": False, "reason": "Resolved.", "resolution_phase": "DESIGN", "status": "RESOLVED", "resolved_by_ref": "DEC-001", "resolution_ref": "docs/DECISIONS.md#UNK-001"})
+        def docs_mutate(d): d["DECISIONS.md"] += "\n## UNK-001 Resolution\nResolution evidence.\n"
+        self.assert_case(2, "REFERENCE_ERROR", mutate, docs_mutate, contains="must reference an OPEN DESIGN unknown")
+
+    def test_unresolved_relation_non_design_unknown_is_reference_error(self):
+        def mutate(c):
+            c["features"][0]["relations"]["capabilities"] = {"unresolved_ref": "UNK-001"}
+            c["unknowns"].append({"id": "UNK-001", "kind": "QUESTION", "question": "Later question?", "affected_refs": ["FTR-001"], "affected_coverage": [], "blocking": False, "reason": "Too late for relation resolution.", "resolution_phase": "IMPLEMENTATION", "status": "OPEN"})
+        self.assert_case(2, "REFERENCE_ERROR", mutate, contains="must reference an OPEN DESIGN unknown")
+
+    def test_replacing_unresolved_relation_with_valid_refs_removes_relation_blocker(self):
+        def unresolved(c):
+            c["features"][0]["relations"]["capabilities"] = {"unresolved_ref": "UNK-001"}
+            c["capabilities"] = []
+            c["unknowns"].append({"id": "UNK-001", "kind": "QUESTION", "question": "Which capability identity applies?", "affected_refs": ["FTR-001"], "affected_coverage": [], "blocking": False, "reason": "Target identity is pending.", "resolution_phase": "DESIGN", "status": "OPEN"})
+        first = self.run_case(mutate=unresolved)
+        self.assertEqual(1, first.returncode, first.stdout)
+        self.assertIn("[UNRESOLVED_RELATION]", first.stdout)
+        second = self.run_case()
+        self.assertEqual(0, second.returncode, second.stdout)
+        self.assertNotIn("[UNRESOLVED_RELATION]", second.stdout)
+
+
+    def test_existing_refs_relation_control_remains_valid(self):
+        self.assert_case(0)
+
+    def test_genuine_na_relation_control_remains_valid(self):
+        def mutate(c):
+            c["features"][0]["relations"]["capabilities"] = {"na": "No material capability boundary applies."}
+            c["capabilities"] = []
+        self.assert_case(0, mutate=mutate)
+
+    def test_unresolved_relation_creates_no_material_graph_edge(self):
+        catalog = minimal_catalog()
+        catalog["features"][0]["relations"]["capabilities"] = {"unresolved_ref": "UNK-001"}
+        catalog["unknowns"].append({"id": "UNK-001", "kind": "QUESTION", "question": "Which capability identity applies?", "affected_refs": ["FTR-001"], "affected_coverage": [], "blocking": False, "reason": "Target identity is pending.", "resolution_phase": "DESIGN", "status": "OPEN"})
+        self.assertNotIn("UNK-001", validator.edges(catalog)["FTR-001"])
+        self.assertNotIn("CAP-001", validator.edges(catalog)["FTR-001"])
+
+    def test_unresolved_relation_does_not_satisfy_flow_subset(self):
+        def mutate(c):
+            c["features"][0]["relations"]["interfaces"] = {"unresolved_ref": "UNK-001"}
+            c["unknowns"].append({"id": "UNK-001", "kind": "QUESTION", "question": "Which interface identity applies?", "affected_refs": ["FTR-001"], "affected_coverage": [], "blocking": False, "reason": "Interface relation remains unresolved.", "resolution_phase": "DESIGN", "status": "OPEN"})
+        result = self.assert_case(1, "UNRESOLVED_RELATION", mutate)
+        self.assertIn("[TRACEABILITY_GAP] FTR-001 relation interfaces omits ['IFC-001'] used by FLW-001", result.stdout)
+
 
 class ModelArtifactTests(unittest.TestCase):
     def test_taxonomy_preserves_exact_45_keys_and_uses_authority_domains(self):
@@ -490,6 +555,15 @@ class ModelArtifactTests(unittest.TestCase):
         resolved_unknown = schema["$defs"]["unknown"]["oneOf"][1]
         self.assertIn("resolution_ref", resolved_unknown["required"])
         self.assertEqual("^docs/(?:DECISIONS\\.md|decisions/[A-Za-z0-9][A-Za-z0-9._-]*\\.md)#UNK-[0-9]{3,}$", resolved_unknown["properties"]["resolution_ref"]["pattern"])
+
+    def test_schema_relation_state_has_exact_unresolved_third_form(self):
+        schema = json.loads((ROOT / "model" / "project.schema.v1.json").read_text(encoding="utf-8"))
+        states = schema["$defs"]["relationState"]["oneOf"]
+        self.assertEqual(3, len(states))
+        self.assertEqual([{"refs"}, {"na"}, {"unresolved_ref"}], [set(state["required"]) for state in states])
+        unresolved = states[2]
+        self.assertFalse(unresolved["additionalProperties"])
+        self.assertEqual("^UNK-[0-9]{3,}$", unresolved["properties"]["unresolved_ref"]["pattern"])
 
     def test_schema_has_no_arbitrary_inventory_minimums(self):
         schema = json.loads((ROOT / "model" / "project.schema.v1.json").read_text(encoding="utf-8"))

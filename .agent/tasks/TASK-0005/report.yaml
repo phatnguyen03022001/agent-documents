@@ -1,0 +1,201 @@
+protocol_version: 3
+
+task_id: TASK-0005
+task_revision: 1
+report_revision: 1
+state: REPORTED
+
+task_source:
+  path: .agent/tasks/TASK-0005/task.yaml
+  commit: "eb587944d5f3fb0a6d66697023b57fade15f9f83"
+  blob_sha: "ebb025eeb9c84c4129ae65c44b52e56335edb365"
+
+execution:
+  repository: phatnguyen03022001/agent-documents
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: "eb587944d5f3fb0a6d66697023b57fade15f9f83"
+  pre_execution_head: "eb587944d5f3fb0a6d66697023b57fade15f9f83"
+  final_execution_head: "a7990ac272c5976ee5379ea63979b8d615dc91df"
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: "1fcf5a2ebeeec7f3e1498d207148a9cd81a95456"
+  observed_revision: "1fcf5a2ebeeec7f3e1498d207148a9cd81a95456"
+
+execution_skills_used:
+  required:
+    - executor
+    - simplicity
+    - verification
+  recommended: []
+  external: []
+
+pre_execution_checks:
+  protocol_version_supported: true
+  task_at_base_confirmed: true
+  task_identity_confirmed: true
+  architect_binding_confirmed: true
+  repository_confirmed: true
+  branch_confirmed: true
+  base_head_confirmed: true
+  skill_revision_confirmed: true
+  required_execution_skills_available: true
+  structure_authority_confirmed: true
+  git_object_publication_preflight_passed: true
+
+capability_preflight:
+  phase: EXECUTION
+  required:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - isolated_test_execution
+    - create_blob
+    - create_tree
+    - create_commit
+    - non_force_update_ref
+  available:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - isolated_test_execution
+    - create_blob
+    - create_tree
+    - create_commit
+    - non_force_update_ref
+  missing: []
+  passed: true
+  evidence: "GitHub provided exact ref/content reads plus create_blob/create_tree/create_commit/non-force update_ref. ChatGPT sandbox provided isolated Python execution. After the operator environment update, Agent Runtime was not invoked or relied upon and Codex was not required."
+
+authoritative_verification:
+  required: false
+  performed: false
+  result: NOT_REQUIRED
+  evidence: "TASK-0005 designates no separate authoritative verifier. Mandatory Executor verification was completed against immutable candidate a7990ac272c5976ee5379ea63979b8d615dc91df before dev moved."
+
+local_hygiene:
+  result: PASS
+  run_root: "/mnt/data/task0005-verify-a7990ac272c5976ee5379ea63979b8d615dc91df"
+  cleanup_performed: true
+  retained:
+    - "/mnt/data/task0005-base (pre-existing exact-base scratch evidence; not deleted because current-run ownership was not re-established)"
+    - "/mnt/data/task0005-candidate (pre-existing candidate-construction scratch evidence; not deleted because current-run ownership was not re-established)"
+    - "/mnt/data/task0005-test-red (pre-existing RED scratch evidence; retained for evidence)"
+  evidence: "The fresh exact-candidate verification root created for this execution was removed after verification. No recursive cleanup was attempted outside that proven run-owned root."
+
+implementation:
+  commit: "a7990ac272c5976ee5379ea63979b8d615dc91df"
+  parent: "eb587944d5f3fb0a6d66697023b57fade15f9f83"
+  tree: "1fc3fa1dee3bd0cb9cb21842d8b71d1c6c7c4edc"
+  message: "task(TASK-0005): stabilize validator diagnostic order"
+  published_non_force_to_dev: true
+  verified_before_publication: true
+  changed_files_exactly:
+    - tools/validate.py
+    - tests/test_validate.py
+  finalized_blobs:
+    tools/validate.py: "b1f67bb1682f6bce267fff86923ab0fc50afcda1"
+    tests/test_validate.py: "7035476e389458ff436a34ca6fce1d406d8aa3b8"
+  unchanged_control_blobs:
+    model/coverage.v1.json: "cb500fb287a6b65832296e06d7e07e5ddeb6cf8c"
+    model/project.schema.v1.json: "54da14c7a4c1bd7ee9dd37a484973c653b599260"
+    templates/docs/catalog/project.json: "ede02b1c8eea336678b7629e717f88a779c75ef1"
+
+verification_evidence:
+  exact_candidate_sha: "a7990ac272c5976ee5379ea63979b8d615dc91df"
+  fresh_isolated_surface: true
+  exact_blob_reconstruction: PASS
+  red_reproduction:
+    result: PASS
+    evidence: "Against exact-base validator blob b97566b49f0a3eff8b93e2ea27121dfc16c7251f, PYTHONHASHSEED values 1, 2, 3, 42, and 99 produced five distinct diagnostic orderings for the same six malformed feature-relation refs. Every run returned exit code 2, DOCS_READY = FALSE, and the same six MODEL_ERROR diagnostics as a set. The new regression failed against the base with AssertionError: expected one unique stdout but observed five."
+  focused_regressions:
+    result: PASS
+    tests_run: 6
+    evidence: "Exact candidate passed the multi-seed deterministic-order regression plus existing refs, genuine N/A, unresolved OPEN DESIGN closure, unresolved flow-subset, and fully-closed controls."
+  full_unittest:
+    command: "python3 -m unittest discover -s tests"
+    result: PASS
+    tests_run: 94
+  py_compile:
+    command: "python3 -m py_compile tools/validate.py tests/test_validate.py"
+    result: PASS
+  semantic_scope_audit:
+    result: PASS
+    evidence: "Base-to-candidate compare changes exactly tools/validate.py and tests/test_validate.py. model_version remains 1; authority domains remain exactly 8; coverage concerns remain exactly 45; identity classes remain exactly 12. The implementation change is only unordered set iteration to the explicit stable sequence roles, flows, data, interfaces, dependencies, capabilities. No model/schema/documentation, relation-state, graph, closure, capability, sharding, performance, catalog-ergonomics, or framework changes were introduced."
+
+changed_files:
+  - path: tools/validate.py
+    summary: "Replace unordered feature-relation key iteration with the explicit stable sequence roles, flows, data, interfaces, dependencies, capabilities."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+  - path: tests/test_validate.py
+    summary: "Add one subprocess-based multi-PYTHONHASHSEED regression proving byte-stable diagnostic ordering, identical exit behavior, and exact ordered diagnostic content."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+
+commits_created:
+  - sha: "a7990ac272c5976ee5379ea63979b8d615dc91df"
+    message: "task(TASK-0005): stabilize validator diagnostic order"
+
+pushed: true
+promoted_to_main: false
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: PROVEN
+    evidence: "The exact-base regression reproduced five distinct output orderings across seeds 1,2,3,42,99; the exact candidate produces one byte-identical ordered stdout across all five seeds."
+  - criterion_id: AC-2
+    status: PROVEN
+    evidence: "Base RED evidence showed identical exit code, DOCS_READY value, diagnostic classes, and diagnostic set across seeds; candidate regression asserts exit code 2 and exact same six MODEL_ERROR diagnostics in stable order."
+  - criterion_id: AC-3
+    status: PROVEN
+    evidence: "Focused refs/N/A/unresolved/closure controls passed and the complete exact-candidate unittest suite passed 94/94 without model, schema, or documentation changes."
+  - criterion_id: AC-4
+    status: PROVEN
+    evidence: "GitHub compare shows exactly two authorized files changed: one set-to-tuple ordering correction in tools/validate.py and one focused deterministic-order regression in tests/test_validate.py. No optimization or model/framework work is present."
+  - criterion_id: AC-5
+    status: PROVEN
+    evidence: "Finalized blobs were assembled into immutable tree 1fc3fa1dee3bd0cb9cb21842d8b71d1c6c7c4edc and sole-parent candidate a7990ac272c5976ee5379ea63979b8d615dc91df. Focused 6/6, full 94/94, py_compile, and semantic/scope audit all passed against that exact candidate before non-force dev advancement."
+
+executor_checks:
+  - check_id: CHECK-1
+    result: PASS
+    evidence: "Initial and pre-publication GitHub truth showed topology exactly {dev, main}, dev at exact base eb587944d5f3fb0a6d66697023b57fade15f9f83, and main at d95e56d098557bd2016041cfc995338c298a7d39. TASK-0005 revision 1, pinned skill authority, repository read/write, isolated test execution, and atomic Git-object capabilities were resolved before candidate publication."
+  - check_id: CHECK-2
+    result: PASS
+    evidence: "Exact-base multi-seed RED reproduction produced five distinct diagnostic orderings while semantic diagnostic content and exit behavior remained equivalent."
+  - check_id: CHECK-3
+    result: PASS
+    evidence: "The implementation is the smallest task-authorized correction: one explicit six-key ordered sequence plus one focused multi-seed regression."
+  - check_id: CHECK-4
+    result: PASS
+    evidence: "Finalized blobs b1f67bb1682f6bce267fff86923ab0fc50afcda1 and 7035476e389458ff436a34ca6fce1d406d8aa3b8 were assembled over base tree 5e13c6c251e7a877966b00e4d248fe27429b6008 into tree 1fc3fa1dee3bd0cb9cb21842d8b71d1c6c7c4edc. Candidate a7990ac272c5976ee5379ea63979b8d615dc91df has sole parent eb587944d5f3fb0a6d66697023b57fade15f9f83 and compare shows exactly the two authorized implementation paths."
+  - check_id: CHECK-5
+    result: PASS
+    evidence: "Fresh hash-bound reconstruction of exact candidate a7990ac272c5976ee5379ea63979b8d615dc91df passed the deterministic-order regression and five semantic controls."
+  - check_id: CHECK-6
+    result: PASS
+    evidence: "On the exact candidate, unittest discovery ran 94 tests PASS and py_compile PASS."
+  - check_id: CHECK-7
+    result: PASS
+    evidence: "Exact-candidate semantic/scope audit passed: V1 version/domain/taxonomy/identity invariants are unchanged, relation/closure semantics are preserved, and no forbidden optimization/catalog/framework work was added."
+  - check_id: CHECK-8
+    result: PENDING_POST_COMMIT
+    evidence: "Immediately before implementation publication, dev still equaled the exact base, main remained unchanged, and topology was exactly {dev, main}; dev then advanced non-force to the already verified candidate. This report is constructed as the separate report-only direct child; parentage, report-only diff, final refs, and topology are verified after report commit publication."
+
+discovered_gaps: []
+structural_observations: []
+deviations_from_task:
+  - "Three inert unreferenced empty commits were accidentally created during Git-object assembly before the correct candidate tree was created: 270eaaa3f3ae7c03277e34c9e91207b736778e2c, 535df8acf3f0abbab1d24e299b1d0682f44017b8, and eebb45ea575ea368fb87980ead80449d14718598. Each uses the unchanged base tree and exact base parent; none is referenced by dev, main, the candidate tree/commit, a tag, or any task/report lineage."
+  - "One earlier create_commit call using a nonexistent tree SHA was rejected by GitHub with HTTP 422 and created no object or ref mutation."
+blockers: []
+
+working_tree_after:
+  clean: true
+  summary: "The run-owned fresh verification root was cleaned. Canonical implementation state is the exact verified candidate on dev; only the authorized report-only child remains to be published."
+
+result: NEEDS_REVIEW

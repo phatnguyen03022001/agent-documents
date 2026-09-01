@@ -1,0 +1,203 @@
+protocol_version: 3
+
+task_id: TASK-0005
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: discovered_gap
+  task_id: ""
+  gap_id: "V1_NONDETERMINISTIC_DIAGNOSTIC_ORDER"
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-documents
+
+target:
+  repository: phatnguyen03022001/agent-documents
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "1fcf5a2ebeeec7f3e1498d207148a9cd81a95456"
+
+architect_analysis_skills:
+  - architect
+  - simplicity
+  - verification
+
+execution_skills:
+  required:
+    - executor
+    - simplicity
+    - verification
+  recommended: []
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: "phatnguyen03022001/agent-documents@acb3f02616e700190586681306a86905792e4c07 tools/validate.py + tests/test_validate.py"
+    role: "Exact unreleased V1 candidate and validator/test implementation in which feature relation keys are validated by iterating an unordered set, allowing diagnostic order to vary with Python hash randomization."
+    precedence: 1
+  - source: "phatnguyen03022001/agent-documents@acb3f02616e700190586681306a86905792e4c07 .agent/tasks/TASK-0004/report.yaml + review.yaml"
+    role: "Accepted exact V1 relation-state semantics and exact-candidate verification evidence that must remain unchanged by this hardening pass."
+    precedence: 2
+  - source: "phatnguyen03022001/agent-skills@1fcf5a2ebeeec7f3e1498d207148a9cd81a95456 protocols/TASK_PROTOCOL.md"
+    role: "Exact protocol-v3 governance authority for bounded execution, exact handoff binding, evidence, review, Git authority, and release separation."
+    precedence: 3
+
+structure_authority:
+  status: RESOLVED
+  source: "tools/validate.py recs() feature-relation validation and tests/test_validate.py"
+  rationale: "The reproduced defect concerns only deterministic ordering of diagnostics for the same malformed input. The smallest correction is to make relation-key iteration explicitly ordered and lock that behavior with a regression. No model, schema, documentation, closure, identity, coverage, sharding, or release semantic changes are required."
+
+objective: "Make V1 validator diagnostics deterministic for identical malformed catalogs across Python hash seeds while preserving the exact set/classification of errors, exit behavior, relation semantics, graph behavior, and DOCS_READY semantics. Add the smallest regression proving byte-stable diagnostic ordering. Do not perform unrelated validator optimization or model change."
+
+scope:
+  required_changes:
+    - "In tools/validate.py, replace the unordered iteration used for feature relation keys with one explicit stable ordered sequence containing exactly roles, flows, data, interfaces, dependencies, capabilities. Preserve exact field validation and relation semantics."
+    - "In tests/test_validate.py, add a focused regression using one malformed catalog with multiple feature-relation diagnostics and multiple PYTHONHASHSEED values to prove identical ordered diagnostic output and identical exit behavior for the same input. The regression must fail against the exact execution base before the correction and pass against the candidate."
+    - "Preserve the exact diagnostic set and classification for existing inputs. This task may stabilize order only; it must not suppress, add, reclassify, merge, or reinterpret existing validator errors except for the new regression fixture's test harness assertions."
+    - "Run focused regression/control tests, the complete unittest suite, and py_compile against one exact immutable candidate SHA."
+    - "Before implementation, preflight an atomic Git-object publication path capable of create_blob, create_tree, create_commit, and non-force update_ref semantics. If unavailable, stop CURRENT_PHASE_CAPABILITY_UNAVAILABLE before constructing a candidate."
+    - "Persist finalized changed-file bytes as unreferenced Git blobs, assemble one unreferenced candidate tree/commit whose sole parent is the exact execution base, and verify that exact immutable candidate from a fresh isolated execution surface before moving dev."
+    - "Only after exact-candidate verification passes, refresh refs and require dev still equals the exact execution base; then fast-forward dev non-force to that exact verified candidate commit."
+    - "After successful dev advancement, publish .agent/tasks/TASK-0005/report.yaml as a separate report-only direct child and stop at NEEDS_REVIEW. If candidate verification fails, do not move dev; publish only a truthful blocking report when authorized capability permits."
+
+  allowed_existing_files_or_components:
+    - tools/validate.py
+    - tests/test_validate.py
+    - .agent/tasks/TASK-0005/task.yaml
+  expected_files_are_restrictive: true
+
+invariants:
+  - "model_version remains 1."
+  - "The eight authority domains remain unchanged."
+  - "The 45 coverage concern keys remain unchanged."
+  - "The twelve identity classes remain unchanged."
+  - "DOCUMENT_MODEL.md, model/project.schema.v1.json, model/coverage.v1.json, templates, README, and existing task/report/review history remain unchanged."
+  - "refs, na, unresolved_ref, unknown-state, reachability, closure, coverage-depth, capability, sharding, and DOCS_READY semantics remain unchanged."
+  - "For any identical validator input, the semantic diagnostic set, diagnostic classes, blocker behavior, and process exit result remain unchanged; only previously unstable ordering becomes stable."
+  - "No heading-index caching, parser optimization, catalog query helper, ID allocator, semantic merge helper, catalog restructuring, lite profile, large-project profile, nested authority hierarchy, ninth domain, multiple catalog, database, registry, or orchestration change is introduced."
+  - "Only an exact immutable candidate verified by SHA may become dev."
+  - "Branches remain exactly {dev, main}; main remains d95e56d098557bd2016041cfc995338c298a7d39."
+
+forbidden_changes:
+  - "Do not modify DOCUMENT_MODEL.md, model/project.schema.v1.json, model/coverage.v1.json, templates, README.md, workflows, requirements, prior task/report/review artifacts, or any external repository."
+  - "Do not optimize repeated Markdown parsing or implement heading/token indexes in this task."
+  - "Do not add catalog ergonomics tooling, ID allocation tooling, new CLI commands, generated indexes, or performance work."
+  - "Do not alter relation-state, unknown, graph, reachability, closure, coverage, identity, capability, domain, sharding, or milestone semantics."
+  - "Do not create branches, PRs, tags, releases, repository metadata mutations, promotion commits, or main mutations."
+  - "Do not move dev to an unverified candidate SHA."
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: forbidden
+  public_contract_change: forbidden
+  blocking_gap_behavior: BLOCKED
+
+structure_policy:
+  expected_new_files:
+    - .agent/tasks/TASK-0005/report.yaml
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: ""
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - isolated_test_execution
+  REVIEW:
+    - exact_commit_report_resolution
+    - repository_content_write
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Diagnostic ordering is deterministic for identical malformed feature-relation input across Python hash seeds."
+    evidence_required: "A focused regression reproduces differing order on the exact base and proves identical ordered output on the candidate across multiple explicit PYTHONHASHSEED values."
+  - id: AC-2
+    requirement: "The correction changes ordering only, not validator meaning."
+    evidence_required: "For the regression fixture and existing controls, diagnostic classes/set, blocker behavior, and exit result remain unchanged while order becomes stable."
+  - id: AC-3
+    requirement: "Existing V1 relation and closure semantics remain exact."
+    evidence_required: "The complete existing unittest suite plus focused refs/na/unresolved_ref/closure controls pass without model/schema/documentation changes."
+  - id: AC-4
+    requirement: "The implementation is minimal and contains no deferred optimization disguised as release hardening."
+    evidence_required: "Base-to-candidate diff changes exactly tools/validate.py and tests/test_validate.py and contains only stable relation-key iteration plus the deterministic-order regression."
+  - id: AC-5
+    requirement: "Verification and publication bind the exact candidate."
+    evidence_required: "Focused multi-seed regression, full unittest suite, py_compile, and semantic/scope audit PASS against one immutable candidate SHA; dev is then non-force advanced from the exact execution base to that same SHA; report is a separate report-only child; main and topology remain unchanged."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Refresh GitHub truth; require dev equals the exact handoff base, main equals d95e56d098557bd2016041cfc995338c298a7d39, topology exactly {dev, main}; resolve TASK-0005 revision 1 and pinned agent-skills authority; preflight repository read/write, isolated_test_execution, and create_blob/create_tree/create_commit/non-force update_ref capability."
+      required: true
+    - id: CHECK-2
+      command_or_check: "On the exact execution base, reproduce the nondeterministic diagnostic-order defect using one malformed feature-relations fixture with multiple relation errors and multiple explicit PYTHONHASHSEED values. Preserve concise RED evidence showing at least two distinct orderings while semantic error content/exit behavior is otherwise equivalent."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Implement the smallest correction: use one explicit ordered sequence for exactly roles, flows, data, interfaces, dependencies, capabilities; add only the focused deterministic-order regression in tests/test_validate.py."
+      required: true
+    - id: CHECK-4
+      command_or_check: "Persist exact changed-file bytes as unreferenced Git blobs and construct one unreferenced candidate tree/commit whose sole parent is the exact execution base. Confirm the candidate diff contains exactly tools/validate.py and tests/test_validate.py. Do not move dev."
+      required: true
+    - id: CHECK-5
+      command_or_check: "From a fresh isolated execution surface, fetch/reconstruct that exact candidate SHA and run the focused diagnostic-order regression across multiple explicit PYTHONHASHSEED values, including controls proving identical exit result and semantic diagnostic content."
+      required: true
+    - id: CHECK-6
+      command_or_check: "On that exact candidate SHA run python3 -m unittest discover -s tests and python3 -m py_compile tools/validate.py tests/test_validate.py."
+      required: true
+    - id: CHECK-7
+      command_or_check: "Audit the exact candidate SHA for semantic preservation and scope: no changes outside tools/validate.py and tests/test_validate.py; model_version=1; eight domains, 45 concern keys, 12 identity classes and all relation/closure semantics unchanged; no heading-index/performance/catalog/framework work."
+      required: true
+    - id: CHECK-8
+      command_or_check: "If CHECK-5..7 PASS, refresh refs and require dev still equals the exact execution base; fast-forward dev non-force to the already verified candidate SHA. Publish TASK-0005/report.yaml as a separate report-only child, verify parentage/diffs/final refs/topology, and stop at NEEDS_REVIEW. Otherwise leave dev unchanged and fail closed."
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+release_authority:
+  create_version_tag: false
+  mutate_repository_metadata: false
+  publish_release: false
+
+blocking_decisions: []
+execution_ready: true

@@ -1,0 +1,211 @@
+protocol_version: 3
+
+task_id: TASK-0006
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: user_request
+  task_id: ""
+  gap_id: "V1_RELEASE_CUTOVER"
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-documents
+
+target:
+  repository: phatnguyen03022001/agent-documents
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "1fcf5a2ebeeec7f3e1498d207148a9cd81a95456"
+
+architect_analysis_skills:
+  - architect
+  - simplicity
+  - verification
+
+execution_skills:
+  required:
+    - executor
+    - simplicity
+    - verification
+  recommended: []
+
+external_skills:
+  architect_analysis: []
+  execution_required: []
+  execution_recommended: []
+
+authority_sources:
+  - source: "phatnguyen03022001/agent-documents@8b3fe8d3afec25b661fbc5f31705124058486209 .agent/tasks/TASK-0005/review.yaml"
+    role: "Accepted diagnostic-determinism hardening and exact V1 release-hardening closure evidence."
+    precedence: 1
+  - source: "phatnguyen03022001/agent-documents@8b3fe8d3afec25b661fbc5f31705124058486209 .agent/tasks/TASK-0004/review.yaml"
+    role: "Accepted V1 relation-state/model correction preserving model_version 1, eight authority domains, 45 concerns, and twelve identity classes."
+    precedence: 2
+  - source: "Governing Architect release-readiness judgment captured by TASK-0006"
+    role: "Independent evidence already reviewed by the Architect found NO_MODEL_CHANGE_REQUIRED across semantic audit, complex real-target adoption, tiny real-target adoption, and large-target one-level-sharding stress. F-01 adoption/scale evidence and F-02 diagnostic determinism are considered closed for V1 release preparation."
+    precedence: 3
+  - source: "phatnguyen03022001/agent-documents@8b3fe8d3afec25b661fbc5f31705124058486209 README.md"
+    role: "Current release-identity wording still says the V1 candidate is unreleased and pending independent audit; this wording would become false after V1.0.0 publication."
+    precedence: 4
+  - source: "phatnguyen03022001/agent-skills@1fcf5a2ebeeec7f3e1498d207148a9cd81a95456 protocols/TASK_PROTOCOL.md + templates/continuation.yaml"
+    role: "Protocol-v3 authority for exact task binding, durable review, release separation, and post-review continuation."
+    precedence: 5
+
+structure_authority:
+  status: RESOLVED
+  source: "README.md release-identity paragraph plus protocol-v3 review/promotion/release separation"
+  rationale: "The V1 model is already accepted for release preparation. The only semantic repository change required before release is replacing stale unreleased-candidate wording with durable versioned-release guidance. Promotion, version tagging, and release publication must occur only after this exact preparation candidate is reviewed and accepted through exact continuation authority."
+
+objective: "Prepare the exact V1.0.0 release candidate without changing V1 model semantics: update only README release identity, verify the exact immutable candidate, publish the canonical report, and stop at NEEDS_REVIEW. After an ACCEPTED Architect review, later exact continuation authority may promote the accepted lineage to main and then create/publish V1.0.0."
+
+scope:
+  required_changes:
+    - "Update only the README.md paragraph that currently states V1 is an unreleased candidate pending independent audit. Replace it with concise durable release-version guidance establishing v1.0.0 as the first stable V1 release and instructing stable consumers to pin released tags rather than mutable branch tips. Do not rewrite unrelated README content."
+    - "Do not change DOCUMENT_MODEL.md, model files, validator behavior, tests, templates, workflow files, dependencies, or task history except for TASK-0006 report/review lifecycle artifacts."
+    - "Verify that the release-preparation candidate preserves model_version=1, exactly eight authority domains, exactly 45 coverage concerns, exactly twelve identity classes, refs/na/unresolved_ref semantics, closure semantics, and one-level sharding semantics."
+    - "Run the complete unittest suite and py_compile against one exact immutable release-preparation candidate SHA. README-only semantic preparation must not weaken existing 94-test evidence."
+    - "Use immutable Git-object candidate construction and exact-SHA verification before moving dev. The implementation candidate must have the exact execution base as sole parent and change README.md only."
+    - "Only after exact-candidate verification passes, refresh refs and require dev still equals the exact execution base and main still equals d95e56d098557bd2016041cfc995338c298a7d39; then fast-forward dev non-force to the verified README-only candidate."
+    - "Publish .agent/tasks/TASK-0006/report.yaml as a separate report-only direct child and stop at NEEDS_REVIEW. Do not promote main, create a version tag, or publish a release during EXECUTION."
+    - "Post-review release path is deliberately continuation-gated: an ACCEPTED review must be persisted first. A later exact PROMOTION continuation may fast-forward main to the exact accepted TASK-0006 lineage. Only after promotion is independently confirmed may a later exact RELEASE continuation create v1.0.0 at that promoted main commit and publish the GitHub release."
+    - "At each post-review continuation, fail closed if expected refs drift, v1.0.0 already exists unexpectedly, a release already exists unexpectedly, or required write capability is unavailable."
+    - "Current operator environment is phone-only ChatGPT + GitHub. Agent Runtime is unavailable and must not be probed, invoked, routed to, or relied upon unless the operator later explicitly states it is available. Codex must be minimized; it is not required for EXECUTION. In a later continuation, Codex may be used only if a task-required promotion/tag/release predicate cannot be satisfied with ChatGPT + GitHub, and then only with Luna at high effort for the narrow required operation."
+
+  allowed_existing_files_or_components:
+    - README.md
+    - .agent/tasks/TASK-0006/task.yaml
+  expected_files_are_restrictive: true
+
+invariants:
+  - "V1 semantic model is unchanged."
+  - "model_version remains 1."
+  - "The eight authority domains remain unchanged."
+  - "The 45 coverage concern keys remain unchanged."
+  - "The twelve identity classes remain unchanged."
+  - "DOCUMENT_MODEL.md, model/project.schema.v1.json, model/coverage.v1.json, tools/validate.py, tests/test_validate.py, templates, workflows, requirements, and prior task/report/review history remain unchanged during release preparation."
+  - "No heading-index optimization, catalog ergonomics, ID allocation tooling, lite/large profiles, nested authority hierarchy, ninth domain, multiple catalog, database, registry, orchestration, or framework expansion is introduced."
+  - "Branches remain exactly {dev, main} throughout preparation. main remains d95e56d098557bd2016041cfc995338c298a7d39 until an exact post-review PROMOTION continuation."
+  - "No tag or GitHub release is created before an ACCEPTED TASK-0006 review and exact release continuation."
+  - "Stable release identity is v1.0.0."
+
+forbidden_changes:
+  - "During EXECUTION, do not mutate main, create tags, publish releases, mutate repository metadata, create PRs, create branches, or change branch topology."
+  - "Do not change V1 model/schema/taxonomy/validator/test semantics."
+  - "Do not perform validator performance optimization or catalog ergonomics work."
+  - "Do not add release automation, CI/CD workflows, changelog framework, generated release machinery, registry, package publishing, or another release system."
+  - "Do not use Agent Runtime while the current operator environment declares it unavailable."
+  - "Do not use Codex during EXECUTION unless the operator explicitly changes the environment constraints."
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: forbidden
+  public_contract_change: forbidden
+  blocking_gap_behavior: BLOCKED
+
+structure_policy:
+  expected_new_files:
+    - .agent/tasks/TASK-0006/report.yaml
+  unlisted_new_files:
+    allowed: false
+    max: 0
+    within: []
+    purpose: ""
+  allow_new_top_level_directories: false
+  allow_new_shared_modules: false
+
+continuation_policy:
+  mode: MANUAL
+  stop_conditions:
+    - BLOCKED
+    - STALE_STATE
+    - AUTHORITY_REQUIRED
+    - CURRENT_PHASE_CAPABILITY_UNAVAILABLE
+    - REVIEW_REQUIRED
+    - REVERIFY_REQUIRED
+    - USER_STOP
+
+capability_requirements:
+  EXECUTION:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - isolated_test_execution
+  REVIEW:
+    - exact_commit_report_resolution
+    - repository_content_write
+  PROMOTION:
+    - exact_remote_ref_read
+    - repository_ref_write
+  RELEASE:
+    - exact_remote_ref_read
+    - create_version_tag
+    - publish_release
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "README no longer makes the stale unreleased/pending-audit claim and instead gives durable V1.0.0 release identity guidance."
+    evidence_required: "Exact candidate diff changes only the release-identity paragraph in README.md and states v1.0.0 as the first stable V1 release while directing stable consumers to released tags rather than mutable branch tips."
+  - id: AC-2
+    requirement: "Release preparation changes no V1 semantics."
+    evidence_required: "Model/version/domain/taxonomy/identity/relation/closure/sharding invariants remain exact and no model/schema/validator/test/template semantic file changes."
+  - id: AC-3
+    requirement: "The exact release-preparation candidate is verified."
+    evidence_required: "Full unittest suite and py_compile PASS against one immutable candidate SHA whose sole parent is the exact execution base and whose implementation diff is README.md only."
+  - id: AC-4
+    requirement: "Preparation preserves release separation."
+    evidence_required: "During EXECUTION main remains d95e56d098557bd2016041cfc995338c298a7d39, no v1.0.0 tag or GitHub release is created, report is a separate report-only child, and result stops at NEEDS_REVIEW."
+  - id: AC-5
+    requirement: "Post-review release actions remain fail-closed and exact-lineage bound."
+    evidence_required: "Task authority explicitly requires persisted ACCEPTED review plus exact continuation before promotion, and independently confirmed promotion before v1.0.0 tag/release publication."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: "Refresh GitHub truth; require dev equals exact handoff base, main equals d95e56d098557bd2016041cfc995338c298a7d39, topology exactly {dev, main}, GitHub releases empty, TASK-0006 revision 1 exact, and required EXECUTION capabilities available. Do not probe Agent Runtime and do not use Codex."
+      required: true
+    - id: CHECK-2
+      command_or_check: "Construct the smallest README-only release-identity correction. Confirm no other existing file changes."
+      required: true
+    - id: CHECK-3
+      command_or_check: "Persist the finalized README bytes as an unreferenced Git blob and construct one immutable unreferenced candidate tree/commit whose sole parent is the exact execution base. Confirm base-to-candidate diff is README.md only."
+      required: true
+    - id: CHECK-4
+      command_or_check: "From a fresh isolated surface reconstruct/fetch the exact candidate SHA and run python3 -m unittest discover -s tests plus python3 -m py_compile tools/validate.py tests/test_validate.py."
+      required: true
+    - id: CHECK-5
+      command_or_check: "Audit exact candidate invariants: model_version=1; exactly 8 authority domains, 45 concern keys, 12 identity classes; relation/closure/sharding semantics unchanged; no performance/catalog/framework work; README release wording is concise and durable."
+      required: true
+    - id: CHECK-6
+      command_or_check: "If CHECK-4..5 PASS, refresh refs and require dev still equals exact execution base and main unchanged; non-force advance dev to the exact verified candidate. Publish TASK-0006/report.yaml as separate report-only child, verify final refs/topology/release absence, and stop at NEEDS_REVIEW."
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: true
+
+release_authority:
+  create_version_tag: true
+  mutate_repository_metadata: false
+  publish_release: true
+
+blocking_decisions: []
+execution_ready: true

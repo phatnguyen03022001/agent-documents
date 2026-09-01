@@ -134,7 +134,7 @@ def recs(c,p):
   if not ne(r['name']):p.m(l+'.name must be non-empty')
   sl(r['actor_refs'],p,l+'.actor_refs',1);sl(r['acceptance_refs'],p,l+'.acceptance_refs',1);sl(r['decision_refs'],p,l+'.decision_refs')
   if not ne(r['spec_ref']):p.m(l+'.spec_ref must be non-empty')
-  rk={'roles','flows','data','interfaces','dependencies','capabilities'}
+  rk=('roles','flows','data','interfaces','dependencies','capabilities')
   if exact(r['relations'],rk,p,l+'.relations'):
    for k in rk:rel(r['relations'][k],p,l+'.relations.'+k)
  for i,r in enumerate(c['capabilities']):

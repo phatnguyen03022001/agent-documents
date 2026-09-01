@@ -3,6 +3,9 @@ import json
 import contextlib
 import importlib.util
 import io
+import os
+import subprocess
+import sys
 import types
 import tempfile
 import unittest
@@ -507,6 +510,46 @@ class ValidatorTests(unittest.TestCase):
             c["unknowns"].append({"id": "UNK-001", "kind": "QUESTION", "question": "Which interface identity applies?", "affected_refs": ["FTR-001"], "affected_coverage": [], "blocking": False, "reason": "Interface relation remains unresolved.", "resolution_phase": "DESIGN", "status": "OPEN"})
         result = self.assert_case(1, "UNRESOLVED_RELATION", mutate)
         self.assertIn("[TRACEABILITY_GAP] FTR-001 relation interfaces omits ['IFC-001'] used by FLW-001", result.stdout)
+
+
+    def test_feature_relation_diagnostics_are_stable_across_hash_seeds(self):
+        with tempfile.TemporaryDirectory() as td:
+            target = Path(td)
+            (target / "docs" / "catalog").mkdir(parents=True)
+            catalog = minimal_catalog()
+            relation_keys = ("roles", "flows", "data", "interfaces", "dependencies", "capabilities")
+            for key in relation_keys:
+                catalog["features"][0]["relations"][key] = {"refs": []}
+            (target / "docs" / "catalog" / "project.json").write_text(
+                json.dumps(catalog, indent=2) + "\n", encoding="utf-8"
+            )
+            for name, content in DOCS.items():
+                path = target / "docs" / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(content, encoding="utf-8")
+
+            outputs = []
+            returncodes = []
+            for seed in ("1", "2", "3", "42", "99"):
+                env = os.environ.copy()
+                env["PYTHONHASHSEED"] = seed
+                result = subprocess.run(
+                    [sys.executable, str(VALIDATOR), str(target)],
+                    capture_output=True,
+                    text=True,
+                    env=env,
+                    check=False,
+                )
+                outputs.append(result.stdout)
+                returncodes.append(result.returncode)
+
+            self.assertEqual({2}, set(returncodes))
+            self.assertEqual(1, len(set(outputs)))
+            expected = ["DOCS_READY = FALSE"] + [
+                f"[MODEL_ERROR] features[0].relations.{key}.refs must contain at least 1 item(s)"
+                for key in relation_keys
+            ]
+            self.assertEqual("\n".join(expected) + "\n", outputs[0])
 
 
 class ModelArtifactTests(unittest.TestCase):

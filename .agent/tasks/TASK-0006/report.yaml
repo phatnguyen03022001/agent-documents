@@ -1,0 +1,182 @@
+protocol_version: 3
+
+task_id: TASK-0006
+task_revision: 1
+report_revision: 1
+state: REPORTED
+
+task_source:
+  path: .agent/tasks/TASK-0006/task.yaml
+  commit: "091b4bdfa84f17182cd73538a549f09f41863873"
+  blob_sha: "94537b3643b0c7c69ebe5c79b014354edc6a1d85"
+
+execution:
+  repository: phatnguyen03022001/agent-documents
+  branch:
+    name: dev
+    role: integration
+  authorized_base_head: "091b4bdfa84f17182cd73538a549f09f41863873"
+  pre_execution_head: "091b4bdfa84f17182cd73538a549f09f41863873"
+  final_execution_head: "c5015712ae95c1f2fba2893db9638fb75b8ba52a"
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  authorized_revision: "1fcf5a2ebeeec7f3e1498d207148a9cd81a95456"
+  observed_revision: "1fcf5a2ebeeec7f3e1498d207148a9cd81a95456"
+
+execution_skills_used:
+  required:
+    - executor
+    - simplicity
+    - verification
+  recommended: []
+  external: []
+
+pre_execution_checks:
+  protocol_version_supported: true
+  task_at_base_confirmed: true
+  task_identity_confirmed: true
+  architect_binding_confirmed: true
+  repository_confirmed: true
+  branch_confirmed: true
+  base_head_confirmed: true
+  skill_revision_confirmed: true
+  required_execution_skills_available: true
+  structure_authority_confirmed: true
+  working_tree_clean: true
+  git_object_publication_preflight_passed: true
+
+capability_preflight:
+  phase: EXECUTION
+  required:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - isolated_test_execution
+  available:
+    - exact_remote_ref_read
+    - repository_content_read
+    - repository_content_write
+    - isolated_test_execution
+    - create_blob
+    - create_tree
+    - create_commit
+    - non_force_update_ref
+  missing: []
+  passed: true
+  evidence: "GitHub provided exact ref/content reads and immutable Git-data writes. ChatGPT sandbox provided isolated Python execution. Exact Git blobs were reconstructed hash-bound before execution. Agent Runtime was not probed or used, and Codex was not used."
+
+authoritative_verification:
+  required: false
+  performed: false
+  result: NOT_REQUIRED
+  evidence: "TASK-0006 designates no separate authoritative verifier. Mandatory Executor verification was completed against immutable candidate c5015712ae95c1f2fba2893db9638fb75b8ba52a before dev moved."
+
+local_hygiene:
+  result: PASS
+  run_root: "/mnt/data/task0006-verify-c5015712ae95c1f2fba2893db9638fb75b8ba52a"
+  cleanup_performed: true
+  retained: []
+  evidence: "The run-owned TASK-0006 preflight and exact-candidate verification roots plus the temporary unittest log were removed after evidence capture. Cleanup was limited to exact /mnt/data/task0006-* paths created by this execution."
+
+implementation:
+  commit: "c5015712ae95c1f2fba2893db9638fb75b8ba52a"
+  parent: "091b4bdfa84f17182cd73538a549f09f41863873"
+  tree: "7b0dccc4d262cc4e0d8fbfa1e31523629935d6bf"
+  message: "docs(TASK-0006): prepare v1.0.0 release identity"
+  published_non_force_to_dev: true
+  verified_before_publication: true
+  changed_files_exactly:
+    - README.md
+  finalized_blobs:
+    README.md: "6c7268bb186abdad4697402f3a129ed8e5fddd5e"
+  unchanged_control_blobs:
+    tools/validate.py: "b1f67bb1682f6bce267fff86923ab0fc50afcda1"
+    tests/test_validate.py: "7035476e389458ff436a34ca6fce1d406d8aa3b8"
+    model/coverage.v1.json: "cb500fb287a6b65832296e06d7e07e5ddeb6cf8c"
+    model/project.schema.v1.json: "54da14c7a4c1bd7ee9dd37a484973c653b599260"
+    templates/docs/catalog/project.json: "ede02b1c8eea336678b7629e717f88a779c75ef1"
+
+verification_evidence:
+  exact_candidate_sha: "c5015712ae95c1f2fba2893db9638fb75b8ba52a"
+  fresh_isolated_surface: true
+  exact_blob_reconstruction: PASS
+  full_unittest:
+    command: "python3 -m unittest discover -s tests"
+    result: PASS
+    tests_run: 94
+    evidence: "Fresh hash-bound candidate reconstruction ran 94 tests in 3.534s and returned OK."
+  py_compile:
+    command: "python3 -m py_compile tools/validate.py tests/test_validate.py"
+    result: PASS
+  semantic_scope_audit:
+    result: PASS
+    evidence: "Base-to-candidate compare changes exactly README.md by one paragraph replacement. model_version remains 1; authority domains remain exactly 8; coverage concerns remain exactly 45; identity classes remain exactly 12; relation states remain exactly refs, na, and unresolved_ref; existing closure and one-level sharding semantics are unchanged because all model/schema/validator/test/template blobs are unchanged. No performance, catalog, release-automation, or framework work was introduced."
+  release_identity_audit:
+    result: PASS
+    evidence: "README states: 'The first stable V1 release is v1.0.0. Stable consumers should pin released version tags rather than mutable branch tips.'"
+  pre_publication_ref_gate:
+    result: PASS
+    evidence: "Immediately before implementation publication, dev still equaled 091b4bdfa84f17182cd73538a549f09f41863873, main equaled d95e56d098557bd2016041cfc995338c298a7d39, branch topology was exactly {dev, main}, releases were empty, and matching refs for tags/v1.0.0 were empty."
+
+changed_files:
+  - path: README.md
+    summary: "Replace the stale unreleased-candidate paragraph with durable v1.0.0 stable-release and released-tag pinning guidance."
+    new_file: false
+    in_scope: true
+    structure_authorized: true
+
+commits_created:
+  - sha: "c5015712ae95c1f2fba2893db9638fb75b8ba52a"
+    message: "docs(TASK-0006): prepare v1.0.0 release identity"
+
+pushed: true
+promoted_to_main: false
+
+acceptance_evidence:
+  - criterion_id: AC-1
+    status: PROVEN
+    evidence: "Exact candidate README removes the stale unreleased/pending-audit claim and establishes v1.0.0 as the first stable V1 release while directing stable consumers to released version tags rather than mutable branch tips."
+  - criterion_id: AC-2
+    status: PROVEN
+    evidence: "GitHub compare from exact base to candidate changes only README.md. Hash-bound control blobs for validator, tests, taxonomy, schema, and starting catalog are unchanged; exact invariant audit confirms model_version 1, 8 domains, 45 concerns, 12 identity classes, refs/na/unresolved_ref relation state, and one-level sharding semantics."
+  - criterion_id: AC-3
+    status: PROVEN
+    evidence: "Immutable candidate c5015712ae95c1f2fba2893db9638fb75b8ba52a has sole parent 091b4bdfa84f17182cd73538a549f09f41863873 and README-only diff. Fresh exact-blob reconstruction passed 94/94 unittests and py_compile before dev moved."
+  - criterion_id: AC-4
+    status: PROVEN
+    evidence: "EXECUTION did not mutate main, create a branch, tag, release, PR, or repository metadata. Pre-publication checks confirmed main at d95e56d098557bd2016041cfc995338c298a7d39, v1.0.0 absent, and releases empty. This report is constructed as a separate report-only direct child and the phase result is NEEDS_REVIEW."
+  - criterion_id: AC-5
+    status: PROVEN
+    evidence: "TASK-0006 explicitly requires a persisted ACCEPTED Architect review plus exact PROMOTION continuation before main promotion, then independently confirmed promotion plus exact RELEASE continuation before creating v1.0.0 and publishing the release. No continuation action was executed here."
+
+executor_checks:
+  - check_id: CHECK-1
+    result: PASS
+    evidence: "Initial GitHub truth showed dev at exact base 091b4bdfa84f17182cd73538a549f09f41863873, main at d95e56d098557bd2016041cfc995338c298a7d39, topology exactly {dev, main}, releases empty, TASK-0006 revision 1 APPROVED, pinned skills resolved, and all EXECUTION capabilities available. Agent Runtime and Codex were not used."
+  - check_id: CHECK-2
+    result: PASS
+    evidence: "The finalized change replaces only the stale README release-identity paragraph with two concise sentences; no unrelated README content changed."
+  - check_id: CHECK-3
+    result: PASS
+    evidence: "Final README blob 6c7268bb186abdad4697402f3a129ed8e5fddd5e was assembled over exact base tree d0b1f1501841ef0c767095157ff46b2bfe7c3331 into tree 7b0dccc4d262cc4e0d8fbfa1e31523629935d6bf. Candidate c5015712ae95c1f2fba2893db9638fb75b8ba52a has the exact execution base as sole parent, and GitHub compare shows README.md only."
+  - check_id: CHECK-4
+    result: PASS
+    evidence: "A fresh isolated ChatGPT sandbox surface reconstructed exact candidate control blobs by Git-object SHA. python3 -m unittest discover -s tests passed 94 tests; python3 -m py_compile tools/validate.py tests/test_validate.py passed."
+  - check_id: CHECK-5
+    result: PASS
+    evidence: "Exact-candidate invariant audit confirmed model_version=1; 8 authority domains; 45 concern keys; 12 identity classes; exact refs/na/unresolved_ref relation states; root-or-one-level-shard document pattern; and no semantic or framework changes because candidate diff is README-only."
+  - check_id: CHECK-6
+    result: PENDING_POST_COMMIT
+    evidence: "After CHECK-4..5 passed, refs were refreshed and dev/main/topology/tag/release predicates remained exact; dev then advanced non-force to the verified candidate. This report is constructed as the separate report-only direct child. Its parentage, report-only diff, final refs/topology, tag absence, and release absence are verified after report publication."
+
+discovered_gaps: []
+structural_observations: []
+deviations_from_task: []
+blockers: []
+
+working_tree_after:
+  clean: true
+  summary: "All run-owned TASK-0006 sandbox artifacts were removed. Canonical implementation state is the exact verified candidate on dev; only this authorized report-only child remains to be published."
+
+result: NEEDS_REVIEW

@@ -10,7 +10,7 @@ V1 is guided by two principles:
 
 > **DESIGN TO CLOSURE, NOT TO EXHAUSTION.**
 
-This repository currently contains an **unreleased V1 candidate pending independent audit**. Nothing here claims that V1 is canonical, stable, or complete before the required reviews.
+The first stable V1 release is **v1.0.0**. Stable consumers should pin released version tags rather than mutable branch tips.
 
 The normative human-readable model is [`DOCUMENT_MODEL.md`](DOCUMENT_MODEL.md). The finite concern taxonomy and machine-readable catalog shape are under `model/`.
 

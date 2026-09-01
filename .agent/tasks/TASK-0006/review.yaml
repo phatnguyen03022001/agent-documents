@@ -1,0 +1,44 @@
+protocol_version: 3
+
+task_id: TASK-0006
+task_revision: 1
+review_revision: 1
+state: ACCEPTED
+
+reviewed_report:
+  repository: phatnguyen03022001/agent-documents
+  path: .agent/tasks/TASK-0006/report.yaml
+  commit: "5aff041cefd1cc49bca3f84a3e67b1596bea02d5"
+  report_revision: 1
+
+independence:
+  reviewer_role: ARCHITECT
+  separate_session_from_executor: true
+  exact_report_identity_verified: true
+
+contract_compliance:
+  protocol_version: PASS
+  identity: PASS
+  execution_base: PASS
+  skill_rules: PASS
+  scope: PASS
+  structure_policy: PASS
+  git_authority: PASS
+  acceptance_criteria: PASS
+  verifier_evidence: PASS
+
+gap_disposition: []
+follow_up_tasks: []
+
+promotion_readiness:
+  eligible_for_candidate_capture: true
+  reason: "The exact TASK-0006 report, README-only implementation lineage, immutable-candidate verification, and release-separation predicates are sufficient. Acceptance makes the reviewed lineage eligible for a separately authorized exact PROMOTION continuation; it does not itself mutate main, create v1.0.0, or publish a release."
+
+notes:
+  - "Governing Architect independently resolved implementation c5015712ae95c1f2fba2893db9638fb75b8ba52a as the sole direct child of exact base 091b4bdfa84f17182cd73538a549f09f41863873 and report 5aff041cefd1cc49bca3f84a3e67b1596bea02d5 as its sole report-only child."
+  - "Base-to-implementation changes only README.md, replacing the stale unreleased-candidate statement with durable guidance that v1.0.0 is the first stable V1 release and stable consumers should pin released tags rather than mutable branch tips."
+  - "Recorded exact-candidate verification is sufficient: full unittest suite 94/94 PASS, py_compile PASS, and semantic/scope audit PASS against c5015712ae95c1f2fba2893db9638fb75b8ba52a."
+  - "Model semantics remain unchanged: model_version 1, exactly eight authority domains, 45 coverage concerns, 12 identity classes, refs/na/unresolved_ref relation states, closure semantics, and one-level sharding semantics are preserved."
+  - "The report records CHECK-6 as PENDING_POST_COMMIT because report parentage and final refs are post-publication predicates. Architect independently resolved the published report as a direct child of the verified implementation; dev was at the report commit, main remained d95e56d098557bd2016041cfc995338c298a7d39, and GitHub releases remained empty at review time."
+  - "Agent Runtime was not used or probed and Codex was not used. No main mutation, tag, release, branch creation, PR, repository-metadata mutation, performance optimization, catalog ergonomics, model/schema/test/template/framework change, or release automation occurred."
+  - "No discovered gaps, deviations, or blockers remain for TASK-0006 revision 1."

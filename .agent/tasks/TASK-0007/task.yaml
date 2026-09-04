@@ -1,0 +1,187 @@
+protocol_version: 3
+
+task_id: TASK-0007
+task_revision: 1
+state: APPROVED
+
+origin:
+  type: user_request
+  task_id: ""
+  gap_id: "POST_ACTIVATION_NATURAL_LATENCY_PILOT_AGENT_DOCUMENTS_HYGIENE"
+
+architect_binding:
+  target_repository: phatnguyen03022001/agent-documents
+
+target:
+  repository: phatnguyen03022001/agent-documents
+  branch:
+    name: dev
+    role: integration
+
+execution_base:
+  mode: handoff_snapshot
+  capture: after_final_planning_commit
+  require_exact_match: true
+
+skill_library:
+  repository: phatnguyen03022001/agent-skills
+  revision: "ed8d9fb35bb8b052530ca879e68a227d77e4a8a6"
+
+execution_skills:
+  required:
+    - executor
+    - verification
+    - simplicity
+    - github-workflow
+
+authority_sources:
+  - source: "architect-profile/main@d47114404c97fcfd74b0f37f646586ec46de6987"
+    role: "ecosystem-active authority generation"
+    precedence: 1
+  - source: "agent-skills/main@ed8d9fb35bb8b052530ca879e68a227d77e4a8a6"
+    role: "active Task Protocol and one-logical-bundle-to-one-terminal_exec execution semantics"
+    precedence: 2
+  - source: "agent-documents@6918f46282f4a92bbc61071444a5ff5dab30ddc9"
+    role: "exact target state: dev=main, Python validator/tests present, repository-root .gitignore absent"
+    precedence: 3
+  - source: "agent-standards/dev@1141b9dbfce0110d6623f5a877c2d04843caa6eb"
+    role: "accepted TASK-0013 revision-2 functional closure; the failed revision-1 latency pilot remains historical evidence"
+    precedence: 4
+
+structure_authority:
+  status: RESOLVED
+  source: "repository-root ignore policy plus existing TASK report layout"
+  rationale: >-
+    The smallest natural hygiene change is one root .gitignore plus the canonical TASK-0007 report.
+    No documentation-model, validator, test, template, dependency, release, or workflow semantics need to change.
+
+objective: >-
+  Add the smallest stack-appropriate repository-root .gitignore for agent-documents and use this real hygiene task as
+  the first natural CHATGPT_LOCAL latency pilot after ecosystem activation of the rule that one logical deterministic
+  EXECUTION BUNDLE is realized by exactly one Agent Runtime terminal_exec. Preserve all correctness and publication
+  predicates; measure execution shape without turning latency into a correctness shortcut or causal overclaim.
+
+scope:
+  required_changes:
+    - >-
+      Add repository-root .gitignore with exactly these 14 lines: .DS_Store; __pycache__/; *.py[cod]; .venv/; venv/;
+      .pytest_cache/; .mypy_cache/; .ruff_cache/; .coverage; coverage/; .env; .env.*; !.env.example; !.env.*.example.
+    - >-
+      Prove no tracked path becomes ignored; prove required positive ignore cases and negative example-file/canonical-path cases.
+    - >-
+      Run python3 -B tools/validate.py ., python3 -B -m unittest discover -s tests -p 'test_*.py', py_compile,
+      git diff --check, exact scope/diff checks, and final repository hygiene against the same candidate.
+    - >-
+      Once semantic choices, exact binding, and capabilities are resolved, execute each maximal contiguous mechanically
+      derivable suffix as one logical EXECUTION BUNDLE and realize that bundle with exactly one terminal_exec.
+    - >-
+      Record post-binding Agent Runtime invocation count, logical-bundle-to-terminal_exec mapping, genuine controller-return
+      reasons, and trustworthy timing boundaries when directly observed. Hostname/computer name is diagnostic only and must
+      never select authority, execution eligibility, repository identity, or evidence validity.
+    - >-
+      Preserve comparison baselines as observations only: TASK-0036 operator E2E 592s / 62 terminal_exec / about 37.6s Mac
+      child-process sum / about 0.64s Agent Runtime overhead / about 21s runtime-to-tunnel observation; TASK-0013 operator
+      E2E 581s / 22 terminal_exec / canonical post-binding-to-decision 194s. Do not infer model/controller/transport causality
+      from this pilot alone.
+    - >-
+      Publish the exact .gitignore candidate on dev, then publish one report-only child. Main remains unchanged.
+  allowed_existing_files_or_components:
+    - ".gitignore"
+    - ".agent/tasks/TASK-0007/report.yaml"
+
+invariants:
+  - "No tracked repository path becomes ignored."
+  - "DOCUMENT_MODEL.md, README.md, model/, templates/, tools/, tests/, prior task evidence, dependencies, tags, releases, and workflows remain unchanged."
+  - "One logical deterministic EXECUTION BUNDLE equals exactly one terminal_exec; bundling may reduce synchronization boundaries but never assurance predicates."
+  - "Hostname, ComputerName, LocalHostName, Bonjour instance names, and similar machine labels are diagnostic metadata only, never authority or routing predicates."
+  - "Contradictory observations for the same exact immutable Git identity fail closed; do not choose a winner using hostname or stale session state."
+  - "Topology remains exactly {dev, main}; main remains 6918f46282f4a92bbc61071444a5ff5dab30ddc9."
+
+forbidden_changes:
+  - "Do not add unrelated broad ignore patterns such as .cache/, build/, dist/, node_modules/, .next/, model/, templates/, tools/, tests/, or .agent/."
+  - "Do not modify documentation-governance semantics, parser/validator behavior, tests, dependencies, workflows, tags, releases, repository settings, or sibling repositories."
+  - "Do not add telemetry frameworks, persistent performance stores, schedulers, queues, daemons, caches, registries, databases, bundle APIs, or Agent Runtime orchestration machinery."
+  - "Do not create/delete/rename branches, force-push, or mutate main."
+
+gap_policy:
+  local_auto_fix: true
+  scope_expansion: forbidden
+  architecture_change: forbidden
+  spec_change: forbidden
+  dependency_change: forbidden
+  public_contract_change: forbidden
+  blocking_gap_behavior: BLOCKED
+
+capability_requirements:
+  EXECUTION:
+    - repository_content_read
+    - repository_content_write
+    - native_repository_execution
+    - git_history_read
+    - git_commit
+    - git_push
+    - remote_ref_read
+
+acceptance_criteria:
+  - id: AC-1
+    requirement: "Base-to-candidate diff adds only the exact authorized 14-line repository-root .gitignore."
+    evidence_required: "Exact candidate diff, line-count/content proof, and no unrelated mutation."
+  - id: AC-2
+    requirement: "No tracked path is ignored and required positive/negative check-ignore cases pass."
+    evidence_required: "git ls-files -ci --exclude-standard plus synthetic positive/negative checks."
+  - id: AC-3
+    requirement: "Repository-native validator, full unittest suite, py_compile, git diff --check, and scope/hygiene checks pass on the same exact candidate."
+    evidence_required: "Exact candidate-bound command results and scope proof."
+  - id: AC-4
+    requirement: >-
+      Every post-binding logical deterministic execution bundle maps to exactly one terminal_exec; any controller return is
+      attributable to new material information, contradiction/ambiguity, authority/capability change, failed/ambiguous
+      postcondition, report-authorship boundary, or terminal lifecycle result.
+    evidence_required: "Actual invocation count, bundle mapping, job results, and return classification."
+  - id: AC-5
+    requirement: >-
+      Trustworthy timing evidence is recorded only when directly observed boundaries exist and is compared descriptively
+      with prior baselines without unsupported causal attribution.
+    evidence_required: "Direct timing boundaries when available plus bounded comparison interpretation."
+  - id: AC-6
+    requirement: >-
+      Candidate and report-only child are published on dev; main remains 6918f46282f4a92bbc61071444a5ff5dab30ddc9;
+      topology remains exactly {dev, main}; final tracked/index state is clean and operator-owned untracked state is preserved.
+    evidence_required: "Exact candidate/report identities, fresh refs/topology, and local closure evidence."
+
+verification:
+  executor_checks:
+    - id: CHECK-1
+      command_or_check: >-
+        Fresh-resolve exact task/base, active architect-profile/main and agent-skills/main, target refs/topology, root .gitignore
+        absence, local state, required EXECUTION capabilities, and immutable identity consistency. Treat hostnames as diagnostics only.
+      required: true
+    - id: CHECK-2
+      command_or_check: >-
+        Execute the maximal deterministic implementation/verification/publication suffix under the active one-bundle-to-one-terminal_exec
+        rule: create only authorized .gitignore; run ignore guards, native validator, full tests, py_compile, diff/scope/hygiene
+        checks; commit/push exact candidate; refresh refs and prove publication.
+      required: true
+    - id: CHECK-3
+      command_or_check: >-
+        Record actual Agent Runtime invocation/bundle mapping, controller-return reasons, and directly observed timing evidence;
+        preserve prior baselines without causal overclaim.
+      required: true
+    - id: CHECK-4
+      command_or_check: >-
+        Publish only .agent/tasks/TASK-0007/report.yaml as the report-only child, then freshly prove report diff, final dev/main
+        refs/topology, unchanged main, and local hygiene outside the self-containing report.
+      required: true
+  authoritative_verification:
+    required: false
+    mechanism: ""
+    expected_signal: ""
+
+git_authority:
+  create_branch: false
+  commit: true
+  push: true
+  promote_to_main: false
+
+blocking_decisions: []
+execution_ready: true

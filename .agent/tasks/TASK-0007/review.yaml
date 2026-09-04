@@ -1,0 +1,50 @@
+protocol_version: 3
+
+task_id: TASK-0007
+task_revision: 1
+review_revision: 1
+state: REVISION_REQUIRED
+
+reviewed_report:
+  repository: phatnguyen03022001/agent-documents
+  path: .agent/tasks/TASK-0007/report.yaml
+  commit: "f31c7d2f667c78bc355964636e999b90dc6f5987"
+  report_revision: 1
+
+independence:
+  reviewer_role: ARCHITECT
+  exact_report_identity_verified: true
+
+contract_compliance:
+  protocol_version: PASS
+  identity: PASS
+  execution_base: PASS
+  skill_rules: PASS
+  scope: PASS
+  structure_policy: PASS
+  git_authority: PASS
+  acceptance_criteria: FAIL
+  verifier_evidence: NOT_REQUIRED
+
+acceptance_basis:
+  - "Fresh review-boundary truth proves dev=f31c7d2f667c78bc355964636e999b90dc6f5987, main=6918f46282f4a92bbc61071444a5ff5dab30ddc9, topology exactly {dev, main}."
+  - "The report is the direct report-only child of exact TASK-0007 revision-1 planning base 037c779dffce49e74b4928baf0b51d36c745f7ee."
+  - "Executor correctly failed closed: exact-base archive reproduction proves tools/validate.py consumes a target repository root and requires <target>/docs/catalog/project.json, while agent-documents itself intentionally contains only templates/docs/catalog/project.json."
+  - "TASK-0007 revision 1 incorrectly required python3 -B tools/validate.py . to PASS while forbidding every scope change that could make agent-documents a validator target. This is a task-contract contradiction, not local drift or an implementation defect."
+  - "The uncommitted 14-line .gitignore passed bounded ignore guards, was not published, and was cleaned up; no implementation candidate exists."
+  - "Execution-shape evidence remains useful historical pilot evidence: four post-binding terminal_exec calls each map to a distinct semantic bundle/return boundary, but the blocked run is not a successful latency pilot."
+
+required_correction:
+  - "Revise TASK-0007 only; do not modify validator, docs, templates, tests, or product semantics to satisfy an invalid self-target verification command."
+  - "Use repository-native self-verification for agent-documents: full unittest suite, py_compile, git diff --check, exact scope/hygiene checks, and ignore-policy proofs."
+  - "Preserve the natural latency-pilot objective, one-logical-bundle-to-one-terminal_exec rule, timing/baseline semantics, hostname-as-diagnostic boundary, and main immutability."
+
+promotion_readiness:
+  eligible_for_candidate_capture: false
+  reason: "Revision 1 is internally unsatisfiable and produced no implementation candidate."
+
+follow_up_tasks:
+  - "Execute TASK-0007 revision 2 after Architect republishes a satisfiable self-verification contract."
+
+notes:
+  - "Do not count revision 1 as post-activation latency pilot success."

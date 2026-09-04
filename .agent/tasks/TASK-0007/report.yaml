@@ -1,22 +1,21 @@
 protocol_version: 3
 
 task_id: TASK-0007
-task_revision: 1
-report_revision: 1
+task_revision: 2
+report_revision: 2
 state: REPORTED
 
 task_source:
   path: .agent/tasks/TASK-0007/task.yaml
-  commit: "037c779dffce49e74b4928baf0b51d36c745f7ee"
-  blob_sha: "b22ac791a2cdfdddd6767ccefee59670d9e1f480"
+  commit: "52da304da251eaa24718b87b1de944e60eb26d2c"
 
 execution:
   repository: phatnguyen03022001/agent-documents
   branch:
     name: dev
     role: integration
-  authorized_base_head: "037c779dffce49e74b4928baf0b51d36c745f7ee"
-  final_execution_head: "037c779dffce49e74b4928baf0b51d36c745f7ee"
+  authorized_base_head: "52da304da251eaa24718b87b1de944e60eb26d2c"
+  final_execution_head: "6e38f8b63f5ee4da6cb157812ca76448be7fc398"
 
 skill_library:
   repository: phatnguyen03022001/agent-skills
@@ -42,112 +41,105 @@ capability_preflight:
     - remote_ref_read
   missing: []
   passed: true
-  evidence: "Agent Runtime terminal_exec provided bounded native execution; git/python were present; fresh remote reads succeeded; an authenticated non-mutating git push --dry-run to unchanged dev succeeded before report authorship."
+  evidence: "Agent Runtime terminal_exec provided bounded native execution; local Git/Python commands and fresh remote reads succeeded before mutation, and the authorized candidate push completed successfully."
 
 authoritative_verification:
   required: false
   performed: false
   result: NOT_REQUIRED
-  evidence: "TASK-0007 designates no separate authoritative verifier."
+  evidence: "TASK-0007 revision 2 designates no separate authoritative verifier."
 
-local_hygiene:
-  result: PASS
-  cleanup_performed: true
-  retained: []
-  evidence: "The exact task-owned staged .gitignore created before the blocking validator result was verified byte-for-byte, unstaged, and removed. Diagnostic /tmp roots were run-owned and removed; no operator-owned state was deleted or reset."
-
-pushed: false
-
-operational_timing:
-  started_at_utc: "2026-09-04T21:11:35Z"
-  terminal_decision_at_utc: "2026-09-04T21:14:11Z"
+pushed: true
 
 verification_evidence:
-  exact_base_sha: "037c779dffce49e74b4928baf0b51d36c745f7ee"
-  ignore_candidate_precommit:
+  exact_candidate_sha: "6e38f8b63f5ee4da6cb157812ca76448be7fc398"
+  gitignore_content:
     result: PASS
-    evidence: "Before the blocker, the working/index candidate was exactly the authorized 14-line root .gitignore; git ls-files -ci --exclude-standard returned no tracked ignored paths; 17 positive synthetic ignore cases and 10 negative/example/canonical-path cases passed. No implementation commit was created."
-  validator:
-    command: "python3 -B tools/validate.py ."
-    result: FAIL
-    exit_code: 2
-    evidence: "Fails on the exact immutable base and on the authorized .gitignore working candidate because agent-documents has no docs/catalog/project.json. tools/validate.py resolves <target>/docs/catalog/project.json; only templates/docs/catalog/project.json exists."
+    evidence: "Base-to-candidate diff contains only repository-root .gitignore, exactly 14 authorized lines with a final newline."
+  ignore_guards:
+    result: PASS
+    evidence: "git ls-files -ci --exclude-standard returned no tracked ignored paths; 14 positive synthetic cases and 9 negative/example/canonical-path cases passed on the exact candidate."
   full_unittest:
     command: "python3 -B -m unittest discover -s tests -p 'test_*.py'"
-    result: NOT_RUN
-    evidence: "The deterministic execution bundle stopped at the mandatory validator failure as required; later checks were not executed against a committed candidate."
+    result: PASS
+    evidence: "94 tests passed on the exact committed candidate; the suite was rerun fresh immediately before report authorship."
   py_compile:
-    result: NOT_RUN
+    command: "python3 -B -m py_compile tools/validate.py tests/test_validate.py"
+    result: PASS
   diff_check:
-    result: NOT_RUN
+    command: "git diff --check 52da304da251eaa24718b87b1de944e60eb26d2c..6e38f8b63f5ee4da6cb157812ca76448be7fc398"
+    result: PASS
+  validator_self_target:
+    result: NOT_RUN_BY_CONTRACT
+    evidence: "tools/validate.py was not invoked against agent-documents itself, per TASK-0007 revision 2."
+  candidate_publication:
+    result: PASS
+    evidence: "Before report authorship, fresh remote refs resolved dev to 6e38f8b63f5ee4da6cb157812ca76448be7fc398, main to 6918f46282f4a92bbc61071444a5ff5dab30ddc9, with topology exactly {dev, main}."
 
 execution_shape:
-  post_binding_terminal_exec_count_through_report_carrier: 4
+  post_binding_terminal_exec_count_through_report_carrier: 5
   bundles:
     - invocation: 1
-      bundle: implementation-verification-publication
+      bundle: implementation-verification-candidate-publication
       result: FAIL
       controller_return_reason: failed_postcondition
-      evidence: "Preflight, exact .gitignore creation, and ignore guards passed; mandatory validator failed before unittest, py_compile, commit, or push."
+      evidence: "Authorized .gitignore creation, ignore guards, 94 unittests, py_compile, and diff check passed; the bundle then stopped before stage/commit/push because its own scope predicate incorrectly expected git diff to list an untracked file."
     - invocation: 2
-      bundle: root-cause-diagnostic-attempt
-      result: FAIL
-      controller_return_reason: terminal_lifecycle_result
-      evidence: "Diagnostic shell command used unbraced zsh BASE:path expansion and terminated before target mutation; this was an execution-script error, not repository evidence."
-    - invocation: 3
-      bundle: root-cause-diagnostic
+      bundle: scope-failure-diagnostic
       result: PASS
-      controller_return_reason: new_material_information_and_blocking_contradiction
-      evidence: "Fresh exact-base archive reproduced validator exit 2 and proved docs/catalog/project.json absent while templates/docs/catalog/project.json exists."
+      controller_return_reason: new_material_information_after_failed_postcondition
+      evidence: "Read-only diagnosis proved status was exactly '?? .gitignore', git diff against the base was empty for the untracked candidate, and git ls-files --others --exclude-standard reported only .gitignore."
+    - invocation: 3
+      bundle: recovery-stage-candidate-publication
+      result: PASS
+      controller_return_reason: report_authorship_boundary
+      evidence: "The unchanged candidate was staged with exact scope proof, committed as 6e38f8b63f5ee4da6cb157812ca76448be7fc398, pushed to dev, and freshly resolved. Direct UTC boundaries were 2026-09-04T21:31:17Z to 2026-09-04T21:31:25Z."
     - invocation: 4
-      bundle: blocked-cleanup-report-publication
+      bundle: report-contract-resolution
+      result: PASS
+      controller_return_reason: report_authorship_material_information
+      evidence: "The pinned implementation-report contract, report template, and prior repository-native TASK-0007 report layout were resolved before authoring revision-2 evidence."
+    - invocation: 5
+      bundle: final-verification-report-publication
       result: CARRIER_INVOKED
       controller_return_reason: terminal_report_publication_boundary
-      evidence: "This report is authored inside the fourth post-binding terminal_exec carrier; it does not self-attest its own remote publication result."
+      evidence: "This report is authored inside the fifth post-binding terminal_exec carrier after fresh candidate-bound verification; it does not self-attest its own remote publication result."
 
 acceptance_evidence:
   - criterion_id: AC-1
-    status: NOT_PROVEN
-    evidence: "The exact 14-line .gitignore content was proven precommit, but no candidate commit was created because mandatory validation failed first."
+    status: PROVEN
+    evidence: "Exact base 52da304da251eaa24718b87b1de944e60eb26d2c to candidate 6e38f8b63f5ee4da6cb157812ca76448be7fc398 changes only .gitignore, whose exact content is the authorized 14-line policy."
   - criterion_id: AC-2
-    status: NOT_PROVEN
-    evidence: "Precommit ignore guards passed with zero tracked ignored paths, 17 required-positive cases, and 10 negative/example/canonical-path cases, but criterion requires candidate-bound proof and no candidate exists."
+    status: PROVEN
+    evidence: "No tracked path is ignored; required positive ignore cases and negative example/canonical-path cases pass on the committed candidate."
   - criterion_id: AC-3
-    status: NOT_PROVEN
-    evidence: "Mandatory python3 -B tools/validate.py . fails reproducibly at the exact authorized base with MODEL_ERROR: missing docs/catalog/project.json. Scope forbids adding target docs or changing validator semantics; unittest/py_compile/candidate-bound final checks therefore did not run."
+    status: PROVEN
+    evidence: "Fresh candidate-bound evidence passes the 94-test unittest suite, py_compile, git diff --check, exact scope/content checks, and repository hygiene without invalid validator self-targeting."
   - criterion_id: AC-4
     status: PROVEN
-    evidence: "Each post-binding logical bundle used exactly one Agent Runtime terminal_exec. Returns occurred only on a failed postcondition, a terminal shell failure, new blocking evidence, and the report-publication boundary; the fourth carrier invocation is recorded without predicting its own publication outcome."
+    evidence: "Five post-binding logical bundles through the report carrier each map to exactly one Agent Runtime terminal_exec. Controller returns occurred only for a failed postcondition, new diagnostic information, the report-authorship boundary/material, and the terminal report-publication boundary."
   - criterion_id: AC-5
     status: PROVEN
-    evidence: "Direct UTC boundaries were captured from current clock at post-binding capability-preflight start and terminal blocker decision. The prior TASK-0036 and TASK-0013 latency baselines remain observations only; this blocked pilot is not treated as a comparable successful sample and no model/controller/transport causality is inferred."
+    evidence: "Directly observed invocation-3 UTC boundaries are recorded without reconstructing canonical operational_timing. TASK-0036 remains an observation at 592s E2E / 62 terminal_exec / about 37.6s Mac child-process sum / about 0.64s Agent Runtime overhead / about 21s runtime-to-tunnel; TASK-0013 remains an observation at 581s E2E / 22 terminal_exec / 194s canonical post-binding-to-decision. This run's execution-script failure makes it unsuitable for causal model/controller/transport attribution."
   - criterion_id: AC-6
-    status: NOT_PROVEN
-    evidence: "No implementation candidate was published. Before report authorship, fresh refs still showed dev at the exact base, main unchanged at 6918f46282f4a92bbc61071444a5ff5dab30ddc9, and topology exactly {dev, main}. Report publication is separate and cannot be self-attested by this report."
+    status: NOT_PROVEN_AT_AUTHORSHIP
+    evidence: "The exact candidate is already published on dev and main/topology are unchanged. This report-only child is being authored now; its own commit/push and fresh final remote/local proof necessarily occur after report authorship and are not self-predicted."
 
 executor_checks:
   - check_id: CHECK-1
     result: PASS
-    evidence: "Exact task/base, active architect-profile/main d47114404c97fcfd74b0f37f646586ec46de6987, agent-skills/main ed8d9fb35bb8b052530ca879e68a227d77e4a8a6, target refs/topology, root .gitignore absence, local clean state, required capabilities, and immutable identities were resolved before mutation."
+    evidence: "Exact task/base, active architect-profile/main d47114404c97fcfd74b0f37f646586ec46de6987, agent-skills/main ed8d9fb35bb8b052530ca879e68a227d77e4a8a6, target refs/topology, root .gitignore absence, local clean state, required capabilities, and immutable identities were resolved before mutation. Host labels were not used for authority or routing."
   - check_id: CHECK-2
-    result: FAIL
-    evidence: "The bundle stopped at mandatory validator failure before candidate commit/push. No correctness predicate was bypassed."
+    result: PASS
+    evidence: "The authorized 14-line .gitignore is the only implementation change. Candidate-bound ignore guards, 94 unittests, py_compile, diff/scope/hygiene checks pass; candidate 6e38f8b63f5ee4da6cb157812ca76448be7fc398 is published on dev."
   - check_id: CHECK-3
     result: PASS
-    evidence: "Execution-shape mapping records four post-binding terminal_exec carriers through report publication, all controller-return reasons, direct timing boundaries, and preserves baseline observations without causal overclaim."
+    evidence: "Execution-shape evidence records all five post-binding carriers through report publication, genuine controller-return reasons, directly observed timing where available, and prior baselines without causal overclaim."
   - check_id: CHECK-4
     result: NOT_PROVEN_AT_AUTHORSHIP
-    evidence: "The failed execution report is the only authorized persistent child being authored after cleanup. Its own commit/push and fresh final dev/main/topology/local-hygiene proof occur after report authorship and are intentionally not self-predicted."
-
-discovered_gaps:
-  - classification: BLOCKING
-    id: TASK_VALIDATOR_SELF_TARGET_CONTRADICTION
-    evidence: "TASK-0007 requires python3 -B tools/validate.py . to pass, but exact base 037c779dffce49e74b4928baf0b51d36c745f7ee lacks docs/catalog/project.json and the validator requires that path. The same task forbids modifying documentation, validator behavior, templates, or expanding scope, so no authorized local fix can satisfy AC-3."
+    evidence: "Only this report file is authorized after the candidate. Its own report-only commit/push plus fresh final dev/main/topology/local-hygiene proof occur after this content is authored and are intentionally not self-attested here."
 
 deviations_from_task:
-  - "One root-cause diagnostic terminal_exec failed before evidence collection because the diagnostic shell used unbraced zsh BASE:path expansion. It caused no repository mutation and was corrected in the next bounded diagnostic invocation."
+  - "Post-binding invocation 1 contained an executor-authored scope predicate that incorrectly expected git diff --name-only <base> to include an untracked .gitignore. The bundle failed before staging, commit, or push; invocation 2 diagnosed the Git behavior read-only, and the unchanged candidate was subsequently proven via staged/base diff and fresh final candidate verification. This adds controller/runtime boundaries and is treated as pilot noise rather than product/task failure."
 
-blockers:
-  - "Mandatory exact command python3 -B tools/validate.py . cannot pass on the authorized exact base without a scope/spec change forbidden by TASK-0007 revision 1."
-
-result: BLOCKED
+result: NEEDS_REVIEW

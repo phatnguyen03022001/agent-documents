@@ -1,7 +1,7 @@
 protocol_version: 3
 
 task_id: TASK-0007
-task_revision: 1
+task_revision: 2
 state: APPROVED
 
 origin:
@@ -35,18 +35,21 @@ execution_skills:
     - github-workflow
 
 authority_sources:
+  - source: ".agent/tasks/TASK-0007/review.yaml@0897c1a125724a43e3b9f995e3ae2f789e433264"
+    role: "revision-1 REVISION_REQUIRED judgment proving the validator self-target command is an Architect task-contract defect"
+    precedence: 1
   - source: "architect-profile/main@d47114404c97fcfd74b0f37f646586ec46de6987"
     role: "ecosystem-active authority generation"
-    precedence: 1
+    precedence: 2
   - source: "agent-skills/main@ed8d9fb35bb8b052530ca879e68a227d77e4a8a6"
     role: "active Task Protocol and one-logical-bundle-to-one-terminal_exec execution semantics"
-    precedence: 2
-  - source: "agent-documents@6918f46282f4a92bbc61071444a5ff5dab30ddc9"
-    role: "exact target state: dev=main, Python validator/tests present, repository-root .gitignore absent"
     precedence: 3
+  - source: "agent-documents@6918f46282f4a92bbc61071444a5ff5dab30ddc9"
+    role: "immutable pre-task product state and historical repository-native verification pattern"
+    precedence: 4
   - source: "agent-standards/dev@1141b9dbfce0110d6623f5a877c2d04843caa6eb"
     role: "accepted TASK-0013 revision-2 functional closure; the failed revision-1 latency pilot remains historical evidence"
-    precedence: 4
+    precedence: 5
 
 structure_authority:
   status: RESOLVED
@@ -69,8 +72,10 @@ scope:
     - >-
       Prove no tracked path becomes ignored; prove required positive ignore cases and negative example-file/canonical-path cases.
     - >-
-      Run python3 -B tools/validate.py ., python3 -B -m unittest discover -s tests -p 'test_*.py', py_compile,
-      git diff --check, exact scope/diff checks, and final repository hygiene against the same candidate.
+      Run repository-native self-verification against the same exact candidate: python3 -B -m unittest discover -s tests
+      -p 'test_*.py'; python3 -B -m py_compile tools/validate.py tests/test_validate.py; git diff --check; exact scope/diff
+      checks; and final repository hygiene. Do not invoke tools/validate.py against agent-documents itself: it is a consumer
+      validator whose argument is a target repository containing docs/catalog/project.json, not a self-validator for this repo.
     - >-
       Once semantic choices, exact binding, and capabilities are resolved, execute each maximal contiguous mechanically
       derivable suffix as one logical EXECUTION BUNDLE and realize that bundle with exactly one terminal_exec.
@@ -91,6 +96,7 @@ scope:
 
 invariants:
   - "No tracked repository path becomes ignored."
+  - "tools/validate.py is a target-repository consumer validator, not an agent-documents self-validator; repository self-verification uses tests, py_compile, diff, scope, and hygiene evidence."
   - "DOCUMENT_MODEL.md, README.md, model/, templates/, tools/, tests/, prior task evidence, dependencies, tags, releases, and workflows remain unchanged."
   - "One logical deterministic EXECUTION BUNDLE equals exactly one terminal_exec; bundling may reduce synchronization boundaries but never assurance predicates."
   - "Hostname, ComputerName, LocalHostName, Bonjour instance names, and similar machine labels are diagnostic metadata only, never authority or routing predicates."
@@ -130,8 +136,8 @@ acceptance_criteria:
     requirement: "No tracked path is ignored and required positive/negative check-ignore cases pass."
     evidence_required: "git ls-files -ci --exclude-standard plus synthetic positive/negative checks."
   - id: AC-3
-    requirement: "Repository-native validator, full unittest suite, py_compile, git diff --check, and scope/hygiene checks pass on the same exact candidate."
-    evidence_required: "Exact candidate-bound command results and scope proof."
+    requirement: "Full unittest suite, py_compile, git diff --check, and exact scope/hygiene checks pass on the same exact candidate; no invalid validator self-target invocation is required."
+    evidence_required: "Exact candidate-bound repository-native self-verification results and scope proof."
   - id: AC-4
     requirement: >-
       Every post-binding logical deterministic execution bundle maps to exactly one terminal_exec; any controller return is
@@ -159,8 +165,8 @@ verification:
     - id: CHECK-2
       command_or_check: >-
         Execute the maximal deterministic implementation/verification/publication suffix under the active one-bundle-to-one-terminal_exec
-        rule: create only authorized .gitignore; run ignore guards, native validator, full tests, py_compile, diff/scope/hygiene
-        checks; commit/push exact candidate; refresh refs and prove publication.
+        rule: create only authorized .gitignore; run ignore guards, full unittest suite, py_compile, diff/scope/hygiene checks;
+        commit/push exact candidate; refresh refs and prove publication. Do not self-target tools/validate.py at agent-documents.
       required: true
     - id: CHECK-3
       command_or_check: >-

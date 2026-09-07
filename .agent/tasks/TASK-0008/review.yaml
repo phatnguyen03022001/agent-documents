@@ -1,0 +1,46 @@
+protocol_version: 3
+
+task_id: TASK-0008
+task_revision: 1
+review_revision: 1
+state: REVISION_REQUIRED
+
+reviewed_report:
+  repository: phatnguyen03022001/agent-documents
+  path: .agent/tasks/TASK-0008/report.yaml
+  commit: "40377e840f7ad3d2b1a15cf91ec8f1be66c87c21"
+  report_revision: 1
+
+independence:
+  reviewer_role: ARCHITECT
+  separate_session_from_executor: true
+  exact_report_identity_verified: true
+
+contract_compliance:
+  protocol_version: PASS
+  identity: PASS
+  execution_base: PASS
+  skill_rules: PASS
+  scope: PASS
+  structure_policy: PASS
+  git_authority: PASS
+  acceptance_criteria: FAIL
+  verifier_evidence: NOT_REQUIRED
+
+acceptance_basis:
+  - "Fresh review proves TASK-0008 revision 1 is internally unsatisfiable rather than incorrectly executed: exact-base DOCUMENT_MODEL.md contains stale current release-state assertions both in the opening paragraph and in section 18."
+  - "Revision 1 authorizes only the opening release-state paragraph while AC-1 requires DOCUMENT_MODEL.md to stop contradicting the already-published stable V1 release state. Correcting section 18 would exceed the restrictive revision-1 change boundary; leaving it unchanged would fail AC-1."
+  - "Executor correctly stopped before DOCUMENT_MODEL.md mutation and published bounded failure evidence. Report commit 40377e840f7ad3d2b1a15cf91ec8f1be66c87c21 is the direct report-only child of exact task base eca9af8e9075df440aaee86b38a8cd2e226fa557."
+  - "Fresh remote proof establishes dev=40377e840f7ad3d2b1a15cf91ec8f1be66c87c21 before review publication, main=6918f46282f4a92bbc61071444a5ff5dab30ddc9 unchanged, topology exactly {dev, main}, and v1.0.0 remains bound to 6918f46282f4a92bbc61071444a5ff5dab30ddc9."
+
+required_correction:
+  - "Revise TASK-0008 only; explicitly authorize correction of both stale release-state assertions in DOCUMENT_MODEL.md: the opening paragraph and the final section-18 release-status sentence."
+  - "Preserve wording-only intent: no other DOCUMENT_MODEL.md semantics or repository paths may change."
+  - "Require exact proof that both stale unreleased/pending-review assertions are absent while all intervening model content remains byte-identical to the revision-1 base except those two bounded sentences."
+  - "Preserve main/tag/release immutability, repository-native verification, report lineage, and all existing 8-domain/45-concern/model/validator boundaries."
+
+follow_up_tasks:
+  - "Execute TASK-0008 revision 2 after Architect republishes the corrected authority/acceptance contract."
+
+notes:
+  - "No implementation candidate exists for revision 1. This judgment records an Architect-authored task-contract defect, not an Executor implementation defect."

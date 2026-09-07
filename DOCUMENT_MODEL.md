@@ -1,6 +1,6 @@
 # Agent Documents V1 Model
 
-This document is the normative human-readable specification for the V1 candidate. The candidate remains unreleased and pending independent audit.
+This document is the normative human-readable specification for Agent Documents V1. The first stable V1 release is v1.0.0.
 
 ## 1. Purpose and system boundaries
 
@@ -285,4 +285,4 @@ V1 is not an orchestration platform, documentation CMS, generator framework, dat
 
 Changes that add/remove/rename a concern, add a ninth authority domain, change identity classes, alter field authority, or otherwise break the V1 machine contract require explicit versioned evolution rather than silent reinterpretation. Validator/model/schema/template changes within a version must remain mutually consistent and deterministic.
 
-This repository remains an unreleased candidate pending independent review; satisfying this model does not itself make V1 canonical or authorize release/promotion.
+The first stable V1 release is v1.0.0; satisfying this model does not itself authorize future release or promotion actions.
